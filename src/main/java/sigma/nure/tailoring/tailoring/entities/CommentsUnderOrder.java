@@ -4,17 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PartSizeOrder {
-
+public class CommentsUnderOrder {
     private Long id;
-    private String name;
-    private Integer width;
-    private Integer volume;
-    private Integer length;
-    private Integer height;
+    private String message;
+    private LocalDateTime dateOfCreation;
+    private Long userId;
+    private Long tailoringOrderId;
 }

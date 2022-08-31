@@ -4,17 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PartSizeOrder {
-
+public class TailoringTemplate {
     private Long id;
     private String name;
-    private Integer width;
-    private Integer volume;
-    private Integer length;
-    private Integer height;
+    private boolean active;
+    private LocalDateTime dateOfCreation;
+    private int cost;
+    private String typeTemplate;
+    private String templateDescription;
 }
