@@ -74,12 +74,12 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository{
                 this.rowMapper,number,UserState.REGISTERED).findFirst();
     }
 
-    private static final String SELECT_USER_WHERE_CODE_AND_NUMBER_ID_AND_DATE_OD_CREATION_BEFORE = SELECT_USER +
+    private static final String SELECT_USER_WHERE_CODE_AND_NUMBER_ID_AND_DATE_OD_CREATION_AFTER = SELECT_USER +
             " RIGHT JOIN user_code c ON u.id = c.user_id " +
-            " WHERE c.value = ?  AND  u.phone_number = ? AND c.user_code < ? ";
+            " WHERE c.value = ?  AND  u.phone_number = ? AND c.user_code > ? ";
     @Override
-    public Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationBefore(String code, String number, LocalDateTime dateOfCreation) {
-        return jdbc.queryForStream(SELECT_USER_WHERE_CODE_AND_NUMBER_ID_AND_DATE_OD_CREATION_BEFORE,
+    public Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationAfter(String code, String number, LocalDateTime dateOfCreation) {
+        return jdbc.queryForStream(SELECT_USER_WHERE_CODE_AND_NUMBER_ID_AND_DATE_OD_CREATION_AFTER,
                 this.rowMapper,code,number,dateOfCreation).findFirst();
     }
 

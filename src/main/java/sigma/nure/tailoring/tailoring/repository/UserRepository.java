@@ -14,10 +14,10 @@ public interface UserRepository {
    List<User> findAll(@NonNull Pageable pageable);
    Optional<User> findById(@NonNull Long id);
    Optional<User> findByPhoneNumberAndActiveTrueAndUserStateRegistered(String number);
-   Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationBefore(String code, String number, LocalDateTime dateOfCreation);
+   Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationAfter(String code, String number, LocalDateTime dateOfCreation);
 
    boolean save(@NonNull User user);
-   boolean isBooked(String email,String phoneNumber,LocalDateTime dataBefore);
+   boolean isBooked(String email,String phoneNumber,LocalDateTime dataAfter);
 
    boolean update(@NonNull User user);
    boolean updateActiveById(boolean active,Long userId);
