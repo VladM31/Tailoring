@@ -38,7 +38,7 @@ public class UserServiceJdbcTemplatePostgres implements UserService{
 
     @Override
     public Optional<User> findByUserCodeAndPhoneNumberAndActiveTrue(String code, String number) {
-        return repository.findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationBefore(code,number,
+        return repository.findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationAfter(code,number,
                 LocalDateTime.now().minusMinutes(this.waitUserRegistration));
     }
 
