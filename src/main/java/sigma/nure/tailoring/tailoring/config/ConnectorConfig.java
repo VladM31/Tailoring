@@ -57,8 +57,6 @@ public class ConnectorConfig {
                         Integer.valueOf(map.get("id").toString())
                       ));
 
-        idByRole.forEach( (k,v) -> System.out.println( k + " - " + v));
-
         return Collections.unmodifiableMap(idByRole);
     }
 }

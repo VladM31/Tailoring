@@ -17,7 +17,7 @@ public interface UserRepository {
    Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationBefore(String code, String number, LocalDateTime dateOfCreation);
 
    boolean save(@NonNull User user);
-   boolean isBooked(String email,String phoneNumber);
+   boolean isBooked(String email,String phoneNumber,LocalDateTime dataBefore);
 
    boolean update(@NonNull User user);
    boolean updateActiveById(boolean active,Long userId);
