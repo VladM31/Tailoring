@@ -13,7 +13,7 @@ public interface UserService {
     List<User> findAll(@NonNull Pageable pageable);
     Optional<User> findById(@NonNull Long id);
     Optional<User> findByPhoneNumberAndActiveTrueAndUserStateRegistered(String number);
-    Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationBefore(String code, String number, LocalDateTime dateOfCreation);
+    Optional<User> findByUserCodeAndPhoneNumberAndActiveTrue(String code, String number);
 
     boolean save(@NonNull User user);
     boolean isBooked(String email,String phoneNumber);
