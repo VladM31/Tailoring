@@ -7,8 +7,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import sigma.nure.tailoring.tailoring.entities.Role;
 
 import javax.sql.DataSource;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @ComponentScan("sigma.nure.tailoring.tailoring")
@@ -39,5 +43,22 @@ public class ConnectorConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource){
         return  new JdbcTemplate(dataSource);
+    }
+
+
+    @Bean
+    public Map<Role,Integer> idByRole(JdbcTemplate jdbcTemplate){
+        Map<Role,Integer> idByRole = new HashMap<>();
+
+        jdbcTemplate.queryForList("SELECT id,name FROM role")
+                .forEach(
+                        map -> idByRole.put(
+                        Role.valueOf(map.get("name").toString()),
+                        Integer.valueOf(map.get("id").toString())
+                      ));
+
+        idByRole.forEach( (k,v) -> System.out.println( k + " - " + v));
+
+        return Collections.unmodifiableMap(idByRole);
     }
 }
