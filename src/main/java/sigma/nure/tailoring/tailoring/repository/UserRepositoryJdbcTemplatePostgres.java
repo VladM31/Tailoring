@@ -3,8 +3,6 @@ package sigma.nure.tailoring.tailoring.repository;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
@@ -12,7 +10,6 @@ import sigma.nure.tailoring.tailoring.entities.UserState;
 import sigma.nure.tailoring.tailoring.tools.Pageable;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
