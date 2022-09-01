@@ -117,18 +117,24 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository{
         return !ids.isEmpty();
     }
 
+    private static final String UPDATE_A_LOT_OF_USER_FIELDS_BY_ID = "UPDATE \"user\" SET phone_number = ?, password = ?, " +
+            "city = ?, country = ?, email = ?, firstname = ?, lastname = ?, male = ? WHERE id = ? ";
     @Override
     public boolean update(User user) {
-        return false;
+        return jdbc.update(UPDATE_A_LOT_OF_USER_FIELDS_BY_ID, user.getPhoneNumber(),user.getPassword(),
+                user.getCity(),user.getCountry(), user.getEmail(), user.getFirstname(),
+                user.getLastname(),user.isMale(),user.getId()) != 0;
     }
 
+    private static final String UPDATE_ACTIVE_USER_BY_ID = "UPDATE \"user\" SET active = ?  WHERE id = ? ";
     @Override
     public boolean updateActiveById(boolean active, Long userId) {
-        return false;
+        return jdbc.update(UPDATE_ACTIVE_USER_BY_ID,active,userId) != 0;
     }
 
+    private static final String UPDATE_USER_STATE_BY_ID = "UPDATE \"user\" SET user_state = ?  WHERE id = ? ";
     @Override
     public boolean updateUserStateById(UserState userState, Long userId) {
-        return false;
+        return jdbc.update(UPDATE_USER_STATE_BY_ID,userState.name(),userId) != 0;
     }
 }
