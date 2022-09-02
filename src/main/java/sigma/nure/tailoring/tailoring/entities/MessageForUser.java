@@ -15,7 +15,6 @@ import java.util.List;
 public class MessageForUser {
     private String phoneNumber;
     private String describe;
-    private String token;
     private List<MessageEntity> messageEntities;
 
     public boolean isEmptyNumber(){
