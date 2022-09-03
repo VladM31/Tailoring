@@ -14,7 +14,9 @@ public class UserCodeRepositoryJdbcTemplatePostgres implements UserCodeRepositor
     }
 
     private static final String UPDATE_INACTIVE_BY_USER_ID_AND_CODE_VALUE =
-            "UPDATE user_code SET active = false WHERE user_id = ? AND value = ?";
+            "UPDATE user_code SET active = false " +
+                    "WHERE user_id = ? " +
+                    "AND value = ?";
     @Override
     public boolean updateCodeToInactiveByUserIdAndCodValue(Long userId, String codeValue) {
         return jdbc.update(UPDATE_INACTIVE_BY_USER_ID_AND_CODE_VALUE,userId,codeValue) != 0;
