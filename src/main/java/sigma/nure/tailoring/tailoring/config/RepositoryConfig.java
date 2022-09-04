@@ -14,7 +14,7 @@ import java.util.Map;
 public class RepositoryConfig {
 
     @Bean
-    public UserRepository userRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc,DataSource dataSource, Map<Role,Integer> idByRole){
+    public UserRepository JdbcTemplateUserRepository (JdbcTemplate jdbc,DataSource dataSource, Map<Role,Integer> idByRole){
         return new UserRepositoryJdbcTemplatePostgres(jdbc,dataSource,idByRole);
     }
 }
