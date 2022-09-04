@@ -14,10 +14,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class TelegramBotServiceImplementedOnHttp implements TelegramBotService{
+public class TelegramBotServiceImplementedOnHttp implements TelegramBotService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(TelegramBotServiceImplementedOnHttp.class);
     private final String token;
     private final String urlHasNumber;
@@ -50,8 +50,8 @@ public class TelegramBotServiceImplementedOnHttp implements TelegramBotService{
     public boolean sendMessage(MessageForUser message) {
 
         final Map<String, String> values = new HashMap<>();
-        values.put("token",this.token);
-        values.put("json",this.jsonConverter.toJson(message));
+        values.put("token", this.token);
+        values.put("json", this.jsonConverter.toJson(message));
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(this.urlSendMessage))
@@ -63,14 +63,14 @@ public class TelegramBotServiceImplementedOnHttp implements TelegramBotService{
                 "Telegram Bot Service: response send message has error");
     }
 
-    private static boolean sendRequestAndReturnBooleanAnswer(HttpRequest httpRequest,String messageError){
+    private static boolean sendRequestAndReturnBooleanAnswer(HttpRequest httpRequest, String messageError) {
         HttpClient client = HttpClient.newBuilder().build();
         HttpResponse<String> response = null;
 
         try {
             response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
-            LOGGER.warn(messageError,e);
+            LOGGER.warn(messageError, e);
             return false;
         }
 
@@ -89,6 +89,5 @@ public class TelegramBotServiceImplementedOnHttp implements TelegramBotService{
         }
         return HttpRequest.BodyPublishers.ofString(builder.toString());
     }
-
 
 }
