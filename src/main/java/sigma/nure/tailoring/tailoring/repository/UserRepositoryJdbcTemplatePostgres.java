@@ -1,5 +1,7 @@
 package sigma.nure.tailoring.tailoring.repository;
 
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,13 +11,11 @@ import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.entities.UserState;
 import sigma.nure.tailoring.tailoring.tools.Pageable;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
@@ -61,14 +61,12 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
 
     private static final String UPDATE_USER_STATE_BY_ID = "UPDATE \"user\" SET user_state = ?  WHERE id = ? ";
 
-    private final Map<Role, Integer> idByRole;
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertUser;
     private final RowMapper<User> rowMapper;
 
-    public UserRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc, DataSource dataSource, Map<Role, Integer> idByRole) {
+    public UserRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc, DataSource dataSource) {
         this.jdbc = jdbc;
-        this.idByRole = idByRole;
         this.rowMapper = new BeanPropertyRowMapper<>(User.class);
 
         this.insertUser = new SimpleJdbcInsert(dataSource)
@@ -108,6 +106,7 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
 
     @Override
     public boolean save(User user) {
+        Map<String,Integer> idByRoleName = this.getMapFindIdByRoleName();
         Map<String, Object> args = new HashMap<>();
 
         args.put("phone_number", user.getPhoneNumber());
@@ -120,13 +119,26 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
         args.put("date_registration", Timestamp.valueOf(user.getDateRegistration()));
         args.put("male", user.isMale());
         args.put("user_state", user.getUserState().name());
-        args.put("role_id", this.idByRole.get(user.getRole()).intValue());
+        args.put("role_id", idByRoleName.get(user.getRole().name()).intValue());
 
         Long id = (Long) insertUser.executeAndReturnKey(args);
 
         user.setId(id);
 
         return id != null;
+    }
+
+    public Map<String, Integer> getMapFindIdByRoleName() {
+        Map<String, Integer> idByRoleName = new HashMap<>();
+
+        jdbc.queryForList("SELECT id,name FROM role")
+                .forEach(
+                        map -> idByRoleName.put(
+                                map.get("name").toString(),
+                                Integer.valueOf(map.get("id").toString())
+                        ));
+
+        return Collections.unmodifiableMap(idByRoleName);
     }
 
     @Override
@@ -154,4 +166,5 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     public boolean updateUserStateById(UserState userState, Long userId) {
         return jdbc.update(UPDATE_USER_STATE_BY_ID, userState.name(), userId) != 0;
     }
+
 }

@@ -2,6 +2,7 @@ package sigma.nure.tailoring.tailoring.config;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -43,20 +44,5 @@ public class ConnectorConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource){
         return  new JdbcTemplate(dataSource);
-    }
-
-
-    @Bean
-    public Map<Role,Integer> idByRole(JdbcTemplate jdbcTemplate){
-        Map<Role,Integer> idByRole = new HashMap<>();
-
-        jdbcTemplate.queryForList("SELECT id,name FROM role")
-                .forEach(
-                        map -> idByRole.put(
-                        Role.valueOf(map.get("name").toString()),
-                        Integer.valueOf(map.get("id").toString())
-                      ));
-
-        return Collections.unmodifiableMap(idByRole);
     }
 }
