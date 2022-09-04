@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.entities.UserState;
-import sigma.nure.tailoring.tailoring.tools.Pageable;
+import sigma.nure.tailoring.tailoring.tools.Page;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -77,10 +77,10 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     }
 
     @Override
-    public List<User> findAll(Pageable pageable) {
+    public List<User> findAll(Page pageable) {
         return jdbc.query(String.format(SELECT_ORDER_BY_LIMIT_OFFSET,
                         pageable.getOrderByOrDefault("date_registration"),
-                        pageable.getDirectionOrDefault(Pageable.Direction.DESC),
+                        pageable.getDirectionOrDefault(Page.Direction.DESC),
                         pageable.getLimitOrDefault(100L),
                         pageable.getOffsetOrDefault(0L)),
                 this.rowMapper);
@@ -96,7 +96,6 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
         return jdbc.queryForStream(SELECT_USER_WHERE_PHONE_NUMBER_AND_ACTIVE_TRUE_AND_STATE_REGISTERED,
                 this.rowMapper, number, UserState.REGISTERED).findFirst();
     }
-
 
     @Override
     public Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationAfter(String code, String number, LocalDateTime dateOfCreation) {

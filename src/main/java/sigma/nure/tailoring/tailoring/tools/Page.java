@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Pageable {
+public class Page {
     private String orderBy;
     private Long limit;
     private Long offset;

@@ -4,14 +4,14 @@ package sigma.nure.tailoring.tailoring.repository;
 import org.springframework.lang.NonNull;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.entities.UserState;
-import sigma.nure.tailoring.tailoring.tools.Pageable;
+import sigma.nure.tailoring.tailoring.tools.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-   List<User> findAll(@NonNull Pageable pageable);
+   List<User> findAll(@NonNull Page pageable);
 
    Optional<User> findById(@NonNull Long id);
 

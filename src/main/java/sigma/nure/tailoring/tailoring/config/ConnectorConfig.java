@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@ComponentScan("sigma.nure.tailoring.tailoring")
 public class ConnectorConfig {
 
     @Bean
