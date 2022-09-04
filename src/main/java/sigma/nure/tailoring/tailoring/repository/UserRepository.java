@@ -19,7 +19,7 @@ public interface UserRepository {
 
    Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationAfter(String code, String number, LocalDateTime dateOfCreation);
 
-   boolean save(@NonNull User user);
+   Optional<Long> saveAndReturnUserId(@NonNull User user);
 
    boolean isBooked(String email, String phoneNumber, LocalDateTime dataAfter);
 

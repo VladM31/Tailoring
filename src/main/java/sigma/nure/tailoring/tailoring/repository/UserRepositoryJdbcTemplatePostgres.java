@@ -104,7 +104,7 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     }
 
     @Override
-    public boolean save(User user) {
+    public Optional<Long> saveAndReturnUserId(User user) {
         Map<String,Integer> idByRoleName = this.getMapFindIdByRoleName();
         Map<String, Object> args = new HashMap<>();
 
@@ -122,9 +122,7 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
 
         Long id = (Long) insertUser.executeAndReturnKey(args);
 
-        user.setId(id);
-
-        return id != null;
+        return Optional.ofNullable(id);
     }
 
     public Map<String, Integer> getMapFindIdByRoleName() {
