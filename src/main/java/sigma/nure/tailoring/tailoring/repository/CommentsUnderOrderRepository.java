@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface CommentsUnderOrderRepository {
     boolean save(CommentsUnderOrder comment);
+
     List<CommentsUnderOrder> findAllByOrderId(Long orderId);
 }

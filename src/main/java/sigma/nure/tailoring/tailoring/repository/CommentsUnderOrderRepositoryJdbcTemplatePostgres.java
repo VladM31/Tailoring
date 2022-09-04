@@ -8,27 +8,10 @@ import sigma.nure.tailoring.tailoring.entities.CommentsUnderOrder;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class CommentsUnderOrderRepositoryJdbcTemplatePostgres implements CommentsUnderOrderRepository{
-
-    private final JdbcTemplate jdbc;
-    private final RowMapper<CommentsUnderOrder> rowMapper;
-
-    public CommentsUnderOrderRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
-        this.rowMapper = new BeanPropertyRowMapper<>(CommentsUnderOrder.class);
-    }
+public class CommentsUnderOrderRepositoryJdbcTemplatePostgres implements CommentsUnderOrderRepository {
 
     private static final String INSERT_COMMENT =
             "INSERT INTO comments_under_order(message,date_of_creation,user_id,tailoring_order_id) VALUES(?,?,?,?)";
-    @Override
-    public boolean save(CommentsUnderOrder comment) {
-        return jdbc.update(INSERT_COMMENT,
-                comment.getMessage(),
-                LocalDateTime.now(),
-                comment.getUserId(),
-                comment.getTailoringOrderId()
-        ) != 0;
-    }
 
     private static final String SELECT_ALL_COMMENTS_BY_ORDER_ID =
             "SELECT id, message, " +
@@ -39,8 +22,27 @@ public class CommentsUnderOrderRepositoryJdbcTemplatePostgres implements Comment
                     "comments_under_order " +
                     "WHERE " +
                     "tailoring_order_id = ? ";
+
+    private final JdbcTemplate jdbc;
+    private final RowMapper<CommentsUnderOrder> rowMapper;
+
+    public CommentsUnderOrderRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc) {
+        this.jdbc = jdbc;
+        this.rowMapper = new BeanPropertyRowMapper<>(CommentsUnderOrder.class);
+    }
+
+    @Override
+    public boolean save(CommentsUnderOrder comment) {
+        return jdbc.update(INSERT_COMMENT,
+                comment.getMessage(),
+                LocalDateTime.now(),
+                comment.getUserId(),
+                comment.getTailoringOrderId()
+        ) != 0;
+    }
+
     @Override
     public List<CommentsUnderOrder> findAllByOrderId(Long orderId) {
-        return jdbc.query(SELECT_ALL_COMMENTS_BY_ORDER_ID,this.rowMapper,orderId);
+        return jdbc.query(SELECT_ALL_COMMENTS_BY_ORDER_ID, this.rowMapper, orderId);
     }
 }
