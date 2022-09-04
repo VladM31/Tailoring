@@ -12,14 +12,20 @@ import java.util.Optional;
 
 public interface UserRepository {
    List<User> findAll(@NonNull Pageable pageable);
+
    Optional<User> findById(@NonNull Long id);
+
    Optional<User> findByPhoneNumberAndActiveTrueAndUserStateRegistered(String number);
+
    Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationAfter(String code, String number, LocalDateTime dateOfCreation);
 
    boolean save(@NonNull User user);
-   boolean isBooked(String email,String phoneNumber,LocalDateTime dataAfter);
+
+   boolean isBooked(String email, String phoneNumber, LocalDateTime dataAfter);
 
    boolean update(@NonNull User user);
-   boolean updateActiveById(boolean active,Long userId);
-   boolean updateUserStateById(UserState userState,Long userId);
+
+   boolean updateActiveById(boolean active, Long userId);
+
+   boolean updateUserStateById(UserState userState, Long userId);
 }
