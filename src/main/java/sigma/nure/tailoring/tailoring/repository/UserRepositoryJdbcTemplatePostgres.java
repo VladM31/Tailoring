@@ -65,11 +65,10 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     private final SimpleJdbcInsert insertUser;
     private final RowMapper<User> rowMapper;
 
-    public UserRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc, DataSource dataSource) {
+    public UserRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
         this.rowMapper = new BeanPropertyRowMapper<>(User.class);
-
-        this.insertUser = new SimpleJdbcInsert(dataSource)
+        this.insertUser = new SimpleJdbcInsert(jdbc.getDataSource())
                 .withTableName("\"user\"")
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("phone_number", "password", "city", "country", "email", "firstname",

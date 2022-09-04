@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 public class RepositoryConfig {
 
     @Bean
-    public UserRepository JdbcTemplateUserRepository (JdbcTemplate jdbc,DataSource dataSource){
-        return new UserRepositoryJdbcTemplatePostgres(jdbc,dataSource);
+    public UserRepository JdbcTemplateUserRepository(JdbcTemplate jdbc, DataSource dataSource) {
+        return new UserRepositoryJdbcTemplatePostgres(jdbc);
     }
 }

@@ -15,23 +15,23 @@ public class Page {
     private Long offset;
     private Direction direction;
 
-    public String getOrderByOrDefault(String defaultValue){
+    public String getOrderByOrDefault(String defaultValue) {
         return orderBy != null ? orderBy : defaultValue;
     }
 
-    public Long getLimitOrDefault(Long defaultValue){
+    public Long getLimitOrDefault(Long defaultValue) {
         return limit != null ? limit : defaultValue;
     }
 
-    public Long getOffsetOrDefault(Long defaultValue){
+    public Long getOffsetOrDefault(Long defaultValue) {
         return offset != null ? offset : defaultValue;
     }
 
-    public Direction getDirectionOrDefault(Direction defaultValue){
+    public Direction getDirectionOrDefault(Direction defaultValue) {
         return direction != null ? direction : defaultValue;
     }
 
-    public enum Direction{
-        DESC,ASC
+    public enum Direction {
+        DESC, ASC
     }
 }
