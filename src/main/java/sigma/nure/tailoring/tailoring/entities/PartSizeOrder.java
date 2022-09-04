@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PartSizeOrder {
-
     private Long id;
     private String name;
     private Integer width;
