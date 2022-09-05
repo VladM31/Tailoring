@@ -101,27 +101,27 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
         userStates = handler.getNullIfCollectionNullOrEmpty(userStates);
         roles = handler.getNullIfCollectionNullOrEmpty(roles);
 
-        Map<String,Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
 
-        params.put("phoneNumberContaining",phoneNumberContaining);
-        params.put("emailContaining",emailContaining);
-        params.put("cityContaining",cityContaining);
-        params.put("countryContaining",countryContaining);
-        params.put("firstnameContaining",firstnameContaining);
-        params.put("lastnameContaining",lastnameContaining);
-        params.put("afterOrEqualsDataRegistration",afterOrEqualsDataRegistration);
-        params.put("beforeOrEqualsDataRegistration",beforeOrEqualsDataRegistration);
-        params.put("activeUser",activeUser);
-        params.put("male",male);
+        params.put("phoneNumberContaining", phoneNumberContaining);
+        params.put("emailContaining", emailContaining);
+        params.put("cityContaining", cityContaining);
+        params.put("countryContaining", countryContaining);
+        params.put("firstnameContaining", firstnameContaining);
+        params.put("lastnameContaining", lastnameContaining);
+        params.put("afterOrEqualsDataRegistration", afterOrEqualsDataRegistration);
+        params.put("beforeOrEqualsDataRegistration", beforeOrEqualsDataRegistration);
+        params.put("activeUser", activeUser);
+        params.put("male", male);
 
-        params.put("idsAreNull",ids == null);
-        params.put("ids",ids);
-        params.put("userStatesAreNull",userStates == null);
-        params.put("userStates",userStates);
-        params.put("rolesAreNull",roles == null);
-        params.put("roles",roles);
+        params.put("idsAreNull", ids == null);
+        params.put("ids", ids);
+        params.put("userStatesAreNull", userStates == null);
+        params.put("userStates", userStates);
+        params.put("rolesAreNull", roles == null);
+        params.put("roles", roles);
 
-        return namedJdbc.query(sqlScriptWithPage,params,rowMapper);
+        return namedJdbc.query(sqlScriptWithPage, params, rowMapper);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
 
     @Override
     public Optional<Long> saveAndReturnUserId(User user) {
-        Map<String,Integer> idByRoleName = this.getMapFindIdByRoleName();
+        Map<String, Integer> idByRoleName = this.getMapFindIdByRoleName();
         Map<String, Object> args = new HashMap<>();
 
         args.put("phone_number", user.getPhoneNumber());
