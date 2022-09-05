@@ -1,22 +1,19 @@
 package sigma.nure.tailoring.tailoring.repository;
 
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.entities.UserState;
 import sigma.nure.tailoring.tailoring.tools.Page;
 
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
-
 
 public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
 
@@ -28,15 +25,6 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
             "r.name AS role " +
             "FROM \"user\" u " +
             "LEFT JOIN role r ON r.id = u.role_id ";
-
-    private static final String SELECT_ORDER_BY_LIMIT_OFFSET = SELECT_USER + " ORDER BY %s %s LIMIT %s OFFSET %s";
-
-    private static final String SELECT_USER_BY_ID = SELECT_USER + " WHERE u.id = ? ";
-
-    private static final String SELECT_USER_WHERE_PHONE_NUMBER_AND_ACTIVE_TRUE_AND_STATE_REGISTERED =
-            SELECT_USER + " WHERE u.phone_number = ? " +
-                    "AND u.active = true " +
-                    "AND u.user_state = ? ";
 
     private static final String SELECT_USER_WHERE_CODE_AND_NUMBER_ID_AND_DATE_OD_CREATION_AFTER = SELECT_USER +
             " RIGHT JOIN user_code c ON u.id = c.user_id " +
@@ -64,9 +52,13 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertUser;
     private final RowMapper<User> rowMapper;
+    private final NamedParameterJdbcTemplate namedJdbc;
+    private final RepositoryHandler handler;
 
-    public UserRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc) {
+    public UserRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc, RepositoryHandler handler) {
         this.jdbc = jdbc;
+        this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
+        this.handler = handler;
         this.rowMapper = new BeanPropertyRowMapper<>(User.class);
         this.insertUser = new SimpleJdbcInsert(jdbc.getDataSource())
                 .withTableName("\"user\"")
@@ -75,25 +67,61 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
                         "lastname", "date_registration", "male", "user_state", "role_id");
     }
 
-    @Override
-    public List<User> findAll(Page pageable) {
-        return jdbc.query(String.format(SELECT_ORDER_BY_LIMIT_OFFSET,
-                        pageable.getOrderByOrDefault("date_registration"),
-                        pageable.getDirectionOrDefault(Page.Direction.DESC),
-                        pageable.getLimitOrDefault(100L),
-                        pageable.getOffsetOrDefault(0L)),
-                this.rowMapper);
-    }
+    private static final String SELECT_WHERE_FIELDS_ARE = SELECT_USER +
+            "WHERE " +
+            "(:idsAreNull OR u.id IN(:ids)) AND " +
+            "(:phoneNumberContaining::varchar IS NULL OR  u.phone_number LIKE CONCAT ('%',:phoneNumberContaining::varchar, '%')) AND " +
+            "(:emailContaining::varchar IS NULL OR  u.email LIKE CONCAT ('%',:emailContaining::varchar, '%')) AND " +
+            "(:cityContaining::varchar IS NULL OR  u.city LIKE CONCAT ('%',:cityContaining::varchar, '%')) AND " +
+            "(:countryContaining::varchar IS NULL OR  u.country LIKE CONCAT ('%',:countryContaining::varchar, '%')) AND " +
+            "(:firstnameContaining::varchar IS NULL OR  u.firstname LIKE CONCAT ('%',:firstnameContaining::varchar, '%')) AND " +
+            "(:lastnameContaining::varchar IS NULL OR  u.lastname LIKE CONCAT ('%',:lastnameContaining::varchar, '%')) AND " +
+            "(:afterOrEqualsDataRegistration::timestamp IS NULL OR  u.date_registration >= :afterOrEqualsDataRegistration::timestamp) AND " +
+            "(:beforeOrEqualsDataRegistration::timestamp IS NULL OR  u.date_registration <= :beforeOrEqualsDataRegistration::timestamp)  AND " +
+            "(:activeUser::boolean IS NULL OR  u.active = :activeUser::boolean) AND " +
+            "(:male::boolean IS NULL OR  u.male = :male::boolean) AND " +
+            "(:userStatesAreNull OR u.user_state IN(:userStates::varchar)) AND " +
+            "(:rolesAreNull OR r.name IN(:roles::varchar)) ";
+
+    private static final String ORDER_BY_AND_LIMIT = " ORDER BY %s %s LIMIT %s OFFSET %s";
 
     @Override
-    public Optional<User> findById(Long id) {
-        return jdbc.queryForStream(SELECT_USER_BY_ID, this.rowMapper, id).findFirst();
-    }
+    public List<User> findAll(Iterable<Long> ids, String phoneNumberContaining, String emailContaining, String cityContaining,
+                              String countryContaining, String firstnameContaining, String lastnameContaining, LocalDateTime afterOrEqualsDataRegistration,
+                              LocalDateTime beforeOrEqualsDataRegistration, Boolean activeUser, Boolean male, Iterable<UserState> userStates,
+                              Iterable<Role> roles, Page pageable) {
 
-    @Override
-    public Optional<User> findByPhoneNumberAndActiveTrueAndUserStateRegistered(String number) {
-        return jdbc.queryForStream(SELECT_USER_WHERE_PHONE_NUMBER_AND_ACTIVE_TRUE_AND_STATE_REGISTERED,
-                this.rowMapper, number, UserState.REGISTERED).findFirst();
+        final String sqlScriptWithPage = SELECT_WHERE_FIELDS_ARE + String.format(ORDER_BY_AND_LIMIT,
+                pageable.getOrderByOrDefault("date_registration"),
+                pageable.getDirectionOrDefault(Page.Direction.DESC),
+                pageable.getLimitOrDefault(100L),
+                pageable.getOffsetOrDefault(0L));
+
+        ids = handler.getNullIfCollectionNullOrEmpty(ids);
+        userStates = handler.getNullIfCollectionNullOrEmpty(userStates);
+        roles = handler.getNullIfCollectionNullOrEmpty(roles);
+
+        Map<String,Object> params = new HashMap<>();
+
+        params.put("phoneNumberContaining",phoneNumberContaining);
+        params.put("emailContaining",emailContaining);
+        params.put("cityContaining",cityContaining);
+        params.put("countryContaining",countryContaining);
+        params.put("firstnameContaining",firstnameContaining);
+        params.put("lastnameContaining",lastnameContaining);
+        params.put("afterOrEqualsDataRegistration",afterOrEqualsDataRegistration);
+        params.put("beforeOrEqualsDataRegistration",beforeOrEqualsDataRegistration);
+        params.put("activeUser",activeUser);
+        params.put("male",male);
+
+        params.put("idsAreNull",ids == null);
+        params.put("ids",ids);
+        params.put("userStatesAreNull",userStates == null);
+        params.put("userStates",userStates);
+        params.put("rolesAreNull",roles == null);
+        params.put("roles",roles);
+
+        return namedJdbc.query(sqlScriptWithPage,params,rowMapper);
     }
 
     @Override
@@ -162,5 +190,4 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     public boolean updateUserStateById(UserState userState, Long userId) {
         return jdbc.update(UPDATE_USER_STATE_BY_ID, userState.name(), userId) != 0;
     }
-
 }

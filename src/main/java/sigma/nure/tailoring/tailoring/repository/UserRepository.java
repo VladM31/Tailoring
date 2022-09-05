@@ -2,6 +2,7 @@ package sigma.nure.tailoring.tailoring.repository;
 
 
 import org.springframework.lang.NonNull;
+import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.entities.UserState;
 import sigma.nure.tailoring.tailoring.tools.Page;
@@ -11,21 +12,30 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-   List<User> findAll(@NonNull Page pageable);
+    List<User> findAll(Iterable<Long> ids,
+                       String phoneNumberContaining,
+                       String emailContaining,
+                       String cityContaining,
+                       String countryContaining,
+                       String firstnameContaining,
+                       String lastnameContaining,
+                       LocalDateTime afterOrEqualsDataRegistration,
+                       LocalDateTime beforeOrEqualsDataRegistration,
+                       Boolean activeUser,
+                       Boolean male,
+                       Iterable<UserState> userStates,
+                       Iterable<Role> roles,
+                       Page pageable);
 
-   Optional<User> findById(@NonNull Long id);
+    Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationAfter(String code, String number, LocalDateTime dateOfCreation);
 
-   Optional<User> findByPhoneNumberAndActiveTrueAndUserStateRegistered(String number);
+    Optional<Long> saveAndReturnUserId(@NonNull User user);
 
-   Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationAfter(String code, String number, LocalDateTime dateOfCreation);
+    boolean isBooked(String email, String phoneNumber, LocalDateTime dataAfter);
 
-   Optional<Long> saveAndReturnUserId(@NonNull User user);
+    boolean update(@NonNull User user);
 
-   boolean isBooked(String email, String phoneNumber, LocalDateTime dataAfter);
+    boolean updateActiveById(boolean active, Long userId);
 
-   boolean update(@NonNull User user);
-
-   boolean updateActiveById(boolean active, Long userId);
-
-   boolean updateUserStateById(UserState userState, Long userId);
+    boolean updateUserStateById(UserState userState, Long userId);
 }
