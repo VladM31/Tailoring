@@ -11,7 +11,7 @@ import sigma.nure.tailoring.tailoring.repository.UserRepositoryJdbcTemplatePostg
 public class RepositoryConfig {
 
     @Bean
-    public UserRepository JdbcTemplateUserRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
+    public UserRepository jdbcTemplateUserRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
         return new UserRepositoryJdbcTemplatePostgres(jdbc, handler);
     }
 }
