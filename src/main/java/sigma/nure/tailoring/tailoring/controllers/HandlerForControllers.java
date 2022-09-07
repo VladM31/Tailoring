@@ -8,7 +8,7 @@ import sigma.nure.tailoring.tailoring.entities.User;
 @Component
 public class HandlerForControllers {
 
-    public void setUserDataOnTopLabel(Model model, @Nullable User user){
-        model.addAttribute("isAuthorized",user != null);
+    public void setUserDataOnTopLabel(Model model, @Nullable User user) {
+        model.addAttribute("isAuthorized", user != null);
     }
 }
