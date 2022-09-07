@@ -42,12 +42,10 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     private static final String UPDATE_A_LOT_OF_USER_FIELDS_BY_ID = "UPDATE \"user\" " +
             "SET phone_number = ?, password = ?, " +
             "city = ?, country = ?, email = ?, " +
-            "firstname = ?, lastname = ?, male = ? " +
+            "firstname = ?, lastname = ?, male = ?, user_state = ? " +
             "WHERE id = ? ";
 
     private static final String UPDATE_ACTIVE_USER_BY_ID = "UPDATE \"user\" SET active = ?  WHERE id = ? ";
-
-    private static final String UPDATE_USER_STATE_BY_ID = "UPDATE \"user\" SET user_state = ?  WHERE id = ? ";
 
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertUser;
@@ -178,7 +176,7 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     public boolean update(User user) {
         return jdbc.update(UPDATE_A_LOT_OF_USER_FIELDS_BY_ID, user.getPhoneNumber(), user.getPassword(),
                 user.getCity(), user.getCountry(), user.getEmail(), user.getFirstname(),
-                user.getLastname(), user.isMale(), user.getId()) != 0;
+                user.getLastname(), user.isMale(), user.getUserState().name(), user.getId()) != 0;
     }
 
     @Override
@@ -186,8 +184,4 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
         return jdbc.update(UPDATE_ACTIVE_USER_BY_ID, active, userId) != 0;
     }
 
-    @Override
-    public boolean updateUserStateById(UserState userState, Long userId) {
-        return jdbc.update(UPDATE_USER_STATE_BY_ID, userState.name(), userId) != 0;
-    }
 }

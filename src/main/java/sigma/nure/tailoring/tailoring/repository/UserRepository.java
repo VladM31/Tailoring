@@ -36,6 +36,4 @@ public interface UserRepository {
     boolean update(@NonNull User user);
 
     boolean updateActiveById(boolean active, Long userId);
-
-    boolean updateUserStateById(UserState userState, Long userId);
 }
