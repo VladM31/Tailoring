@@ -47,24 +47,6 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
 
     private static final String UPDATE_ACTIVE_USER_BY_ID = "UPDATE \"user\" SET active = ?  WHERE id = ? ";
 
-    private final JdbcTemplate jdbc;
-    private final SimpleJdbcInsert insertUser;
-    private final RowMapper<User> rowMapper;
-    private final NamedParameterJdbcTemplate namedJdbc;
-    private final RepositoryHandler handler;
-
-    public UserRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc, RepositoryHandler handler) {
-        this.jdbc = jdbc;
-        this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
-        this.handler = handler;
-        this.rowMapper = new BeanPropertyRowMapper<>(User.class);
-        this.insertUser = new SimpleJdbcInsert(jdbc.getDataSource())
-                .withTableName("\"user\"")
-                .usingGeneratedKeyColumns("id")
-                .usingColumns("phone_number", "password", "city", "country", "email", "firstname",
-                        "lastname", "date_registration", "male", "user_state", "role_id");
-    }
-
     private static final String SELECT_WHERE_FIELDS_ARE = SELECT_USER +
             "WHERE " +
             "(:idsAreNull OR u.id IN(:ids)) AND " +
@@ -82,6 +64,24 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
             "(:rolesAreNull OR r.name IN(:roles::varchar)) ";
 
     private static final String ORDER_BY_AND_LIMIT = " ORDER BY %s %s LIMIT %s OFFSET %s";
+
+    private final JdbcTemplate jdbc;
+    private final SimpleJdbcInsert insertUser;
+    private final RowMapper<User> rowMapper;
+    private final NamedParameterJdbcTemplate namedJdbc;
+    private final RepositoryHandler handler;
+
+    public UserRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc, RepositoryHandler handler) {
+        this.jdbc = jdbc;
+        this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
+        this.handler = handler;
+        this.rowMapper = new BeanPropertyRowMapper<>(User.class);
+        this.insertUser = new SimpleJdbcInsert(jdbc.getDataSource())
+                .withTableName("\"user\"")
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("phone_number", "password", "city", "country", "email", "firstname",
+                        "lastname", "date_registration", "male", "user_state", "role_id");
+    }
 
     @Override
     public List<User> findAll(Iterable<Long> ids, String phoneNumberContaining, String emailContaining, String cityContaining,
