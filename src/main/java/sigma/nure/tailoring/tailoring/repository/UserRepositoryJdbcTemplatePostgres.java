@@ -11,6 +11,7 @@ import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.entities.UserState;
 import sigma.nure.tailoring.tailoring.tools.Page;
 
+import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -115,9 +116,9 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
         params.put("idsAreNull", ids == null);
         params.put("ids", ids);
         params.put("userStatesAreNull", userStates == null);
-        params.put("userStates", userStates);
+        params.put("userStates", handler.getStringIterableFromEnumIterable(userStates));
         params.put("rolesAreNull", roles == null);
-        params.put("roles", roles);
+        params.put("roles", handler.getStringIterableFromEnumIterable(roles));
 
         return namedJdbc.query(sqlScriptWithPage, params, rowMapper);
     }
@@ -183,5 +184,6 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     public boolean updateActiveById(boolean active, Long userId) {
         return jdbc.update(UPDATE_ACTIVE_USER_BY_ID, active, userId) != 0;
     }
+
 
 }
