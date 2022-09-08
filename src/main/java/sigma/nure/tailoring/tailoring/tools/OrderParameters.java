@@ -30,6 +30,6 @@ public class OrderParameters {
     private LocalDateTime beforeDateOfCreation,afterDareOfCreation;
     private Boolean userIsMale;
     private Boolean isFromTemplate;
-    private Integer startCost,endCost;
-    private Integer startCount,endCount;
+    private Integer greatOrEqualsCost,lessOrEqualsCost;
+    private Integer greatOrEqualsCount,lessOrEqualsCount;
 }
