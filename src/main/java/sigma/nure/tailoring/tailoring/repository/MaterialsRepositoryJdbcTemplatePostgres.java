@@ -17,15 +17,11 @@ public class MaterialsRepositoryJdbcTemplatePostgres implements MaterialsReposit
 
     private static final String SELECT_ALL_MATERIALS = "SELECT id, name, cost_one_square_meter AS cost FROM material";
 
-    private static final String SELECT_MATERIALS_BY_ID_IN = SELECT_ALL_MATERIALS + " WHERE id IN(:ids) ";
-
     private static final String UPDATE_MATERIAL_BY_ID = "UPDATE material SET name = ?, cost_one_square_meter = ? WHERE id = ?";
 
     private static final String INSERT_MATERIAL = "INSERT INTO material(name,cost_one_square_meter) VALUES(?,?)";
 
     private static final String SELECT_ALL_COLORS = "SELECT id, name, color_code AS code FROM color";
-
-    private static final String SELECT_COLORS_BY_ID_IN = SELECT_ALL_COLORS + " WHERE id IN(:ids) ";
 
     private static final String UPDATE_COLORS_BY_ID = "UPDATE color SET name = ?, color_code = ? WHERE id = ?";
 
@@ -49,12 +45,6 @@ public class MaterialsRepositoryJdbcTemplatePostgres implements MaterialsReposit
     }
 
     @Override
-    public List<Material> findMaterialsByIdIn(Integer... ids) {
-        Map<String, List<Integer>> paramMap = Collections.singletonMap("ids", List.of(ids));
-        return namedJdbc.query(SELECT_MATERIALS_BY_ID_IN, paramMap, materialRowMapper);
-    }
-
-    @Override
     public boolean updateMaterial(Material material) {
         return jdbc.update(UPDATE_MATERIAL_BY_ID, material.getName(), material.getCost(), material.getId()) != 0;
     }
@@ -67,12 +57,6 @@ public class MaterialsRepositoryJdbcTemplatePostgres implements MaterialsReposit
     @Override
     public List<Color> findAllColors() {
         return jdbc.query(SELECT_ALL_COLORS, this.colorRowMapper);
-    }
-
-    @Override
-    public List<Color> findColorsByIdIn(Integer... ids) {
-        Map<String, List<Integer>> paramMap = Collections.singletonMap("ids", List.of(ids));
-        return namedJdbc.query(SELECT_COLORS_BY_ID_IN, paramMap, colorRowMapper);
     }
 
     @Override
