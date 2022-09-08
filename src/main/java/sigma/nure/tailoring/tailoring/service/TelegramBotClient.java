@@ -3,7 +3,7 @@ package sigma.nure.tailoring.tailoring.service;
 
 import sigma.nure.tailoring.tailoring.entities.MessageForUser;
 
-public interface TelegramBotService {
+public interface TelegramBotClient {
 
     boolean hasPhoneNumber(String phoneNumber);
 
