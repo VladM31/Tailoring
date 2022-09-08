@@ -41,7 +41,8 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     private static final String UPDATE_A_LOT_OF_USER_FIELDS_BY_ID = "UPDATE \"user\" " +
             "SET phone_number = ?, password = ?, " +
             "city = ?, country = ?, email = ?, " +
-            "firstname = ?, lastname = ?, male = ?, user_state = ? " +
+            "firstname = ?, lastname = ?, male = ?, user_state = ?, " +
+            "password = ?, role_id = ?, active = ? " +
             "WHERE id = ? ";
 
     private static final String UPDATE_ACTIVE_USER_BY_ID = "UPDATE \"user\" SET active = ?  WHERE id = ? ";
@@ -118,7 +119,7 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationAfter(String code, String number, LocalDateTime dateOfCreation) {
+    public Optional<User> findByWorkCodeAndPhoneNumber(String code, String number, LocalDateTime dateOfCreation) {
         return jdbc.queryForStream(SELECT_USER_WHERE_CODE_AND_NUMBER_ID_AND_DATE_OD_CREATION_AFTER,
                 this.rowMapper, code, number, dateOfCreation).findFirst();
     }
@@ -168,15 +169,11 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
 
     @Override
     public boolean update(User user) {
+        Map<String, Integer> idByRoleName = this.getMapFindIdByRoleName();
         return jdbc.update(UPDATE_A_LOT_OF_USER_FIELDS_BY_ID, user.getPhoneNumber(), user.getPassword(),
                 user.getCity(), user.getCountry(), user.getEmail(), user.getFirstname(),
-                user.getLastname(), user.isMale(), user.getUserState().name(), user.getId()) != 0;
+                user.getLastname(), user.isMale(), user.getUserState().name(), user.getId(),
+                user.getPassword(), idByRoleName.get(user.getRole().name()), user.isActive()) != 0;
     }
-
-    @Override
-    public boolean updateActiveById(boolean active, Long userId) {
-        return jdbc.update(UPDATE_ACTIVE_USER_BY_ID, active, userId) != 0;
-    }
-
 
 }

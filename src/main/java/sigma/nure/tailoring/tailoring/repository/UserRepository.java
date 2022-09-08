@@ -13,13 +13,11 @@ import java.util.Optional;
 public interface UserRepository {
     List<User> findBy(UserSearchCriteria userParameters, Page pageable);
 
-    Optional<User> findByUserCodeAndPhoneNumberAndActiveTrueAndDateOfCreationAfter(String code, String number, LocalDateTime dateOfCreation);
+    Optional<User> findByWorkCodeAndPhoneNumber(String code, String number, LocalDateTime dateOfCreation);
 
     Optional<Long> saveAndReturnUserId(@NonNull User user);
 
     boolean isBooked(String email, String phoneNumber, LocalDateTime dataAfter);
 
     boolean update(@NonNull User user);
-
-    boolean updateActiveById(boolean active, Long userId);
 }
