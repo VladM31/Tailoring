@@ -10,6 +10,7 @@ import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.entities.UserState;
 import sigma.nure.tailoring.tailoring.tools.Page;
+import sigma.nure.tailoring.tailoring.tools.UserParameters;
 
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
@@ -85,10 +86,7 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     }
 
     @Override
-    public List<User> findAll(Iterable<Long> ids, String phoneNumberContaining, String emailContaining, String cityContaining,
-                              String countryContaining, String firstnameContaining, String lastnameContaining, LocalDateTime afterOrEqualsDataRegistration,
-                              LocalDateTime beforeOrEqualsDataRegistration, Boolean activeUser, Boolean male, Iterable<UserState> userStates,
-                              Iterable<Role> roles, Page pageable) {
+    public List<User> findBy(UserParameters param, Page pageable) {
 
         final String sqlScriptWithPage = SELECT_WHERE_FIELDS_ARE + String.format(ORDER_BY_AND_LIMIT,
                 pageable.getOrderByOrDefault("date_registration"),
@@ -96,31 +94,31 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
                 pageable.getLimitOrDefault(100L),
                 pageable.getOffsetOrDefault(0L));
 
-        ids = handler.getNullIfCollectionNullOrEmpty(ids);
-        userStates = handler.getNullIfCollectionNullOrEmpty(userStates);
-        roles = handler.getNullIfCollectionNullOrEmpty(roles);
+        param.setIds(handler.getNullIfCollectionNullOrEmpty(param.getIds()));
+        param.setUserStates(handler.getNullIfCollectionNullOrEmpty(param.getUserStates()));
+        param.setRoles(handler.getNullIfCollectionNullOrEmpty(param.getRoles()));
 
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> args = new HashMap<>();
 
-        params.put("phoneNumberContaining", phoneNumberContaining);
-        params.put("emailContaining", emailContaining);
-        params.put("cityContaining", cityContaining);
-        params.put("countryContaining", countryContaining);
-        params.put("firstnameContaining", firstnameContaining);
-        params.put("lastnameContaining", lastnameContaining);
-        params.put("afterOrEqualsDataRegistration", afterOrEqualsDataRegistration);
-        params.put("beforeOrEqualsDataRegistration", beforeOrEqualsDataRegistration);
-        params.put("activeUser", activeUser);
-        params.put("male", male);
+        args.put("phoneNumberContaining", param.getPhoneNumberContaining());
+        args.put("emailContaining", param.getEmailContaining());
+        args.put("cityContaining", param.getCityContaining());
+        args.put("countryContaining", param.getCountryContaining());
+        args.put("firstnameContaining", param.getFirstnameContaining());
+        args.put("lastnameContaining", param.getLastnameContaining());
+        args.put("afterOrEqualsDataRegistration", param.getAfterOrEqualsDataRegistration());
+        args.put("beforeOrEqualsDataRegistration", param.getBeforeOrEqualsDataRegistration());
+        args.put("activeUser", param.getActiveUser());
+        args.put("male", param.getMale());
 
-        params.put("idsAreNull", ids == null);
-        params.put("ids", ids);
-        params.put("userStatesAreNull", userStates == null);
-        params.put("userStates", handler.getStringIterableFromEnumIterable(userStates));
-        params.put("rolesAreNull", roles == null);
-        params.put("roles", handler.getStringIterableFromEnumIterable(roles));
+        args.put("idsAreNull", param.getIds() == null);
+        args.put("ids", param.getIds());
+        args.put("userStatesAreNull", param.getUserStates() == null);
+        args.put("userStates", handler.getStringIterableFromEnumIterable(param.getUserStates()));
+        args.put("rolesAreNull", param.getRoles() == null);
+        args.put("roles", handler.getStringIterableFromEnumIterable(param.getRoles()));
 
-        return namedJdbc.query(sqlScriptWithPage, params, rowMapper);
+        return namedJdbc.query(sqlScriptWithPage, args, rowMapper);
     }
 
     @Override
