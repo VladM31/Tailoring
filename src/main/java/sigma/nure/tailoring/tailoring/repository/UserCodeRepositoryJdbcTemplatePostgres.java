@@ -21,12 +21,12 @@ public class UserCodeRepositoryJdbcTemplatePostgres implements UserCodeRepositor
     }
 
     @Override
-    public boolean updateCodeToInactiveByUserIdAndCodValue(Long userId, String codeValue) {
+    public boolean updateCode(Long userId, String codeValue) {
         return jdbc.update(UPDATE_INACTIVE_BY_USER_ID_AND_CODE_VALUE, userId, codeValue) != 0;
     }
 
     @Override
-    public boolean save(Long userId, String codeValue) {
+    public boolean insertCode(Long userId, String codeValue) {
         return jdbc.update(INSERT_USER_CODE, userId, codeValue, LocalDateTime.now()) != 0;
     }
 }
