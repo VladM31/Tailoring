@@ -4,29 +4,58 @@ import com.google.gson.Gson;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 import sigma.nure.tailoring.tailoring.entities.*;
 import sigma.nure.tailoring.tailoring.tools.OrderParameters;
 import sigma.nure.tailoring.tailoring.tools.Page;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository{
+@Repository
+public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
 
     private static final String SELECT_ORDER =
             "SELECT o.id AS orderId, o.address_for_send AS addressForSend,\n" +
-            "       o.order_description AS orderDescription, o.order_status AS status, o.order_payment_status AS paymentStatus,\n" +
-            "       o.date_of_creation AS dateOfCreation, o.is_from_template AS fromTemplate, o.end_date AS endDate,\n" +
-            "       o.cost, o.count_of_order AS countOfOrder, o.user_id AS userId, u.phone_number AS phoneNumber,\n" +
-            "       u.city, u.country, u.firstname, u.male,\n" +
-            "       m.id AS materialId , m.name AS materialName, m.cost_one_square_meter AS materialCost,\n" +
-            "       c.id AS colorId, c.name AS colorName, c.color_code AS code,\n" +
-            "       o.images AS imagesJson, o.part_sizes AS partSizesJson\n" +
-            "FROM tailoring_order o\n" +
-            "         LEFT JOIN \"user\" u on u.id = o.user_id\n" +
-            "         INNER JOIN color c on c.id = o.color_id\n" +
-            "         INNER JOIN material m on m.id = o.material_id;";
+                    "       o.order_description AS orderDescription, o.order_status AS status, o.order_payment_status AS paymentStatus,\n" +
+                    "       o.date_of_creation AS dateOfCreation, o.is_from_template AS fromTemplate, o.end_date AS endDate,\n" +
+                    "       o.cost, o.count_of_order AS countOfOrder, o.user_id AS userId, u.phone_number AS phoneNumber,\n" +
+                    "       u.city, u.country, u.firstname, u.male,\n" +
+                    "       m.id AS materialId , m.name AS materialName, m.cost_one_square_meter AS materialCost,\n" +
+                    "       c.id AS colorId, c.name AS colorName, c.color_code AS code,\n" +
+                    "       o.images AS imagesJson, o.part_sizes AS partSizesJson\n" +
+                    "FROM tailoring_order o\n" +
+                    "         LEFT JOIN \"user\" u on u.id = o.user_id\n" +
+                    "         INNER JOIN color c on c.id = o.color_id\n" +
+                    "         INNER JOIN material m on m.id = o.material_id\n" +
+                    "WHERE \n" +
+                    "(:idsAreNull OR o.id IN(:ids::bigint)) AND \n" +
+                    "(:materialIdsAreNull OR o.material_id IN(:materialIds::int)) AND \n" +
+                    "(:colorIdsAreNull OR o.color_id IN(:colorIds::int)) AND \n" +
+                    "(:userIdsAreNull OR o.user_id IN(:userIds::bigint)) AND \n" +
+                    "(:orderStatusesAreNull OR o.order_status IN(:orderStatuses)) AND \n" +
+                    "(:paymentStatusesAreNull OR o.order_payment_status IN(:paymentStatuses)) AND \n" +
+                    "(:addressForSendContaining::varchar IS NULL OR o.address_for_send LIKE CONCAT ('%',:addressForSendContaining::varchar, '%')) AND \n" +
+                    "(:userPhoneNumberContaining::varchar IS NULL OR u.phone_number LIKE CONCAT ('%',:userPhoneNumberContaining::varchar, '%')) AND \n" +
+                    "(:userCityContaining::varchar IS NULL OR u.city LIKE CONCAT ('%',:userCityContaining::varchar, '%')) AND \n" +
+                    "(:userCountryContaining::varchar IS NULL OR u.country LIKE CONCAT ('%',:userCountryContaining::varchar, '%')) AND \n" +
+                    "(:userFirstnameContaining::varchar IS NULL OR u.firstname LIKE CONCAT ('%',:userFirstnameContaining::varchar, '%')) AND \n" +
+                    "(:beforeOrEqualsEndDate::date IS NULL OR o.end_date <= :beforeOrEqualsEndDate::date) AND \n" +
+                    "(:afterOrEqualsEndDate::date IS NULL OR o.end_date >= :afterOrEqualsEndDate::date) AND \n" +
+                    "(:beforeOrEqualsDateOfCreation::timestamp IS NULL OR o.date_of_creation <= :beforeOrEqualsDateOfCreation::timestamp) AND \n" +
+                    "(:afterOrEqualsDareOfCreation::timestamp IS NULL OR o.date_of_creation >= :afterOrEqualsDareOfCreation::timestamp) AND \n" +
+                    "(:userIsMale::boolean IS NULL OR u.male = :userIsMale::boolean) AND \n" +
+                    "(:isFromTemplate::boolean IS NULL OR o.is_from_template = :isFromTemplate::boolean) AND \n" +
+                    "(:greatOrEqualsCost::int IS NULL OR o.cost >= :greatOrEqualsCost::int) AND \n" +
+                    "(:lessOrEqualsCost::int IS NULL OR o.cost <= :lessOrEqualsCost::int) AND \n" +
+                    "(:greatOrEqualsCount::int IS NULL OR o.count_of_order >= :greatOrEqualsCount::int) AND \n" +
+                    "(:lessOrEqualsCount::int IS NULL OR o.count_of_order <= :lessOrEqualsCount::int) \n";
 
     private final JdbcTemplate jdbc;
     private final NamedParameterJdbcTemplate namedJdbc;
@@ -34,7 +63,7 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository{
     private final RepositoryHandler handler;
     private final Gson jsonConvector;
 
-    public OrderRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc,RepositoryHandler handler) {
+    public OrderRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc, RepositoryHandler handler) {
         this.jdbc = jdbc;
         this.handler = handler;
         this.jsonConvector = new Gson();
@@ -42,14 +71,14 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository{
         this.rowMapper = getRowMapper();
     }
 
-    private RowMapper<TailoringOrder> getRowMapper(){
+    private RowMapper<TailoringOrder> getRowMapper() {
         final var rowMapperForNotJson = new BeanPropertyRowMapper<>(TailoringOrder.class);
         final var rowMapperShortUserData = new BeanPropertyRowMapper<>(ShortUserData.class);
-        return  (r,i) -> {
-            TailoringOrder order = rowMapperForNotJson.mapRow(r,i);
+        return (r, i) -> {
+            TailoringOrder order = rowMapperForNotJson.mapRow(r, i);
             order.setId(r.getLong("orderId"));
 
-            order.setUserData(rowMapperShortUserData.mapRow(r,i));
+            order.setUserData(rowMapperShortUserData.mapRow(r, i));
             order.getUserData().setId(r.getLong("userId"));
 
             Color color = new Color();
@@ -64,19 +93,56 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository{
             material.setCost(r.getInt("materialCost"));
             order.setMaterial(material);
 
-            order.setImages(jsonConvector.fromJson(r.getString("imagesJson"),List.class));
-            order.setPartSizes(jsonConvector.fromJson(r.getString("partSizesJson"),List.class));
+            order.setImages(jsonConvector.fromJson(r.getString("imagesJson"), List.class));
+            order.setPartSizes(jsonConvector.fromJson(r.getString("partSizesJson"), List.class));
 
             return order;
         };
-
 
     }
 
 
     @Override
     public List<TailoringOrder> findBy(OrderParameters parameters, Page page) {
-        return jdbc.query(SELECT_ORDER,rowMapper);
+
+        String scriptSelect = SELECT_ORDER + handler.getScriptFromPage(page, "o.date_of_creation", Page.Direction.DESC, 100L, 0L);
+
+        checkCollectionParameters(parameters);
+
+        Map<String, Object> paramForFiltering = new HashMap<>();
+
+        paramForFiltering.put("idsAreNull", parameters.getIds() == null);
+        paramForFiltering.put("ids", parameters.getIds());
+        paramForFiltering.put("materialIdsAreNull", parameters.getMaterialIds() == null);
+        paramForFiltering.put("materialIds", parameters.getMaterialIds());
+        paramForFiltering.put("colorIdsAreNull", parameters.getColorIds() == null);
+        paramForFiltering.put("colorIds", parameters.getColorIds());
+        paramForFiltering.put("userIdsAreNull", parameters.getUserIds() == null);
+        paramForFiltering.put("userIds", parameters.getUserIds());
+        paramForFiltering.put("orderStatusesAreNull", parameters.getOrderStatuses() == null);
+        paramForFiltering.put("orderStatuses", handler.getStringIterableFromEnumIterable(parameters.getOrderStatuses()));
+        paramForFiltering.put("paymentStatusesAreNull", parameters.getPaymentStatuses() == null);
+        paramForFiltering.put("paymentStatuses", handler.getStringIterableFromEnumIterable(parameters.getPaymentStatuses()));
+
+        paramForFiltering.put("addressForSendContaining", parameters.getAddressForSendContaining());
+        paramForFiltering.put("userPhoneNumberContaining", parameters.getUserPhoneNumberContaining());
+        paramForFiltering.put("userCityContaining", parameters.getUserCityContaining());
+        paramForFiltering.put("userCountryContaining", parameters.getUserCountryContaining());
+        paramForFiltering.put("userFirstnameContaining", parameters.getUserFirstnameContaining());
+
+        paramForFiltering.put("beforeOrEqualsEndDate", parameters.getBeforeOrEqualsEndDate());
+        paramForFiltering.put("afterOrEqualsEndDate", parameters.getAfterOrEqualsEndDate());
+        paramForFiltering.put("beforeOrEqualsDateOfCreation", parameters.getBeforeOrEqualsDateOfCreation());
+        paramForFiltering.put("afterOrEqualsDareOfCreation", parameters.getAfterOrEqualsDareOfCreation());
+
+        paramForFiltering.put("userIsMale", parameters.getUserIsMale());
+        paramForFiltering.put("isFromTemplate", parameters.getIsFromTemplate());
+        paramForFiltering.put("greatOrEqualsCost", parameters.getGreatOrEqualsCost());
+        paramForFiltering.put("lessOrEqualsCost", parameters.getLessOrEqualsCost());
+        paramForFiltering.put("greatOrEqualsCount", parameters.getGreatOrEqualsCount());
+        paramForFiltering.put("lessOrEqualsCount", parameters.getLessOrEqualsCount());
+
+        return namedJdbc.query(scriptSelect, paramForFiltering, rowMapper);
     }
 
     @Override
@@ -94,4 +160,12 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository{
         return null;
     }
 
+    private void checkCollectionParameters(OrderParameters params) {
+        params.setIds(handler.getNullIfCollectionNullOrEmpty(params.getIds()));
+        params.setMaterialIds(handler.getNullIfCollectionNullOrEmpty(params.getMaterialIds()));
+        params.setColorIds(handler.getNullIfCollectionNullOrEmpty(params.getColorIds()));
+        params.setUserIds(handler.getNullIfCollectionNullOrEmpty(params.getUserIds()));
+        params.setOrderStatuses(handler.getNullIfCollectionNullOrEmpty(params.getOrderStatuses()));
+        params.setPaymentStatuses(handler.getNullIfCollectionNullOrEmpty(params.getPaymentStatuses()));
+    }
 }

@@ -26,8 +26,8 @@ public class OrderParameters {
     private String userCityContaining;
     private String userCountryContaining;
     private String userFirstnameContaining;
-    private LocalDate beforeEndDate,afterEndDate;
-    private LocalDateTime beforeDateOfCreation,afterDareOfCreation;
+    private LocalDate beforeOrEqualsEndDate,afterOrEqualsEndDate;
+    private LocalDateTime beforeOrEqualsDateOfCreation,afterOrEqualsDareOfCreation;
     private Boolean userIsMale;
     private Boolean isFromTemplate;
     private Integer greatOrEqualsCost,lessOrEqualsCost;
