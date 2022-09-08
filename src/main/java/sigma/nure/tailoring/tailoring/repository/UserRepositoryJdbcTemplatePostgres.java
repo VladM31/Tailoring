@@ -3,16 +3,13 @@ package sigma.nure.tailoring.tailoring.repository;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.entities.UserState;
 import sigma.nure.tailoring.tailoring.tools.Page;
-import sigma.nure.tailoring.tailoring.tools.UserParameters;
+import sigma.nure.tailoring.tailoring.tools.UserSearchCriteria;
 
-import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -86,8 +83,7 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     }
 
     @Override
-    public List<User> findBy(UserParameters param, Page pageable) {
-
+    public List<User> findBy(UserSearchCriteria param, Page pageable) {
         final String sqlScriptWithPage = SELECT_WHERE_FIELDS_ARE + String.format(ORDER_BY_AND_LIMIT,
                 pageable.getOrderByOrDefault("date_registration"),
                 pageable.getDirectionOrDefault(Page.Direction.DESC),
@@ -164,7 +160,6 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
 
     @Override
     public boolean isBooked(String email, String phoneNumber, LocalDateTime dataBefore) {
-
         List<Long> ids = jdbc.query(SELECT_ID_WHERE_EMAIL_IS_OR_PHONE_NUMBER_IS, (r, i) -> r.getLong("id"),
                 email, phoneNumber, UserState.REGISTERED.name(), UserState.REGISTRATION.name(), Timestamp.valueOf(dataBefore));
 

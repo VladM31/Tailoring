@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserParameters {
+public class UserSearchCriteria {
     private Iterable<Long> ids;
     private String phoneNumberContaining;
     private String emailContaining;
