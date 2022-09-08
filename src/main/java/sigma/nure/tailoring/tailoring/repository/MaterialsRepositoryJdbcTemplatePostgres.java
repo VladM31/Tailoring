@@ -30,11 +30,9 @@ public class MaterialsRepositoryJdbcTemplatePostgres implements MaterialsReposit
     private final JdbcTemplate jdbc;
     private final RowMapper<Material> materialRowMapper;
     private final RowMapper<Color> colorRowMapper;
-    private final NamedParameterJdbcTemplate namedJdbc;
 
     public MaterialsRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
-        this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
         this.materialRowMapper = new BeanPropertyRowMapper<>(Material.class);
         this.colorRowMapper = new BeanPropertyRowMapper<>(Color.class);
     }
