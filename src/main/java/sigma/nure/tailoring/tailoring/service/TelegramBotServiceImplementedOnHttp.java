@@ -24,9 +24,9 @@ public class TelegramBotServiceImplementedOnHttp implements TelegramBotService {
     private final String urlSendMessage;
     private final Gson jsonConverter;
 
-    public TelegramBotServiceImplementedOnHttp(@Value("${telegram.bot.connector.token}") String token,
-                                               @Value("${telegram.bot.url.has.phone.number}") String urlHasNumber,
-                                               @Value("${telegram.bot.url.has.send.message}") String urlSendMessage) {
+    public TelegramBotServiceImplementedOnHttp(String token,
+                                               String urlHasNumber,
+                                               String urlSendMessage) {
         this.token = token;
         this.urlSendMessage = urlSendMessage;
         this.urlHasNumber = urlHasNumber + "?token=" + token + "&phoneNumber=";
@@ -36,7 +36,6 @@ public class TelegramBotServiceImplementedOnHttp implements TelegramBotService {
 
     @Override
     public boolean hasPhoneNumber(String phoneNumber) {
-
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(urlHasNumber + phoneNumber))
                 .GET()
@@ -48,7 +47,6 @@ public class TelegramBotServiceImplementedOnHttp implements TelegramBotService {
 
     @Override
     public boolean sendMessage(MessageForUser message) {
-
         final Map<String, String> values = new HashMap<>();
         values.put("token", this.token);
         values.put("json", this.jsonConverter.toJson(message));
