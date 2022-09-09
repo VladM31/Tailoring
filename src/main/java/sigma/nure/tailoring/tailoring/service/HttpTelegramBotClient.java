@@ -20,7 +20,7 @@ public class HttpTelegramBotClient implements TelegramBotClient {
     private final String token;
     private final String tokenParamName;
     private final String phoneNumberParamName;
-    private final String jsonParamName;
+    private final String messageParamName;
     private final String urlHasNumber;
     private final String urlSendMessage;
 
@@ -29,7 +29,7 @@ public class HttpTelegramBotClient implements TelegramBotClient {
         this.token = token;
         this.tokenParamName = tokenParamName;
         this.phoneNumberParamName = phoneNumberParamName;
-        this.jsonParamName = jsonParamName;
+        this.messageParamName = jsonParamName;
         this.urlSendMessage = urlSendMessage;
         this.urlHasNumber = urlHasNumber;
         this.jsonConverter = new Gson();
@@ -52,7 +52,7 @@ public class HttpTelegramBotClient implements TelegramBotClient {
     public boolean sendMessage(MessageForUser message) {
         final Map<String, String> values = Map.of(
                 this.tokenParamName, this.token,
-                this.jsonParamName, this.jsonConverter.toJson(message)
+                this.messageParamName, this.jsonConverter.toJson(message)
         );
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
