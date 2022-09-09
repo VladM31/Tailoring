@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@Repository
 public class MaterialsRepositoryJdbcTemplatePostgres implements MaterialsRepository {
 
     private static final String SELECT_ALL_MATERIALS = "SELECT id, name, cost_one_square_meter AS cost FROM material";
