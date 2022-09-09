@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderParameters {
+public class OrderSearchCriteria {
     private Iterable<Long> ids;
     private Iterable<Long> materialIds;
     private Iterable<Long> colorIds;

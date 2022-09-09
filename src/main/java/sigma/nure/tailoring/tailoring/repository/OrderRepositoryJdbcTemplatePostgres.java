@@ -3,19 +3,14 @@ package sigma.nure.tailoring.tailoring.repository;
 import com.google.gson.Gson;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import sigma.nure.tailoring.tailoring.entities.*;
-import sigma.nure.tailoring.tailoring.tools.OrderParameters;
+import sigma.nure.tailoring.tailoring.tools.OrderSearchCriteria;
 import sigma.nure.tailoring.tailoring.tools.Page;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLType;
 import java.util.*;
 
 @Repository
@@ -90,7 +85,7 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
     }
 
     @Override
-    public List<TailoringOrder> findBy(OrderParameters parameters, Page page) {
+    public List<TailoringOrder> findBy(OrderSearchCriteria parameters, Page page) {
         String scriptSelect = SELECT_ORDER + handler.getScriptFromPage(page, "o.date_of_creation", Page.Direction.DESC, 100L, 0L);
 
         checkCollectionParameters(parameters);
@@ -211,7 +206,7 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
         };
     }
 
-    private void checkCollectionParameters(OrderParameters params) {
+    private void checkCollectionParameters(OrderSearchCriteria params) {
         params.setIds(handler.getNullIfCollectionNullOrEmpty(params.getIds()));
         params.setMaterialIds(handler.getNullIfCollectionNullOrEmpty(params.getMaterialIds()));
         params.setColorIds(handler.getNullIfCollectionNullOrEmpty(params.getColorIds()));
