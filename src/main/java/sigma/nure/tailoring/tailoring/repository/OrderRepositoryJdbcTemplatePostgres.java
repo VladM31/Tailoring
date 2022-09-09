@@ -3,20 +3,20 @@ package sigma.nure.tailoring.tailoring.repository;
 import com.google.gson.Gson;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import sigma.nure.tailoring.tailoring.entities.*;
 import sigma.nure.tailoring.tailoring.tools.OrderParameters;
 import sigma.nure.tailoring.tailoring.tools.Page;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLType;
+import java.util.*;
 
 @Repository
 public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
@@ -57,10 +57,22 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
                     "(:greatOrEqualsCount::int IS NULL OR o.count_of_order >= :greatOrEqualsCount::int) AND \n" +
                     "(:lessOrEqualsCount::int IS NULL OR o.count_of_order <= :lessOrEqualsCount::int) \n";
 
+    private static final String PIN_TO_TEMPLATE = "INSERT INTO template_orders(tailoring_order_id,tailoring_templates_id) VALUES(?,?)";
+
+    private static final String UPDATE = "UPDATE tailoring_order SET " +
+            "address_for_send = :addressForSend, order_description = :orderDescription, " +
+            "order_status = :status, order_payment_status = :paymentStatus, " +
+            "is_from_template = :isFromTemplate, end_date = :endDate, " +
+            "cost = :theCost, count_of_order = :countOfOrder, " +
+            "material_id = :materialId, color_id = :colorId, user_id = :userId, " +
+            "part_sizes = :partSizes::json, images = :theImages::json " +
+            "WHERE id = :orderId";
+
     private final JdbcTemplate jdbc;
     private final NamedParameterJdbcTemplate namedJdbc;
     private final RowMapper<TailoringOrder> rowMapper;
     private final RepositoryHandler handler;
+    private final SimpleJdbcInsert insertOrder;
     private final Gson jsonConvector;
 
     public OrderRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc, RepositoryHandler handler) {
@@ -69,42 +81,16 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
         this.jsonConvector = new Gson();
         this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
         this.rowMapper = getRowMapper();
+        this.insertOrder = new SimpleJdbcInsert(jdbc.getDataSource())
+                .withTableName("tailoring_order")
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("address_for_send", "order_description", "order_status", "order_payment_status",
+                        "date_of_creation", "is_from_template", "part_sizes", "images", "end_date", "cost",
+                        "count_of_order", "user_id", "material_id", "color_id");
     }
-
-    private RowMapper<TailoringOrder> getRowMapper() {
-        final var rowMapperForNotJson = new BeanPropertyRowMapper<>(TailoringOrder.class);
-        final var rowMapperShortUserData = new BeanPropertyRowMapper<>(ShortUserData.class);
-        return (r, i) -> {
-            TailoringOrder order = rowMapperForNotJson.mapRow(r, i);
-            order.setId(r.getLong("orderId"));
-
-            order.setUserData(rowMapperShortUserData.mapRow(r, i));
-            order.getUserData().setId(r.getLong("userId"));
-
-            Color color = new Color();
-            color.setId(r.getInt("colorId"));
-            color.setName(r.getString("colorName"));
-            color.setCode("code");
-            order.setColor(color);
-
-            Material material = new Material();
-            material.setId(r.getInt("materialId"));
-            material.setName(r.getString("materialName"));
-            material.setCost(r.getInt("materialCost"));
-            order.setMaterial(material);
-
-            order.setImages(jsonConvector.fromJson(r.getString("imagesJson"), List.class));
-            order.setPartSizes(jsonConvector.fromJson(r.getString("partSizesJson"), List.class));
-
-            return order;
-        };
-
-    }
-
 
     @Override
     public List<TailoringOrder> findBy(OrderParameters parameters, Page page) {
-
         String scriptSelect = SELECT_ORDER + handler.getScriptFromPage(page, "o.date_of_creation", Page.Direction.DESC, 100L, 0L);
 
         checkCollectionParameters(parameters);
@@ -146,18 +132,83 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
     }
 
     @Override
-    public boolean save(TailoringOrder order, Long templateId) {
-        return false;
+    public Optional<Long> saveAndReturnOrderId(TailoringOrder order) {
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("address_for_send", order.getAddressForSend());
+        args.put("order_description", order.getOrderDescription());
+        args.put("order_status", order.getStatus().name());
+        args.put("order_payment_status", order.getPaymentStatus().name());
+        args.put("date_of_creation", order.getDateOfCreation());
+        args.put("is_from_template", order.isFromTemplate());
+        args.put("part_sizes", this.jsonConvector.toJson(order.getPartSizes()));
+        args.put("images", this.jsonConvector.toJson(order.getImages()));
+        args.put("end_date", order.getEndDate());
+        args.put("cost", order.getCost());
+        args.put("count_of_order", order.getCountOfOrder());
+        args.put("user_id", order.getUserData().getId());
+        args.put("material_id", order.getMaterial().getId());
+        args.put("color_id", order.getColor().getId());
+
+        Long id = (Long) insertOrder.executeAndReturnKey(args);
+
+        return Optional.ofNullable(id);
+    }
+
+    @Override
+    public boolean pinToTemplate(Long orderId, Long templateId) {
+        return jdbc.update(PIN_TO_TEMPLATE, orderId, templateId) != 0;
     }
 
     @Override
     public boolean update(TailoringOrder order) {
-        return false;
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("addressForSend", order.getAddressForSend());
+        args.put("orderDescription", order.getOrderDescription());
+        args.put("status", order.getStatus().name());
+        args.put("paymentStatus", order.getPaymentStatus().name());
+        args.put("isFromTemplate", order.isFromTemplate());
+        args.put("endDate", order.getEndDate());
+        args.put("theCost", order.getCost());
+        args.put("countOfOrder", order.getCountOfOrder());
+        args.put("materialId", order.getMaterial().getId());
+        args.put("colorId", order.getColor().getId());
+        args.put("userId", order.getUserData().getId());
+        args.put("partSizes", this.jsonConvector.toJson(order.getPartSizes()));
+        args.put("theImages", this.jsonConvector.toJson(order.getImages()));
+        args.put("orderId", order.getId());
+
+        return this.namedJdbc.update(UPDATE, args) != 0;
     }
 
-    @Override
-    public List<ShortTailoringOrderData> findShortDataByUserId(Long userId) {
-        return null;
+    private RowMapper<TailoringOrder> getRowMapper() {
+        final var rowMapperForNotJson = new BeanPropertyRowMapper<>(TailoringOrder.class);
+        final var rowMapperShortUserData = new BeanPropertyRowMapper<>(ShortUserData.class);
+        return (r, i) -> {
+            TailoringOrder order = rowMapperForNotJson.mapRow(r, i);
+            order.setId(r.getLong("orderId"));
+
+            order.setUserData(rowMapperShortUserData.mapRow(r, i));
+            order.getUserData().setId(r.getLong("userId"));
+
+            Color color = new Color();
+            color.setId(r.getInt("colorId"));
+            color.setName(r.getString("colorName"));
+            color.setCode("code");
+            order.setColor(color);
+
+            Material material = new Material();
+            material.setId(r.getInt("materialId"));
+            material.setName(r.getString("materialName"));
+            material.setCost(r.getInt("materialCost"));
+            order.setMaterial(material);
+
+            order.setImages(new ArrayList<>(List.of(jsonConvector.fromJson(r.getString("imagesJson"), Image[].class))));
+            order.setPartSizes(new ArrayList<>(List.of(jsonConvector.fromJson(r.getString("partSizesJson"), PartSizeOrder[].class))));
+
+            return order;
+        };
     }
 
     private void checkCollectionParameters(OrderParameters params) {
