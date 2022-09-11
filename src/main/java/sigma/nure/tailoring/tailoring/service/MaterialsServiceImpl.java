@@ -8,11 +8,11 @@ import sigma.nure.tailoring.tailoring.repository.MaterialsRepository;
 import java.util.List;
 
 @Service
-public class MaterialsServiceBasedOnRepository implements MaterialsService {
+public class MaterialsServiceImpl implements MaterialsService {
 
     private final MaterialsRepository repository;
 
-    public MaterialsServiceBasedOnRepository(MaterialsRepository repository) {
+    public MaterialsServiceImpl(MaterialsRepository repository) {
         this.repository = repository;
     }
 

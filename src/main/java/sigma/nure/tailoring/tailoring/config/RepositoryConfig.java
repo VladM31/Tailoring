@@ -14,7 +14,7 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public MaterialsRepository JdbcTemplateMaterialsRepository(JdbcTemplate jdbc){
+    public MaterialsRepository jdbcTemplateMaterialsRepository(JdbcTemplate jdbc){
         return new MaterialsRepositoryJdbcTemplatePostgres(jdbc);
     }
 }
