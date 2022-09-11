@@ -21,24 +21,24 @@ public class HttpTelegramBotClient implements TelegramBotClient {
     private final String tokenParamName;
     private final String phoneNumberParamName;
     private final String messageParamName;
-    private final String urlHasNumber;
-    private final String urlSendMessage;
+    private final String telegramBotDbUrl;
+    private final String telegramBotUrl;
 
     public HttpTelegramBotClient(String token, String tokenParamName, String phoneNumberParamName,
-                                 String jsonParamName, String urlHasNumber, String urlSendMessage) {
+                                 String jsonParamName, String telegramBotDbUrl, String telegramBotUrl) {
         this.token = token;
         this.tokenParamName = tokenParamName;
         this.phoneNumberParamName = phoneNumberParamName;
         this.messageParamName = jsonParamName;
-        this.urlSendMessage = urlSendMessage;
-        this.urlHasNumber = urlHasNumber;
+        this.telegramBotUrl = telegramBotUrl;
+        this.telegramBotDbUrl = telegramBotDbUrl;
         this.jsonConverter = new Gson();
     }
 
     @Override
     public boolean hasPhoneNumber(String phoneNumber) {
         HttpRequest httpRequest = HttpRequest.newBuilder()
-                .uri(URI.create(this.urlHasNumber +
+                .uri(URI.create(this.telegramBotDbUrl +
                         "?" + this.tokenParamName + "=" + this.token +
                         "&" + this.phoneNumberParamName + "=" + phoneNumber))
                 .GET()
@@ -56,7 +56,7 @@ public class HttpTelegramBotClient implements TelegramBotClient {
         );
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
-                .uri(URI.create(this.urlSendMessage))
+                .uri(URI.create(this.telegramBotUrl))
                 .POST(ofFormData(values))
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .build();
@@ -65,7 +65,7 @@ public class HttpTelegramBotClient implements TelegramBotClient {
                 "Telegram Bot Client: response send message has error");
     }
 
-    private static boolean send(HttpRequest httpRequest, String messageError) {
+    private boolean send(HttpRequest httpRequest, String messageError) {
         HttpClient client = HttpClient.newBuilder().build();
         HttpResponse<String> response = null;
 
@@ -79,7 +79,7 @@ public class HttpTelegramBotClient implements TelegramBotClient {
         return response.body().equals("true");
     }
 
-    private static HttpRequest.BodyPublisher ofFormData(Map<String, String> data) {
+    private HttpRequest.BodyPublisher ofFormData(Map<String, String> data) {
         var builder = new StringBuilder();
         for (Map.Entry<String, String> entry : data.entrySet()) {
             if (builder.length() > 0) {
