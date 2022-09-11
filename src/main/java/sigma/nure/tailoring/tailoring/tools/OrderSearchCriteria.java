@@ -15,21 +15,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderSearchCriteria {
-    private Iterable<Long> ids;
+    private Iterable<Long> orderIds;
     private Iterable<Long> materialIds;
     private Iterable<Long> colorIds;
     private Iterable<Long> userIds;
     private Iterable<OrderStatus> orderStatuses;
     private Iterable<OrderPaymentStatus> paymentStatuses;
-    private String addressForSendContaining;
-    private String userPhoneNumberContaining;
-    private String userCityContaining;
-    private String userCountryContaining;
-    private String userFirstnameContaining;
-    private LocalDate beforeOrEqualsEndDate,afterOrEqualsEndDate;
-    private LocalDateTime beforeOrEqualsDateOfCreation,afterOrEqualsDareOfCreation;
+    private String address;
+    private String phoneNumber;
+    private String city;
+    private String country;
+    private String firstname;
+    private LocalDate beforeOrEqualsEndDate;
+    private LocalDate afterOrEqualsEndDate;
+    private LocalDateTime beforeOrEqualsDateOfCreation;
+    private LocalDateTime afterOrEqualsDareOfCreation;
     private Boolean userIsMale;
     private Boolean isFromTemplate;
-    private Integer greatOrEqualsCost,lessOrEqualsCost;
-    private Integer greatOrEqualsCount,lessOrEqualsCount;
+    private Integer greatOrEqualsCost;
+    private Integer lessOrEqualsCost;
+    private Integer greatOrEqualsCount;
+    private Integer lessOrEqualsCount;
 }

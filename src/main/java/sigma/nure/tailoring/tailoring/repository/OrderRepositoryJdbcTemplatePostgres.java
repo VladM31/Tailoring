@@ -30,17 +30,17 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
                     "         INNER JOIN color c on c.id = o.color_id\n" +
                     "         INNER JOIN material m on m.id = o.material_id\n" +
                     "WHERE \n" +
-                    "(:idsAreNull OR o.id IN(:ids::bigint)) AND \n" +
+                    "(:orderIdsAreNull OR o.id IN(:orderIds::bigint)) AND \n" +
                     "(:materialIdsAreNull OR o.material_id IN(:materialIds::int)) AND \n" +
                     "(:colorIdsAreNull OR o.color_id IN(:colorIds::int)) AND \n" +
                     "(:userIdsAreNull OR o.user_id IN(:userIds::bigint)) AND \n" +
                     "(:orderStatusesAreNull OR o.order_status IN(:orderStatuses)) AND \n" +
                     "(:paymentStatusesAreNull OR o.order_payment_status IN(:paymentStatuses)) AND \n" +
-                    "(:addressForSendContaining::varchar IS NULL OR o.address_for_send LIKE CONCAT ('%',:addressForSendContaining::varchar, '%')) AND \n" +
-                    "(:userPhoneNumberContaining::varchar IS NULL OR u.phone_number LIKE CONCAT ('%',:userPhoneNumberContaining::varchar, '%')) AND \n" +
-                    "(:userCityContaining::varchar IS NULL OR u.city LIKE CONCAT ('%',:userCityContaining::varchar, '%')) AND \n" +
-                    "(:userCountryContaining::varchar IS NULL OR u.country LIKE CONCAT ('%',:userCountryContaining::varchar, '%')) AND \n" +
-                    "(:userFirstnameContaining::varchar IS NULL OR u.firstname LIKE CONCAT ('%',:userFirstnameContaining::varchar, '%')) AND \n" +
+                    "(:address::varchar IS NULL OR o.address_for_send LIKE CONCAT ('%',:address::varchar, '%')) AND \n" +
+                    "(:phoneNumber::varchar IS NULL OR u.phone_number LIKE CONCAT ('%',:phoneNumber::varchar, '%')) AND \n" +
+                    "(:city::varchar IS NULL OR u.city LIKE CONCAT ('%',:city::varchar, '%')) AND \n" +
+                    "(:country::varchar IS NULL OR u.country LIKE CONCAT ('%',:country::varchar, '%')) AND \n" +
+                    "(:firstname::varchar IS NULL OR u.firstname LIKE CONCAT ('%',:firstname::varchar, '%')) AND \n" +
                     "(:beforeOrEqualsEndDate::date IS NULL OR o.end_date <= :beforeOrEqualsEndDate::date) AND \n" +
                     "(:afterOrEqualsEndDate::date IS NULL OR o.end_date >= :afterOrEqualsEndDate::date) AND \n" +
                     "(:beforeOrEqualsDateOfCreation::timestamp IS NULL OR o.date_of_creation <= :beforeOrEqualsDateOfCreation::timestamp) AND \n" +
@@ -92,8 +92,8 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
 
         Map<String, Object> paramForFiltering = new HashMap<>();
 
-        paramForFiltering.put("idsAreNull", parameters.getIds() == null);
-        paramForFiltering.put("ids", parameters.getIds());
+        paramForFiltering.put("orderIdsAreNull", parameters.getOrderIds() == null);
+        paramForFiltering.put("orderIds", parameters.getOrderIds());
         paramForFiltering.put("materialIdsAreNull", parameters.getMaterialIds() == null);
         paramForFiltering.put("materialIds", parameters.getMaterialIds());
         paramForFiltering.put("colorIdsAreNull", parameters.getColorIds() == null);
@@ -105,11 +105,11 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
         paramForFiltering.put("paymentStatusesAreNull", parameters.getPaymentStatuses() == null);
         paramForFiltering.put("paymentStatuses", handler.getStringIterableFromEnumIterable(parameters.getPaymentStatuses()));
 
-        paramForFiltering.put("addressForSendContaining", parameters.getAddressForSendContaining());
-        paramForFiltering.put("userPhoneNumberContaining", parameters.getUserPhoneNumberContaining());
-        paramForFiltering.put("userCityContaining", parameters.getUserCityContaining());
-        paramForFiltering.put("userCountryContaining", parameters.getUserCountryContaining());
-        paramForFiltering.put("userFirstnameContaining", parameters.getUserFirstnameContaining());
+        paramForFiltering.put("address", parameters.getAddress());
+        paramForFiltering.put("phoneNumber", parameters.getPhoneNumber());
+        paramForFiltering.put("city", parameters.getCity());
+        paramForFiltering.put("country", parameters.getCountry());
+        paramForFiltering.put("firstname", parameters.getFirstname());
 
         paramForFiltering.put("beforeOrEqualsEndDate", parameters.getBeforeOrEqualsEndDate());
         paramForFiltering.put("afterOrEqualsEndDate", parameters.getAfterOrEqualsEndDate());
@@ -127,7 +127,7 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
     }
 
     @Override
-    public Optional<Long> saveAndReturnOrderId(TailoringOrder order) {
+    public Optional<Long> save(TailoringOrder order) {
         Map<String, Object> args = new HashMap<>();
 
         args.put("address_for_send", order.getAddressForSend());
@@ -207,7 +207,7 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
     }
 
     private void checkCollectionParameters(OrderSearchCriteria params) {
-        params.setIds(handler.getNullIfCollectionNullOrEmpty(params.getIds()));
+        params.setOrderIds(handler.getNullIfCollectionNullOrEmpty(params.getOrderIds()));
         params.setMaterialIds(handler.getNullIfCollectionNullOrEmpty(params.getMaterialIds()));
         params.setColorIds(handler.getNullIfCollectionNullOrEmpty(params.getColorIds()));
         params.setUserIds(handler.getNullIfCollectionNullOrEmpty(params.getUserIds()));

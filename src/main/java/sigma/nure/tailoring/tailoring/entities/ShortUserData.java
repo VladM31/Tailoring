@@ -13,6 +13,6 @@ public class ShortUserData {
     private String city;
     private String country;
     private String firstname;
-    private boolean male;
+    private boolean isMale;
 
 }

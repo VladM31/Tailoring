@@ -11,7 +11,7 @@ public interface OrderRepository {
 
     List<TailoringOrder> findBy(OrderSearchCriteria parameters, Page page);
 
-    Optional<Long> saveAndReturnOrderId(TailoringOrder order);
+    Optional<Long> save(TailoringOrder order);
 
     boolean pinToTemplate(Long orderId,Long templateId);
 
