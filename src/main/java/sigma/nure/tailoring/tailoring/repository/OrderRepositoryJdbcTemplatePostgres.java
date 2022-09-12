@@ -111,17 +111,17 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
         paramForFiltering.put("country", parameters.getCountry());
         paramForFiltering.put("firstname", parameters.getFirstname());
 
-        paramForFiltering.put("beforeOrEqualsEndDate", parameters.getBeforeOrEqualsEndDate());
-        paramForFiltering.put("afterOrEqualsEndDate", parameters.getAfterOrEqualsEndDate());
-        paramForFiltering.put("beforeOrEqualsDateOfCreation", parameters.getBeforeOrEqualsDateOfCreation());
-        paramForFiltering.put("afterOrEqualsDareOfCreation", parameters.getAfterOrEqualsDareOfCreation());
+        paramForFiltering.put("beforeOrEqualsEndDate", parameters.getEndDate().getFrom());
+        paramForFiltering.put("afterOrEqualsEndDate", parameters.getEndDate().getTo());
+        paramForFiltering.put("beforeOrEqualsDateOfCreation", parameters.getDateOfCreation().getFrom());
+        paramForFiltering.put("afterOrEqualsDareOfCreation", parameters.getDateOfCreation().getTo());
 
-        paramForFiltering.put("userIsMale", parameters.getUserIsMale());
+        paramForFiltering.put("userIsMale", parameters.getIsMale());
         paramForFiltering.put("isFromTemplate", parameters.getIsFromTemplate());
-        paramForFiltering.put("greatOrEqualsCost", parameters.getGreatOrEqualsCost());
-        paramForFiltering.put("lessOrEqualsCost", parameters.getLessOrEqualsCost());
-        paramForFiltering.put("greatOrEqualsCount", parameters.getGreatOrEqualsCount());
-        paramForFiltering.put("lessOrEqualsCount", parameters.getLessOrEqualsCount());
+        paramForFiltering.put("greatOrEqualsCost", parameters.getCost().getFrom());
+        paramForFiltering.put("lessOrEqualsCost", parameters.getCost().getTo());
+        paramForFiltering.put("greatOrEqualsCount", parameters.getCount().getFrom());
+        paramForFiltering.put("lessOrEqualsCount", parameters.getCount().getTo());
 
         return namedJdbc.query(scriptSelect, paramForFiltering, rowMapper);
     }

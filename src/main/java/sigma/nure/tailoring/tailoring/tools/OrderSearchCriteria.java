@@ -26,14 +26,10 @@ public class OrderSearchCriteria {
     private String city;
     private String country;
     private String firstname;
-    private LocalDate beforeOrEqualsEndDate;
-    private LocalDate afterOrEqualsEndDate;
-    private LocalDateTime beforeOrEqualsDateOfCreation;
-    private LocalDateTime afterOrEqualsDareOfCreation;
-    private Boolean userIsMale;
+    private Range<LocalDate> endDate;
+    private Range<LocalDateTime> dateOfCreation;
+    private Boolean isMale;
     private Boolean isFromTemplate;
-    private Integer greatOrEqualsCost;
-    private Integer lessOrEqualsCost;
-    private Integer greatOrEqualsCount;
-    private Integer lessOrEqualsCount;
+    private Range<Integer> cost;
+    private Range<Integer> count;
 }
