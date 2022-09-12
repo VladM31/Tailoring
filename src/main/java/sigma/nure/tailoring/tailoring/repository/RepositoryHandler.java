@@ -19,10 +19,12 @@ public class RepositoryHandler {
         return collection;
     }
 
-    public <T extends Enum<?>> Iterable<String> getStringIterableFromEnumIterable(@Nullable Iterable<T> enums){
+    public <T> Iterable<String> getStringIterableFromEnumIterable(@Nullable Iterable<T> enums){
         if(enums == null){
             return null;
         }
-        return StreamSupport.stream(enums.spliterator(),false).map(Enum::name).collect(Collectors.toSet());
+        return StreamSupport.stream(enums.spliterator(),false)
+                .map(obj -> obj.toString())
+                .collect(Collectors.toSet());
     }
 }
