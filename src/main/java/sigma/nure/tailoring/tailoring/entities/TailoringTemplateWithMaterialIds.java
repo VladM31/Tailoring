@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,6 +19,8 @@ public class TailoringTemplateWithMaterialIds {
     private String typeTemplate;
     private String templateDescription;
     private LocalDateTime dateOfCreation;
+    private Set<String> imagesUrl;
     private Set<Integer> materialIds;
     private Set<Integer> colorIds;
+    private Set<PartSizeForTemplate> partSizeForTemplates;
 }

@@ -20,4 +20,6 @@ public class TailoringTemplate {
     private String templateDescription;
     private Set<Material> materials;
     private Set<Color> colors;
+    private Set<String> imagesUrl;
+    private Set<PartSizeForTemplate> partSizeForTemplates;
 }
