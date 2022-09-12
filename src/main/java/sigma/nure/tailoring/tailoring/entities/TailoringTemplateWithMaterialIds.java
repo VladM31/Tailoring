@@ -10,14 +10,14 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TailoringTemplate {
+public class TailoringTemplateWithMaterialIds {
     private Long id;
-    private String name;
-    private boolean active;
-    private LocalDateTime dateOfCreation;
     private int cost;
+    private boolean active;
+    private String name;
     private String typeTemplate;
     private String templateDescription;
-    private Set<Material> materials;
-    private Set<Color> colors;
+    private LocalDateTime dateOfCreation;
+    private Set<Integer> materialIds;
+    private Set<Integer> colorIds;
 }
