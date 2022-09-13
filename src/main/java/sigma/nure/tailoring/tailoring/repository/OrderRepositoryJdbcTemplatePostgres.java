@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import sigma.nure.tailoring.tailoring.entities.*;
 import sigma.nure.tailoring.tailoring.tools.OrderSearchCriteria;
 import sigma.nure.tailoring.tailoring.tools.Page;
+import sigma.nure.tailoring.tailoring.tools.Range;
 
 import java.util.*;
 
@@ -111,17 +112,17 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
         paramForFiltering.put("country", parameters.getCountry());
         paramForFiltering.put("firstname", parameters.getFirstname());
 
-        paramForFiltering.put("beforeOrEqualsEndDate", parameters.getEndDate().getFrom());
-        paramForFiltering.put("afterOrEqualsEndDate", parameters.getEndDate().getTo());
-        paramForFiltering.put("beforeOrEqualsDateOfCreation", parameters.getDateOfCreation().getFrom());
-        paramForFiltering.put("afterOrEqualsDareOfCreation", parameters.getDateOfCreation().getTo());
+        paramForFiltering.put("beforeOrEqualsEndDate", Range.from(parameters.getEndDate()));
+        paramForFiltering.put("afterOrEqualsEndDate", Range.to(parameters.getEndDate()));
+        paramForFiltering.put("beforeOrEqualsDateOfCreation", Range.from(parameters.getDateOfCreation()));
+        paramForFiltering.put("afterOrEqualsDareOfCreation", Range.to(parameters.getDateOfCreation()));
 
         paramForFiltering.put("userIsMale", parameters.getIsMale());
         paramForFiltering.put("isFromTemplate", parameters.getIsFromTemplate());
-        paramForFiltering.put("greatOrEqualsCost", parameters.getCost().getFrom());
-        paramForFiltering.put("lessOrEqualsCost", parameters.getCost().getTo());
-        paramForFiltering.put("greatOrEqualsCount", parameters.getCount().getFrom());
-        paramForFiltering.put("lessOrEqualsCount", parameters.getCount().getTo());
+        paramForFiltering.put("greatOrEqualsCost", Range.from(parameters.getCost()));
+        paramForFiltering.put("lessOrEqualsCost", Range.to(parameters.getCost()));
+        paramForFiltering.put("greatOrEqualsCount", Range.from(parameters.getCount()));
+        paramForFiltering.put("lessOrEqualsCount", Range.to(parameters.getCount()));
 
         return namedJdbc.query(scriptSelect, paramForFiltering, rowMapper);
     }
@@ -214,4 +215,6 @@ public class OrderRepositoryJdbcTemplatePostgres implements OrderRepository {
         params.setOrderStatuses(handler.getNullIfCollectionNullOrEmpty(params.getOrderStatuses()));
         params.setPaymentStatuses(handler.getNullIfCollectionNullOrEmpty(params.getPaymentStatuses()));
     }
+
+
 }
