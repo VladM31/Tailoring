@@ -49,7 +49,7 @@ public class MaterialsController {
     }
 
 
-    @GetMapping(value = "/materials")
+    @GetMapping(value = {"/materials", "/free/materials"})
     public ResponseEntity<List<Material>> getAllMaterials(){
         return new ResponseEntity<>(this.materialsService.findAllMaterial(), HttpStatus.ACCEPTED);
     }
