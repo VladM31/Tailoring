@@ -19,20 +19,29 @@ public class TailoringTemplateRepositoryJdbcTemplatePostgres implements Tailorin
             "t.image_names AS imagesUrlParam, t.colour_ids AS colorIdsParam, t.cost, t.material_ids AS materialIdsParam, \n" +
             "t.template_part_sizes AS partSizes, t.template_description AS templateDescription \n" +
             "FROM tailoring_templates t, json_array_elements(t.colour_ids) colId,json_array_elements(t.material_ids) AS matId\n " +
-            "WHERE (:areTemplateIdsNull OR t.id IN(:templateIds::bigint))\n" +
+            "WHERE (:areTemplateIdsNull::boolean OR t.id IN(:templateIds::bigint))\n" +
             "AND (:name::varchar IS NULL OR t.name LIKE CONCAT ('%',:name::varchar, '%'))\n" +
-            "AND (:areTypeTemplatesNull OR t.type_template IN(:typeTemplates))\n" +
-            "AND (:isActive IS NULL OR t.active = :isActive)\n" +
+            "AND (:areTypeTemplatesNull::boolean OR t.type_template IN(:typeTemplates))\n" +
+            "AND (:isActive::boolean IS NULL OR t.active = :isActive)\n" +
             "AND (:startCost::int IS NULL OR t.cost >= :startCost::int)\n" +
             "AND (:endCost::int IS NULL OR t.cost <= :endCost::int)\n" +
-            "AND (:startDateOfCreation::timestamp IS NULL OR t.date_registration >= :startDateOfCreation::timestamp)" +
+            "AND (:startDateOfCreation::timestamp IS NULL OR t.date_registration >= :startDateOfCreation::timestamp)\n" +
             "AND (:endDateOfCreation::timestamp IS NULL OR t.date_registration <= :endDateOfCreation::timestamp)\n" +
-            "group by id\n";//+
-//            "WHERE" +
-//            "group by id ";
+            "group by id\n";
 
     private static final String HAVING = " HAVING (:areColorIdsNull::boolean OR array_agg(colId::text::int) && %s )\n" +
             "AND (:areMaterialIdsNull::boolean OR array_agg(matId::text::int) && %s )\n";
+
+    private static final String SELECT_TYPES_ORDER = "SELECT DISTINCT type_template FROM tailoring_templates";
+
+    private static final String SAVE = "INSERT INTO tailoring_templates(name, active, date_registration, cost, type_template," +
+            " image_names, colour_ids, material_ids, template_part_sizes, template_description) \n" +
+            "VALUES (:name,:active,:dateOfCreation,:cost,:typeTemplate,:imageUrl::json,:colorIds::json,:materialIds::json,:partSize::json,:description)";
+
+    private static final String UPDATE = "UPDATE tailoring_templates SET name = :name, active = :active, date_registration = :dateOfCreation, \n" +
+            "cost = :cost, type_template = :typeTemplate, image_names = :imageUrl::json, colour_ids = :colorIds::json, \n" +
+            "material_ids = :materialIds::json, template_part_sizes = :partSize::json, template_description = :description \n" +
+            "WHERE id = :id";
 
     private final JdbcTemplate jdbc;
     private final NamedParameterJdbcTemplate namedJdbc;
@@ -81,17 +90,22 @@ public class TailoringTemplateRepositoryJdbcTemplatePostgres implements Tailorin
 
     @Override
     public Set<String> findAllTypeTemplate() {
-        return null;
+        return new HashSet<>(jdbc.queryForList(SELECT_TYPES_ORDER, String.class));
     }
 
     @Override
-    public boolean save(TailoringTemplateWithMaterialIds template) {
-        return false;
+    public boolean save(TailoringTemplateWithMaterialIds t) {
+        Map<String, Object> args = getArgsWithoutId(t);
+
+        return namedJdbc.update(SAVE, args) != 0;
     }
 
     @Override
-    public boolean update(TailoringTemplateWithMaterialIds template) {
-        return false;
+    public boolean update(TailoringTemplateWithMaterialIds t) {
+        Map<String, Object> args = getArgsWithoutId(t);
+
+        args.put("id", t.getId());
+        return namedJdbc.update(UPDATE, args) != 0;
     }
 
     private RowMapper<TailoringTemplateWithMaterialIds> generateRowMapper() {
@@ -140,5 +154,21 @@ public class TailoringTemplateRepositoryJdbcTemplatePostgres implements Tailorin
         var iterableString = handler.getStringIterableFromEnumIterable(iterable);
 
         return "'{" + String.join(",", iterableString == null ? List.of() : iterableString) + "}'";
+    }
+
+    private Map<String, Object> getArgsWithoutId(TailoringTemplateWithMaterialIds t) {
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("name", t.getName());
+        args.put("active", t.isActive());
+        args.put("dateOfCreation", t.getDateOfCreation());
+        args.put("cost", t.getCost());
+        args.put("typeTemplate", t.getTypeTemplate());
+        args.put("imageUrl", jsonConvector.toJson(t.getImagesUrl()));
+        args.put("colorIds", jsonConvector.toJson(t.getColorIds()));
+        args.put("materialIds", jsonConvector.toJson(t.getMaterialIds()));
+        args.put("partSize", jsonConvector.toJson(t.getPartSizeForTemplates()));
+        args.put("description", t.getTemplateDescription());
+        return args;
     }
 }
