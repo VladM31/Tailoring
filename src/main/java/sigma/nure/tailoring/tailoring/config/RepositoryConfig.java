@@ -10,7 +10,7 @@ public class RepositoryConfig {
 
     @Bean
     public UserRepository jdbcTemplateUserRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
-        return new UserRepositoryJdbcTemplatePostgres(jdbc, handler);
+        return new JdbcTemplatePostgresUserRepository(jdbc, handler);
     }
 
     @Bean
