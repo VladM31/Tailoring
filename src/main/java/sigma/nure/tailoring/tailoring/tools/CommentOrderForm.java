@@ -16,9 +16,9 @@ public class CommentOrderForm {
     @NotBlank(message = "Message must be not blank")
     @Size(min = 1, max = 200, message = "Message must be great than 0 and less than 201")
     private String message;
-    @NotNull
+    @NotNull(message = "User not set")
     private Long userId;
-    @NotNull
+    @NotNull(message = "Order not set")
     private Long tailoringOrderId;
     private LocalDateTime dateOfCreation;
 }
