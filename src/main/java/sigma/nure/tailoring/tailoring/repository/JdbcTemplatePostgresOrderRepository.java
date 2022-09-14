@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Repository
 public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
@@ -22,7 +23,7 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
     private static final String SELECT_ORDER =
             "SELECT o.id AS orderId, o.address_for_send AS addressForSend,\n" +
                     "       o.order_description AS orderDescription, o.order_status AS status, o.order_payment_status AS paymentStatus,\n" +
-                    "       o.date_of_creation AS dateOfCreation, o.tailoring_templates_id AS templateIds, o.end_date AS endDate,\n" +
+                    "       o.date_of_creation AS dateOfCreation, o.tailoring_templates_id AS templateId, o.end_date AS endDate,\n" +
                     "       o.cost, o.count_of_order AS countOfOrder, o.user_id AS userId, u.phone_number AS phoneNumber,\n" +
                     "       u.city, u.country, u.firstname, u.male,\n" +
                     "       m.id AS materialId , m.name AS materialName, m.cost_one_square_meter AS materialCost,\n" +
@@ -37,7 +38,8 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
                     "(:materialIdsAreNull OR o.material_id IN(:materialIds::int)) AND \n" +
                     "(:colorIdsAreNull OR o.color_id IN(:colorIds::int)) AND \n" +
                     "(:userIdsAreNull OR o.user_id IN(:userIds::bigint)) AND \n" +
-                    "(:templateIdsAreNull OR o.tailoring_templates_id IN(:templateIds::bigint)) AND \n" +
+                    "(:templateIdsAreNull OR o.tailoring_templates_id IN(:templateIds::bigint) OR " +
+                    "  (:templateIdsContainingNull AND o.tailoring_templates_id IS NULL)) AND \n" +
                     "(:orderStatusesAreNull OR o.order_status IN(:orderStatuses)) AND \n" +
                     "(:paymentStatusesAreNull OR o.order_payment_status IN(:paymentStatuses)) AND \n" +
                     "(:address::varchar IS NULL OR o.address_for_send LIKE CONCAT ('%',:address::varchar, '%')) AND \n" +
@@ -128,6 +130,10 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         paramForFiltering.put("lessOrEqualsCost", Range.to(parameters.getCost()));
         paramForFiltering.put("greatOrEqualsCount", Range.from(parameters.getCount()));
         paramForFiltering.put("lessOrEqualsCount", Range.to(parameters.getCount()));
+        paramForFiltering.put("templateIdsContainingNull", parameters.getTemplateIds() == null ? false :
+                StreamSupport.stream(parameters.getTemplateIds().spliterator(), false)
+                        .anyMatch(id -> id == null)
+        );
 
         return namedJdbc.query(scriptSelect, paramForFiltering, orderRowMapper);
     }
