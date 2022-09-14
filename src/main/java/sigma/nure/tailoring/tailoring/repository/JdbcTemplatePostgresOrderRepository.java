@@ -179,13 +179,13 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
     }
 
     private RowMapper<TailoringOrder> getOrderRowMapper() {
-        final var notJsonFieldsRowMapper = new BeanPropertyRowMapper<>(TailoringOrder.class);
-        final var ownerRowMapper = new BeanPropertyRowMapper<>(Owner.class);
+        final var orderRowMapper = new BeanPropertyRowMapper<>(TailoringOrder.class);
+        final var customerOrderRowMapper = new BeanPropertyRowMapper<>(CustomerOrder.class);
         return (r, i) -> {
-            TailoringOrder order = notJsonFieldsRowMapper.mapRow(r, i);
+            TailoringOrder order = orderRowMapper.mapRow(r, i);
             order.setId(r.getLong("orderId"));
 
-            order.setUserData(ownerRowMapper.mapRow(r, i));
+            order.setUserData(customerOrderRowMapper.mapRow(r, i));
             order.getUserData().setId(r.getLong("userId"));
 
             Color color = new Color();
