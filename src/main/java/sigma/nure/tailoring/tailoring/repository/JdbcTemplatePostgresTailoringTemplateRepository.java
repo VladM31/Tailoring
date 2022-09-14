@@ -45,16 +45,16 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
 
     private final JdbcTemplate jdbc;
     private final NamedParameterJdbcTemplate namedJdbc;
-    private final RowMapper<TailoringTemplateWithMaterialIds> rowMapper;
-    private final Gson jsonConvector;
+    private final RowMapper<TailoringTemplateWithMaterialIds> templateRowMapper;
+    private final Gson gson;
     private final RepositoryHandler handler;
 
     public JdbcTemplatePostgresTailoringTemplateRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
         this.jdbc = jdbc;
         this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
         this.handler = handler;
-        this.jsonConvector = new Gson();
-        this.rowMapper = this.generateRowMapper();
+        this.gson = new Gson();
+        this.templateRowMapper = this.generateRowMapper();
     }
 
     @Override
@@ -89,7 +89,7 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
         args.put("endDateOfCreation", Optional.ofNullable(criteria.getDateOfCreation())
                 .map(date -> date.getTo()).orElse(null));
 
-        return namedJdbc.query(script, args, rowMapper);
+        return namedJdbc.query(script, args, templateRowMapper);
     }
 
     @Override
@@ -112,28 +112,28 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
     }
 
     private RowMapper<TailoringTemplateWithMaterialIds> generateRowMapper() {
-        RowMapper<TailoringTemplateWithMaterialIds> mapperForNotJsonFields =
+        RowMapper<TailoringTemplateWithMaterialIds> templateRowMapper =
                 new BeanPropertyRowMapper(TailoringTemplateWithMaterialIds.class);
         return (r, i) -> {
-            var template = mapperForNotJsonFields.mapRow(r, i);
+            var template = templateRowMapper.mapRow(r, i);
 
             template.setImagesUrl(new HashSet<>(
-                    Set.of(jsonConvector.fromJson(
+                    Set.of(gson.fromJson(
                             r.getString("imagesUrlParam"),
                             String[].class)
                     )));
             template.setPartSizeForTemplates(new HashSet<>(
-                    Set.of(jsonConvector.fromJson(
+                    Set.of(gson.fromJson(
                             r.getString("partSizes"),
                             PartSizeForTemplate[].class)
                     )));
             template.setColorIds(new HashSet<>(
-                    Set.of(jsonConvector.fromJson(
+                    Set.of(gson.fromJson(
                             r.getString("colorIdsParam"),
                             Integer[].class)
                     )));
             template.setMaterialIds(new HashSet<>(
-                    Set.of(jsonConvector.fromJson(
+                    Set.of(gson.fromJson(
                             r.getString("materialIdsParam"),
                             Integer[].class)
                     )));
@@ -173,10 +173,10 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
         args.put("dateOfCreation", t.getDateOfCreation());
         args.put("cost", t.getCost());
         args.put("typeTemplate", t.getTypeTemplate());
-        args.put("imageUrl", jsonConvector.toJson(t.getImagesUrl()));
-        args.put("colorIds", jsonConvector.toJson(t.getColorIds()));
-        args.put("materialIds", jsonConvector.toJson(t.getMaterialIds()));
-        args.put("partSize", jsonConvector.toJson(t.getPartSizeForTemplates()));
+        args.put("imageUrl", gson.toJson(t.getImagesUrl()));
+        args.put("colorIds", gson.toJson(t.getColorIds()));
+        args.put("materialIds", gson.toJson(t.getMaterialIds()));
+        args.put("partSize", gson.toJson(t.getPartSizeForTemplates()));
         args.put("description", t.getTemplateDescription());
         return args;
     }
