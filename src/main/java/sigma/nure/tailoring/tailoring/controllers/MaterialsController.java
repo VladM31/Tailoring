@@ -16,13 +16,12 @@ import sigma.nure.tailoring.tailoring.tools.MaterialForm;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @PropertySource("classpath:properties/rest-resources.properties")
 @RequestMapping("${material.url.resources}")
 public class MaterialsController {
-
-    private static final int FIRST_ERROR = 0;
     private static final String EMPTY_DEFAULT_MESSAGE = "";
     private final String errorMessage;
     private final MaterialsService materialsService;
@@ -83,8 +82,11 @@ public class MaterialsController {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new Answer(false, bindingResult
                     .getFieldErrors()
-                    .get(FIRST_ERROR)
-                    .getDefaultMessage()
+                    .stream()
+                    .collect(
+                            Collectors.mapping(e -> e.getDefaultMessage(),
+                                    Collectors.joining("\n"))
+                    )
             ), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(new Answer<>(false, defaultMessage), HttpStatus.BAD_REQUEST);
