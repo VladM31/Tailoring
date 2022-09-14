@@ -12,10 +12,10 @@ import sigma.nure.tailoring.tailoring.tools.TailoringTemplateSearchCriteria;
 
 import java.util.*;
 
-public class TailoringTemplateRepositoryJdbcTemplatePostgres implements TailoringTemplateRepository {
+public class JdbcTemplatePostgresTailoringTemplateRepository implements TailoringTemplateRepository {
 
     private static final String SELECT_TEMPLATE = "" +
-            "SELECT t.id, t.name, t.active, t.date_registration AS dateOfCreation, t.type_template AS typeTemplate, \n" +
+            "SELECT t.id, t.name, t.active, t.date_of_creation AS dateOfCreation, t.type_template AS typeTemplate, \n" +
             "t.image_names AS imagesUrlParam, t.colour_ids AS colorIdsParam, t.cost, t.material_ids AS materialIdsParam, \n" +
             "t.template_part_sizes AS partSizes, t.template_description AS templateDescription \n" +
             "FROM tailoring_templates t, json_array_elements(t.colour_ids) colId,json_array_elements(t.material_ids) AS matId\n " +
@@ -25,8 +25,8 @@ public class TailoringTemplateRepositoryJdbcTemplatePostgres implements Tailorin
             "AND (:isActive::boolean IS NULL OR t.active = :isActive)\n" +
             "AND (:startCost::int IS NULL OR t.cost >= :startCost::int)\n" +
             "AND (:endCost::int IS NULL OR t.cost <= :endCost::int)\n" +
-            "AND (:startDateOfCreation::timestamp IS NULL OR t.date_registration >= :startDateOfCreation::timestamp)\n" +
-            "AND (:endDateOfCreation::timestamp IS NULL OR t.date_registration <= :endDateOfCreation::timestamp)\n" +
+            "AND (:startDateOfCreation::timestamp IS NULL OR t.date_of_creation >= :startDateOfCreation::timestamp)\n" +
+            "AND (:endDateOfCreation::timestamp IS NULL OR t.date_of_creation <= :endDateOfCreation::timestamp)\n" +
             "group by id\n";
 
     private static final String HAVING = " HAVING (:areColorIdsNull::boolean OR array_agg(colId::text::int) && %s )\n" +
@@ -34,11 +34,11 @@ public class TailoringTemplateRepositoryJdbcTemplatePostgres implements Tailorin
 
     private static final String SELECT_TYPES_ORDER = "SELECT DISTINCT type_template FROM tailoring_templates";
 
-    private static final String SAVE = "INSERT INTO tailoring_templates(name, active, date_registration, cost, type_template," +
+    private static final String SAVE = "INSERT INTO tailoring_templates(name, active, date_of_creation, cost, type_template," +
             " image_names, colour_ids, material_ids, template_part_sizes, template_description) \n" +
             "VALUES (:name,:active,:dateOfCreation,:cost,:typeTemplate,:imageUrl::json,:colorIds::json,:materialIds::json,:partSize::json,:description)";
 
-    private static final String UPDATE = "UPDATE tailoring_templates SET name = :name, active = :active, date_registration = :dateOfCreation, \n" +
+    private static final String UPDATE = "UPDATE tailoring_templates SET name = :name, active = :active, date_of_creation = :dateOfCreation, \n" +
             "cost = :cost, type_template = :typeTemplate, image_names = :imageUrl::json, colour_ids = :colorIds::json, \n" +
             "material_ids = :materialIds::json, template_part_sizes = :partSize::json, template_description = :description \n" +
             "WHERE id = :id";
@@ -49,7 +49,7 @@ public class TailoringTemplateRepositoryJdbcTemplatePostgres implements Tailorin
     private final Gson jsonConvector;
     private final RepositoryHandler handler;
 
-    public TailoringTemplateRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc, RepositoryHandler handler) {
+    public JdbcTemplatePostgresTailoringTemplateRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
         this.jdbc = jdbc;
         this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
         this.handler = handler;
@@ -60,7 +60,7 @@ public class TailoringTemplateRepositoryJdbcTemplatePostgres implements Tailorin
     @Override
     public List<TailoringTemplateWithMaterialIds> findBy(TailoringTemplateSearchCriteria criteria, Page page) {
         String script = SELECT_TEMPLATE + getHavingWithParameters(criteria.getColorIds(), criteria.getMaterialIds())
-                + handler.getScriptFromPage(page, "date_registration", Page.Direction.DESC, 100L, 0L);
+                + handler.getScriptFromPage(page, "date_of_creation", Page.Direction.DESC, 100L, 0L);
 
         checkIterableCriteria(criteria);
         
