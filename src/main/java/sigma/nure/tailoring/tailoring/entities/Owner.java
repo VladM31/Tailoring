@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShortUserData {
+public class Owner {
     private Long id;
     private String phoneNumber;
     private String city;

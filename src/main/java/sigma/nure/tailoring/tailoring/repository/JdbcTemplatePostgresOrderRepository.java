@@ -2,7 +2,6 @@ package sigma.nure.tailoring.tailoring.repository;
 
 import com.google.gson.Gson;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -12,7 +11,10 @@ import sigma.nure.tailoring.tailoring.tools.OrderSearchCriteria;
 import sigma.nure.tailoring.tailoring.tools.Page;
 import sigma.nure.tailoring.tailoring.tools.Range;
 
+import javax.sql.DataSource;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
@@ -63,20 +65,18 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
             "part_sizes = :partSizes::json, images = :theImages::json " +
             "WHERE id = :orderId";
 
-    private final JdbcTemplate jdbc;
     private final NamedParameterJdbcTemplate namedJdbc;
-    private final RowMapper<TailoringOrder> rowMapper;
+    private final RowMapper<TailoringOrder> orderRowMapper;
     private final RepositoryHandler handler;
     private final SimpleJdbcInsert insertOrder;
     private final Gson gson;
 
-    public JdbcTemplatePostgresOrderRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
-        this.jdbc = jdbc;
+    public JdbcTemplatePostgresOrderRepository(DataSource dataSource, RepositoryHandler handler) {
         this.handler = handler;
         this.gson = new Gson();
-        this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
-        this.rowMapper = getRowMapper();
-        this.insertOrder = new SimpleJdbcInsert(jdbc.getDataSource())
+        this.namedJdbc = new NamedParameterJdbcTemplate(dataSource);
+        this.orderRowMapper = getOrderRowMapper();
+        this.insertOrder = new SimpleJdbcInsert(dataSource)
                 .withTableName("tailoring_order")
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("address_for_send", "order_description", "order_status", "order_payment_status",
@@ -129,7 +129,7 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         paramForFiltering.put("greatOrEqualsCount", Range.from(parameters.getCount()));
         paramForFiltering.put("lessOrEqualsCount", Range.to(parameters.getCount()));
 
-        return namedJdbc.query(scriptSelect, paramForFiltering, rowMapper);
+        return namedJdbc.query(scriptSelect, paramForFiltering, orderRowMapper);
     }
 
     @Override
@@ -178,14 +178,14 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         return this.namedJdbc.update(UPDATE, args) != 0;
     }
 
-    private RowMapper<TailoringOrder> getRowMapper() {
-        final var rowMapperForNotJson = new BeanPropertyRowMapper<>(TailoringOrder.class);
-        final var rowMapperShortUserData = new BeanPropertyRowMapper<>(ShortUserData.class);
+    private RowMapper<TailoringOrder> getOrderRowMapper() {
+        final var notJsonRowMapperFor = new BeanPropertyRowMapper<>(TailoringOrder.class);
+        final var shortUserDataRowMapper = new BeanPropertyRowMapper<>(Owner.class);
         return (r, i) -> {
-            TailoringOrder order = rowMapperForNotJson.mapRow(r, i);
+            TailoringOrder order = notJsonRowMapperFor.mapRow(r, i);
             order.setId(r.getLong("orderId"));
 
-            order.setUserData(rowMapperShortUserData.mapRow(r, i));
+            order.setUserData(shortUserDataRowMapper.mapRow(r, i));
             order.getUserData().setId(r.getLong("userId"));
 
             Color color = new Color();
@@ -200,8 +200,8 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
             material.setCost(r.getInt("materialCost"));
             order.setMaterial(material);
 
-            order.setImages(new ArrayList<>(List.of(gson.fromJson(r.getString("imagesJson"), Image[].class))));
-            order.setPartSizes(new ArrayList<>(List.of(gson.fromJson(r.getString("partSizesJson"), PartSizeOrder[].class))));
+            order.setImages(Stream.of(gson.fromJson(r.getString("imagesJson"), Image[].class)).collect(Collectors.toList()));
+            order.setPartSizes(Stream.of(gson.fromJson(r.getString("partSizesJson"), PartSizeOrder[].class)).collect(Collectors.toList()));
 
             return order;
         };
