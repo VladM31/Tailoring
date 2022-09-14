@@ -20,22 +20,13 @@ public class RepositoryHandler {
         return collection;
     }
 
-    public <T> Iterable<String> getStringIterableFromEnumIterable(@Nullable Iterable<T> enums){
-        if(enums == null){
+    public <T> Iterable<String> getStringIterableFromOtherTypeIterable(@Nullable Iterable<T> iterable) {
+        if (iterable == null) {
             return null;
         }
-        return StreamSupport.stream(enums.spliterator(),false)
+        return StreamSupport.stream(iterable.spliterator(), false)
                 .map(obj -> obj.toString())
                 .collect(Collectors.toSet());
     }
-
-    public static final String ORDER_BY_AND_LIMIT = " ORDER BY %s %s LIMIT %s OFFSET %s";
-
-    public String getScriptFromPage(Page page, String orderBy, Page.Direction direction,Long limit,Long offset){
-        return String.format(ORDER_BY_AND_LIMIT,
-                page.getOrderByOrDefault(orderBy),
-                page.getDirectionOrDefault(direction),
-                page.getLimitOrDefault(limit),
-                page.getOffsetOrDefault(offset));
-    }
+    
 }

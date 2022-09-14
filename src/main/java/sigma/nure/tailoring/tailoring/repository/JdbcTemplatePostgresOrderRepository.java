@@ -51,7 +51,8 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
                     "(:greatOrEqualsCost::int IS NULL OR o.cost >= :greatOrEqualsCost::int) AND \n" +
                     "(:lessOrEqualsCost::int IS NULL OR o.cost <= :lessOrEqualsCost::int) AND \n" +
                     "(:greatOrEqualsCount::int IS NULL OR o.count_of_order >= :greatOrEqualsCount::int) AND \n" +
-                    "(:lessOrEqualsCount::int IS NULL OR o.count_of_order <= :lessOrEqualsCount::int) \n";
+                    "(:lessOrEqualsCount::int IS NULL OR o.count_of_order <= :lessOrEqualsCount::int) " +
+                    " ORDER BY :sortColumn :sortDirection LIMIT :limit OFFSET :offset \n";
 
     private static final String PIN_TO_TEMPLATE = "INSERT INTO template_orders(tailoring_order_id,tailoring_templates_id) VALUES(?,?)";
 
@@ -69,12 +70,12 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
     private final RowMapper<TailoringOrder> rowMapper;
     private final RepositoryHandler handler;
     private final SimpleJdbcInsert insertOrder;
-    private final Gson jsonConvector;
+    private final Gson gson;
 
     public JdbcTemplatePostgresOrderRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
         this.jdbc = jdbc;
         this.handler = handler;
-        this.jsonConvector = new Gson();
+        this.gson = new Gson();
         this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
         this.rowMapper = getRowMapper();
         this.insertOrder = new SimpleJdbcInsert(jdbc.getDataSource())
@@ -87,7 +88,12 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
 
     @Override
     public List<TailoringOrder> findBy(OrderSearchCriteria parameters, Page page) {
-        String scriptSelect = SELECT_ORDER + handler.getScriptFromPage(page, "o.date_of_creation", Page.Direction.DESC, 100L, 0L);
+
+        String scriptSelect = SELECT_ORDER
+                .replaceFirst(":sortColumn", page.getOrderByOrDefault("o.date_of_creation"))
+                .replaceFirst(":sortDirection", page.getDirectionOrDefault(Page.Direction.DESC).toString())
+                .replaceFirst(":limit", page.getLimitOrDefault(100L).toString())
+                .replaceFirst(":offset", page.getOffsetOrDefault(0L).toString());
 
         checkCollectionParameters(parameters);
 
@@ -104,9 +110,9 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         paramForFiltering.put("templateIdsAreNull", parameters.getTemplateIds() == null);
         paramForFiltering.put("templateIds", parameters.getTemplateIds());
         paramForFiltering.put("orderStatusesAreNull", parameters.getOrderStatuses() == null);
-        paramForFiltering.put("orderStatuses", handler.getStringIterableFromEnumIterable(parameters.getOrderStatuses()));
+        paramForFiltering.put("orderStatuses", handler.getStringIterableFromOtherTypeIterable(parameters.getOrderStatuses()));
         paramForFiltering.put("paymentStatusesAreNull", parameters.getPaymentStatuses() == null);
-        paramForFiltering.put("paymentStatuses", handler.getStringIterableFromEnumIterable(parameters.getPaymentStatuses()));
+        paramForFiltering.put("paymentStatuses", handler.getStringIterableFromOtherTypeIterable(parameters.getPaymentStatuses()));
 
         paramForFiltering.put("address", parameters.getAddress());
         paramForFiltering.put("phoneNumber", parameters.getPhoneNumber());
@@ -138,8 +144,8 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         args.put("order_payment_status", order.getPaymentStatus().name());
         args.put("date_of_creation", order.getDateOfCreation());
         args.put("tailoring_templates_id", order.getTemplateId());
-        args.put("part_sizes", this.jsonConvector.toJson(order.getPartSizes()));
-        args.put("images", this.jsonConvector.toJson(order.getImages()));
+        args.put("part_sizes", this.gson.toJson(order.getPartSizes()));
+        args.put("images", this.gson.toJson(order.getImages()));
         args.put("end_date", order.getEndDate());
         args.put("cost", order.getCost());
         args.put("count_of_order", order.getCountOfOrder());
@@ -172,8 +178,8 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         args.put("materialId", order.getMaterial().getId());
         args.put("colorId", order.getColor().getId());
         args.put("userId", order.getUserData().getId());
-        args.put("partSizes", this.jsonConvector.toJson(order.getPartSizes()));
-        args.put("theImages", this.jsonConvector.toJson(order.getImages()));
+        args.put("partSizes", this.gson.toJson(order.getPartSizes()));
+        args.put("theImages", this.gson.toJson(order.getImages()));
         args.put("orderId", order.getId());
 
         return this.namedJdbc.update(UPDATE, args) != 0;
@@ -201,8 +207,8 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
             material.setCost(r.getInt("materialCost"));
             order.setMaterial(material);
 
-            order.setImages(new ArrayList<>(List.of(jsonConvector.fromJson(r.getString("imagesJson"), Image[].class))));
-            order.setPartSizes(new ArrayList<>(List.of(jsonConvector.fromJson(r.getString("partSizesJson"), PartSizeOrder[].class))));
+            order.setImages(new ArrayList<>(List.of(gson.fromJson(r.getString("imagesJson"), Image[].class))));
+            order.setPartSizes(new ArrayList<>(List.of(gson.fromJson(r.getString("partSizesJson"), PartSizeOrder[].class))));
 
             return order;
         };
