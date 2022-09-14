@@ -54,8 +54,6 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
                     "(:lessOrEqualsCount::int IS NULL OR o.count_of_order <= :lessOrEqualsCount::int) " +
                     " ORDER BY :sortColumn :sortDirection LIMIT :limit OFFSET :offset \n";
 
-    private static final String PIN_TO_TEMPLATE = "INSERT INTO template_orders(tailoring_order_id,tailoring_templates_id) VALUES(?,?)";
-
     private static final String UPDATE = "UPDATE tailoring_order SET " +
             "address_for_send = :addressForSend, order_description = :orderDescription, " +
             "order_status = :status, order_payment_status = :paymentStatus, " +
@@ -156,11 +154,6 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         Long id = (Long) insertOrder.executeAndReturnKey(args);
 
         return Optional.ofNullable(id);
-    }
-
-    @Override
-    public boolean pinToTemplate(Long orderId, Long templateId) {
-        return jdbc.update(PIN_TO_TEMPLATE, orderId, templateId) != 0;
     }
 
     @Override
