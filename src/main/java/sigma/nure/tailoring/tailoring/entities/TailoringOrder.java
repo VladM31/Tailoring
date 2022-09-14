@@ -18,7 +18,7 @@ public class TailoringOrder {
     private OrderStatus status;
     private OrderPaymentStatus paymentStatus;
     private LocalDateTime dateOfCreation;
-    private boolean fromTemplate;
+    private Long templateId;
     private LocalDate endDate;
     private int cost;
     private int countOfOrder;
@@ -27,4 +27,8 @@ public class TailoringOrder {
     private ShortUserData userData;
     private List<Image> images;
     private List<PartSizeOrder> partSizes;
+
+    public boolean isFromTemplate() {
+        return this.templateId != null;
+    }
 }

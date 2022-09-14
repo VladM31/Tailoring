@@ -19,6 +19,7 @@ public class OrderSearchCriteria {
     private Iterable<Long> materialIds;
     private Iterable<Long> colorIds;
     private Iterable<Long> userIds;
+    private Iterable<Long> templateIds;
     private Iterable<OrderStatus> orderStatuses;
     private Iterable<OrderPaymentStatus> paymentStatuses;
     private String address;
@@ -29,7 +30,6 @@ public class OrderSearchCriteria {
     private Range<LocalDate> endDate;
     private Range<LocalDateTime> dateOfCreation;
     private Boolean isMale;
-    private Boolean isFromTemplate;
     private Range<Integer> cost;
     private Range<Integer> count;
 }
