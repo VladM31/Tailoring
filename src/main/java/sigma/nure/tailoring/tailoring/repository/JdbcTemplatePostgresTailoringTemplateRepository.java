@@ -27,10 +27,10 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
             "AND (:endCost::int IS NULL OR t.cost <= :endCost::int)\n" +
             "AND (:startDateOfCreation::timestamp IS NULL OR t.date_of_creation >= :startDateOfCreation::timestamp)\n" +
             "AND (:endDateOfCreation::timestamp IS NULL OR t.date_of_creation <= :endDateOfCreation::timestamp)\n" +
-            "group by id\n";
-
-    private static final String HAVING = " HAVING (:areColorIdsNull::boolean OR array_agg(colId::text::int) && %s )\n" +
-            "AND (:areMaterialIdsNull::boolean OR array_agg(matId::text::int) && %s )\n";
+            "group by id\n " +
+            " HAVING (:areColorIdsNull::boolean OR array_agg(colId::text::int) && :containsColorIds )\n" +
+            "AND (:areMaterialIdsNull::boolean OR array_agg(matId::text::int) && :containsMaterialIds )\n" +
+            " ORDER BY :sortColumn :sortDirection LIMIT :limit OFFSET :offset ";
 
     private static final String SELECT_TYPES_ORDER = "SELECT DISTINCT type_template FROM tailoring_templates";
 
@@ -59,11 +59,15 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
 
     @Override
     public List<TailoringTemplateWithMaterialIds> findBy(TailoringTemplateSearchCriteria criteria, Page page) {
-        String script = SELECT_TEMPLATE + getHavingWithParameters(criteria.getColorIds(), criteria.getMaterialIds())
-                + handler.getScriptFromPage(page, "date_of_creation", Page.Direction.DESC, 100L, 0L);
+        String script = this.setParametersInsideScript(
+                SELECT_TEMPLATE,
+                criteria.getColorIds(),
+                criteria.getMaterialIds(),
+                page
+        );
 
         checkIterableCriteria(criteria);
-        
+
         Map<String, Object> args = new HashMap<>();
 
         args.put("areTemplateIdsNull", criteria.getTemplateIds() == null);
@@ -96,7 +100,6 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
     @Override
     public boolean save(TailoringTemplateWithMaterialIds t) {
         Map<String, Object> args = getArgsWithoutId(t);
-
         return namedJdbc.update(SAVE, args) != 0;
     }
 
@@ -146,12 +149,18 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
         criteria.setTypeTemplates(handler.getNullIfCollectionNullOrEmpty(criteria.getTypeTemplates()));
     }
 
-    private String getHavingWithParameters(Iterable<Integer> colorIds, Iterable<Integer> materialIds) {
-        return HAVING.formatted(getConditionForJsonArray(colorIds), getConditionForJsonArray(materialIds));
+    private String setParametersInsideScript(String script, Iterable<Integer> colorIds, Iterable<Integer> materialIds, Page page) {
+        return script
+                .replaceFirst(":containsColorIds", getConditionForJsonArray(colorIds))
+                .replaceFirst(":containsMaterialIds", getConditionForJsonArray(materialIds))
+                .replaceFirst(":sortColumn", page.getOrderByOrDefault("date_of_creation"))
+                .replaceFirst(":sortDirection", page.getDirectionOrDefault(Page.Direction.DESC).toString())
+                .replaceFirst(":limit", page.getLimitOrDefault(100L).toString())
+                .replaceFirst(":offset", page.getOffsetOrDefault(0L).toString());
     }
 
     private String getConditionForJsonArray(Iterable<?> iterable) {
-        var iterableString = handler.getStringIterableFromEnumIterable(iterable);
+        var iterableString = handler.getStringIterableFromOtherTypeIterable(iterable);
 
         return "'{" + String.join(",", iterableString == null ? List.of() : iterableString) + "}'";
     }
