@@ -24,7 +24,7 @@ public class TailoringOrder {
     private int countOfOrder;
     private Material material;
     private Color color;
-    private CustomerOrder userData;
+    private CustomerOrder customerOrder;
     private List<Image> images;
     private List<PartSizeOrder> partSizes;
 
