@@ -1,5 +1,6 @@
 package sigma.nure.tailoring.tailoring.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import sigma.nure.tailoring.tailoring.entities.CommentsUnderOrder;
 import sigma.nure.tailoring.tailoring.entities.Role;
@@ -25,21 +26,22 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Answer<Boolean> save(User user, CommentOrderForm comment, BindingResult bindingResult) {
+    public Answer<HttpStatus> save(User user, CommentOrderForm comment, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new Answer<>(false, bindingResult.getFieldErrors()
+            return new Answer<>(HttpStatus.BAD_REQUEST, bindingResult.getFieldErrors()
                     .stream().collect(Collectors
                             .mapping(error -> error.getDefaultMessage(),
                                     Collectors.joining("\n"))));
         }
 
         var validAnswer = this.validByUserRights(user, comment);
-        if (!validAnswer.getValue()) {
+        if (!validAnswer.getValue().equals(HttpStatus.OK)) {
             return validAnswer;
         }
 
         final boolean wasSave = commentRepository.save(convectorCommentFormToComment(comment));
-        return new Answer<>(wasSave, wasSave ? "" : "Sorry, repeat the request or write to the administration");
+        return new Answer<>(wasSave ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+                wasSave ? "" : "Sorry, repeat the request or write to the administration");
     }
 
     @Override
@@ -56,9 +58,9 @@ public class CommentServiceImpl implements CommentService {
                         ));
     }
 
-    private Answer<Boolean> validByUserRights(User user, CommentOrderForm comment) {
+    private Answer<HttpStatus> validByUserRights(User user, CommentOrderForm comment) {
         if (user.getRole().equals(Role.ADMINISTRATION)) {
-            return new Answer<>(true, "");
+            return new Answer<>(HttpStatus.OK, "");
         }
 
         if (orderRepository.findBy(OrderSearchCriteria
@@ -69,10 +71,10 @@ public class CommentServiceImpl implements CommentService {
                         new Page())
                 .isEmpty()
         ) {
-            return new Answer<>(false, "Sorry, it's not your order");
+            return new Answer<>(HttpStatus.BAD_REQUEST, "Sorry, it's not your order");
         }
 
-        return new Answer<>(true, "");
+        return new Answer<>(HttpStatus.OK, "");
     }
 
     private CommentsUnderOrder convectorCommentFormToComment(CommentOrderForm form) {
