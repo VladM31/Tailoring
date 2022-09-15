@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 import sigma.nure.tailoring.tailoring.entities.PartSizeForTemplate;
 import sigma.nure.tailoring.tailoring.entities.TailoringTemplateWithMaterialIds;
 import sigma.nure.tailoring.tailoring.tools.Page;
@@ -12,6 +13,7 @@ import sigma.nure.tailoring.tailoring.tools.TailoringTemplateSearchCriteria;
 
 import java.util.*;
 
+@Repository
 public class JdbcTemplatePostgresTailoringTemplateRepository implements TailoringTemplateRepository {
 
     private static final String SELECT_TEMPLATE = "" +
@@ -27,10 +29,10 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
             "AND (:endCost::int IS NULL OR t.cost <= :endCost::int)\n" +
             "AND (:startDateOfCreation::timestamp IS NULL OR t.date_of_creation >= :startDateOfCreation::timestamp)\n" +
             "AND (:endDateOfCreation::timestamp IS NULL OR t.date_of_creation <= :endDateOfCreation::timestamp)\n" +
-            "group by id\n";
-
-    private static final String HAVING = " HAVING (:areColorIdsNull::boolean OR array_agg(colId::text::int) && %s )\n" +
-            "AND (:areMaterialIdsNull::boolean OR array_agg(matId::text::int) && %s )\n";
+            "group by id\n " +
+            " HAVING (:areColorIdsNull::boolean OR array_agg(colId::text::int) && :containsColorIds )\n" +
+            "AND (:areMaterialIdsNull::boolean OR array_agg(matId::text::int) && :containsMaterialIds )\n" +
+            " ORDER BY :sortColumn :sortDirection LIMIT :limit OFFSET :offset ";
 
     private static final String SELECT_TYPES_ORDER = "SELECT DISTINCT type_template FROM tailoring_templates";
 
@@ -45,25 +47,29 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
 
     private final JdbcTemplate jdbc;
     private final NamedParameterJdbcTemplate namedJdbc;
-    private final RowMapper<TailoringTemplateWithMaterialIds> rowMapper;
-    private final Gson jsonConvector;
+    private final RowMapper<TailoringTemplateWithMaterialIds> templateRowMapper;
+    private final Gson gson;
     private final RepositoryHandler handler;
 
     public JdbcTemplatePostgresTailoringTemplateRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
         this.jdbc = jdbc;
         this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
         this.handler = handler;
-        this.jsonConvector = new Gson();
-        this.rowMapper = this.generateRowMapper();
+        this.gson = new Gson();
+        this.templateRowMapper = this.generateRowMapper();
     }
 
     @Override
     public List<TailoringTemplateWithMaterialIds> findBy(TailoringTemplateSearchCriteria criteria, Page page) {
-        String script = SELECT_TEMPLATE + getHavingWithParameters(criteria.getColorIds(), criteria.getMaterialIds())
-                + handler.getScriptFromPage(page, "date_of_creation", Page.Direction.DESC, 100L, 0L);
+        String script = this.setParametersInsideScript(
+                SELECT_TEMPLATE,
+                criteria.getColorIds(),
+                criteria.getMaterialIds(),
+                page
+        );
 
         checkIterableCriteria(criteria);
-        
+
         Map<String, Object> args = new HashMap<>();
 
         args.put("areTemplateIdsNull", criteria.getTemplateIds() == null);
@@ -85,7 +91,7 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
         args.put("endDateOfCreation", Optional.ofNullable(criteria.getDateOfCreation())
                 .map(date -> date.getTo()).orElse(null));
 
-        return namedJdbc.query(script, args, rowMapper);
+        return namedJdbc.query(script, args, templateRowMapper);
     }
 
     @Override
@@ -96,7 +102,6 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
     @Override
     public boolean save(TailoringTemplateWithMaterialIds t) {
         Map<String, Object> args = getArgsWithoutId(t);
-
         return namedJdbc.update(SAVE, args) != 0;
     }
 
@@ -109,28 +114,28 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
     }
 
     private RowMapper<TailoringTemplateWithMaterialIds> generateRowMapper() {
-        RowMapper<TailoringTemplateWithMaterialIds> mapperForNotJsonFields =
+        RowMapper<TailoringTemplateWithMaterialIds> templateRowMapper =
                 new BeanPropertyRowMapper(TailoringTemplateWithMaterialIds.class);
         return (r, i) -> {
-            var template = mapperForNotJsonFields.mapRow(r, i);
+            var template = templateRowMapper.mapRow(r, i);
 
             template.setImagesUrl(new HashSet<>(
-                    Set.of(jsonConvector.fromJson(
+                    Set.of(gson.fromJson(
                             r.getString("imagesUrlParam"),
                             String[].class)
                     )));
             template.setPartSizeForTemplates(new HashSet<>(
-                    Set.of(jsonConvector.fromJson(
+                    Set.of(gson.fromJson(
                             r.getString("partSizes"),
                             PartSizeForTemplate[].class)
                     )));
             template.setColorIds(new HashSet<>(
-                    Set.of(jsonConvector.fromJson(
+                    Set.of(gson.fromJson(
                             r.getString("colorIdsParam"),
                             Integer[].class)
                     )));
             template.setMaterialIds(new HashSet<>(
-                    Set.of(jsonConvector.fromJson(
+                    Set.of(gson.fromJson(
                             r.getString("materialIdsParam"),
                             Integer[].class)
                     )));
@@ -146,12 +151,18 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
         criteria.setTypeTemplates(handler.getNullIfCollectionNullOrEmpty(criteria.getTypeTemplates()));
     }
 
-    private String getHavingWithParameters(Iterable<Integer> colorIds, Iterable<Integer> materialIds) {
-        return HAVING.formatted(getConditionForJsonArray(colorIds), getConditionForJsonArray(materialIds));
+    private String setParametersInsideScript(String script, Iterable<Integer> colorIds, Iterable<Integer> materialIds, Page page) {
+        return script
+                .replaceFirst(":containsColorIds", getConditionForJsonArray(colorIds))
+                .replaceFirst(":containsMaterialIds", getConditionForJsonArray(materialIds))
+                .replaceFirst(":sortColumn", page.getOrderByOrDefault("date_of_creation"))
+                .replaceFirst(":sortDirection", page.getDirectionOrDefault(Page.Direction.DESC).toString())
+                .replaceFirst(":limit", page.getLimitOrDefault(100L).toString())
+                .replaceFirst(":offset", page.getOffsetOrDefault(0L).toString());
     }
 
     private String getConditionForJsonArray(Iterable<?> iterable) {
-        var iterableString = handler.getStringIterableFromEnumIterable(iterable);
+        var iterableString = handler.getStringIterableFromOtherTypeIterable(iterable);
 
         return "'{" + String.join(",", iterableString == null ? List.of() : iterableString) + "}'";
     }
@@ -164,10 +175,10 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
         args.put("dateOfCreation", t.getDateOfCreation());
         args.put("cost", t.getCost());
         args.put("typeTemplate", t.getTypeTemplate());
-        args.put("imageUrl", jsonConvector.toJson(t.getImagesUrl()));
-        args.put("colorIds", jsonConvector.toJson(t.getColorIds()));
-        args.put("materialIds", jsonConvector.toJson(t.getMaterialIds()));
-        args.put("partSize", jsonConvector.toJson(t.getPartSizeForTemplates()));
+        args.put("imageUrl", gson.toJson(t.getImagesUrl()));
+        args.put("colorIds", gson.toJson(t.getColorIds()));
+        args.put("materialIds", gson.toJson(t.getMaterialIds()));
+        args.put("partSize", gson.toJson(t.getPartSizeForTemplates()));
         args.put("description", t.getTemplateDescription());
         return args;
     }

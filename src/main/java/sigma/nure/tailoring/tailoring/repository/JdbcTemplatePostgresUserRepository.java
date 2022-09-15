@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
+public class JdbcTemplatePostgresUserRepository implements UserRepository {
 
     private static final String SELECT_USER = "SELECT u.id, u.password, u.city, " +
             "u.country, u.email, u.firstname, u.lastname, u.active, u.male, " +
@@ -61,7 +61,8 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
             "(:activeUser::boolean IS NULL OR  u.active = :activeUser::boolean) AND " +
             "(:male::boolean IS NULL OR  u.male = :male::boolean) AND " +
             "(:userStatesAreNull OR u.user_state IN(:userStates::varchar)) AND " +
-            "(:rolesAreNull OR r.name IN(:roles::varchar)) ";
+            "(:rolesAreNull OR r.name IN(:roles::varchar)) " +
+            " ORDER BY :sortColumn :sortDirection LIMIT :limit OFFSET :offset ";
 
     private static final String ORDER_BY_AND_LIMIT = " ORDER BY %s %s LIMIT %s OFFSET %s";
 
@@ -71,7 +72,7 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
     private final NamedParameterJdbcTemplate namedJdbc;
     private final RepositoryHandler handler;
 
-    public UserRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc, RepositoryHandler handler) {
+    public JdbcTemplatePostgresUserRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
         this.jdbc = jdbc;
         this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
         this.handler = handler;
@@ -85,11 +86,12 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
 
     @Override
     public List<User> findBy(UserSearchCriteria param, Page pageable) {
-        final String sqlScriptWithPage = SELECT_WHERE_FIELDS_ARE + String.format(ORDER_BY_AND_LIMIT,
-                pageable.getOrderByOrDefault("date_registration"),
-                pageable.getDirectionOrDefault(Page.Direction.DESC),
-                pageable.getLimitOrDefault(100L),
-                pageable.getOffsetOrDefault(0L));
+        final String sqlScriptWithPage = SELECT_WHERE_FIELDS_ARE
+                .replaceFirst(":sortColumn", pageable.getOrderByOrDefault("date_registration"))
+                .replaceFirst(":sortDirection", pageable.getDirectionOrDefault(Page.Direction.DESC).toString())
+                .replaceFirst(":limit", pageable.getLimitOrDefault(100L).toString())
+                .replaceFirst(":offset", pageable.getOffsetOrDefault(0L).toString());
+
 
         param.setIds(handler.getNullIfCollectionNullOrEmpty(param.getIds()));
         param.setUserStates(handler.getNullIfCollectionNullOrEmpty(param.getUserStates()));
@@ -111,9 +113,9 @@ public class UserRepositoryJdbcTemplatePostgres implements UserRepository {
         args.put("idsAreNull", param.getIds() == null);
         args.put("ids", param.getIds());
         args.put("userStatesAreNull", param.getUserStates() == null);
-        args.put("userStates", handler.getStringIterableFromEnumIterable(param.getUserStates()));
+        args.put("userStates", handler.getStringIterableFromOtherTypeIterable(param.getUserStates()));
         args.put("rolesAreNull", param.getRoles() == null);
-        args.put("roles", handler.getStringIterableFromEnumIterable(param.getRoles()));
+        args.put("roles", handler.getStringIterableFromOtherTypeIterable(param.getRoles()));
 
         return namedJdbc.query(sqlScriptWithPage, args, rowMapper);
     }

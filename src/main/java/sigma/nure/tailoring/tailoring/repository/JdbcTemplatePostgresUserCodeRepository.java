@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
 
-public class UserCodeRepositoryJdbcTemplatePostgres implements UserCodeRepository {
+public class JdbcTemplatePostgresUserCodeRepository implements UserCodeRepository {
 
     private static final String UPDATE_INACTIVE_BY_USER_ID_AND_CODE_VALUE =
             "UPDATE user_code SET active = false " +
@@ -16,7 +16,7 @@ public class UserCodeRepositoryJdbcTemplatePostgres implements UserCodeRepositor
 
     private final JdbcTemplate jdbc;
 
-    public UserCodeRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc) {
+    public JdbcTemplatePostgresUserCodeRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 

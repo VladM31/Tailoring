@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Image {
-    private Long id;
     private String url;
     private String name;
-    private Long orderId;
 }
