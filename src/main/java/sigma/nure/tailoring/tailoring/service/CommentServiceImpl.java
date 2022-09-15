@@ -5,29 +5,41 @@ import sigma.nure.tailoring.tailoring.entities.CommentsUnderOrder;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.repository.CommentsUnderOrderRepository;
+import sigma.nure.tailoring.tailoring.repository.OrderRepository;
 import sigma.nure.tailoring.tailoring.tools.Answer;
 import sigma.nure.tailoring.tailoring.tools.CommentOrderForm;
+import sigma.nure.tailoring.tailoring.tools.OrderSearchCriteria;
+import sigma.nure.tailoring.tailoring.tools.Page;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommentServiceImpl implements CommentService {
-
     private final CommentsUnderOrderRepository commentRepository;
+    private final OrderRepository orderRepository;
 
-    public CommentServiceImpl(CommentsUnderOrderRepository repository) {
+    public CommentServiceImpl(CommentsUnderOrderRepository repository, OrderRepository orderRepository) {
         this.commentRepository = repository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
     public Answer<Boolean> save(User user, CommentOrderForm comment, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new Answer<>(false, bindingResult.getFieldErrors().get(0).getDefaultMessage());
+            return new Answer<>(false, bindingResult.getFieldErrors()
+                    .stream().collect(Collectors
+                            .mapping(error -> error.getDefaultMessage(),
+                                    Collectors.joining("\n"))));
         }
 
+        var validAnswer = this.validByUserRights(user, comment);
+        if (!validAnswer.getValue()) {
+            return validAnswer;
+        }
 
-        return null;
+        final boolean wasSave = commentRepository.save(convectorCommentFormToComment(comment));
+        return new Answer<>(wasSave, wasSave ? "" : "Sorry, repeat the request or write to the administration");
     }
 
     @Override
@@ -49,8 +61,18 @@ public class CommentServiceImpl implements CommentService {
             return new Answer<>(true, "");
         }
 
+        if (orderRepository.findBy(OrderSearchCriteria
+                                .builder()
+                                .userIds(List.of(user.getId()))
+                                .templateIds(List.of(comment.getTailoringOrderId()))
+                                .build(),
+                        new Page())
+                .isEmpty()
+        ) {
+            return new Answer<>(false, "Sorry, it's not your order");
+        }
 
-        return new Answer<>();
+        return new Answer<>(true, "");
     }
 
     private CommentsUnderOrder convectorCommentFormToComment(CommentOrderForm form) {
