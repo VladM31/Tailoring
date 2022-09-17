@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 import sigma.nure.tailoring.tailoring.entities.PartSizeForTemplate;
 import sigma.nure.tailoring.tailoring.entities.TailoringTemplateWithMaterialIds;
 import sigma.nure.tailoring.tailoring.tools.Page;
@@ -12,6 +13,7 @@ import sigma.nure.tailoring.tailoring.tools.TailoringTemplateSearchCriteria;
 
 import java.util.*;
 
+@Repository
 public class JdbcTemplatePostgresTailoringTemplateRepository implements TailoringTemplateRepository {
 
     private static final String SELECT_TEMPLATE = "" +

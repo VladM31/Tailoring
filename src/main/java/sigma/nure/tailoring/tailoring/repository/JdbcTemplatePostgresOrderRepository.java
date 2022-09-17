@@ -153,7 +153,7 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         args.put("end_date", order.getEndDate());
         args.put("cost", order.getCost());
         args.put("count_of_order", order.getCountOfOrder());
-        args.put("user_id", order.getUserData().getId());
+        args.put("user_id", order.getCustomerOrder().getId());
         args.put("material_id", order.getMaterial().getId());
         args.put("color_id", order.getColor().getId());
 
@@ -176,7 +176,7 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         args.put("countOfOrder", order.getCountOfOrder());
         args.put("materialId", order.getMaterial().getId());
         args.put("colorId", order.getColor().getId());
-        args.put("userId", order.getUserData().getId());
+        args.put("userId", order.getCustomerOrder().getId());
         args.put("partSizes", this.gson.toJson(order.getPartSizes()));
         args.put("theImages", this.gson.toJson(order.getImages()));
         args.put("orderId", order.getId());
@@ -191,8 +191,8 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
             TailoringOrder order = orderRowMapper.mapRow(r, i);
             order.setId(r.getLong("orderId"));
 
-            order.setUserData(customerOrderRowMapper.mapRow(r, i));
-            order.getUserData().setId(r.getLong("userId"));
+            order.setCustomerOrder(customerOrderRowMapper.mapRow(r, i));
+            order.getCustomerOrder().setId(r.getLong("userId"));
 
             Color color = new Color();
             color.setId(r.getInt("colorId"));
