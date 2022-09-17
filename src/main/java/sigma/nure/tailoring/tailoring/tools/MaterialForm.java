@@ -15,7 +15,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MaterialForm {
-    @Nullable
     private Integer id;
     @Size(min = 2, max = 60, message = "Name must be greater than 2 and less than 60 characters")
     @NotBlank(message = "Name must not be empty")

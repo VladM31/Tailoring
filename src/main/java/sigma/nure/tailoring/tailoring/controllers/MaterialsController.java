@@ -33,37 +33,12 @@ public class MaterialsController {
 
     @PostMapping(value = "/colors")
     public ResponseEntity<Boolean> saveColor(@Valid @ModelAttribute ColorForm form, @NotNull BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw ResponseException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .build()
-                    .bindingResultToMessage(bindingResult);
-        }
-        if (materialsService.saveColor(form.toColor())) {
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        }
-        throw ResponseException.builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR).
-                errorMessage("MaterialsService.saveColor didn't work")
-                .build();
+        return new ResponseEntity<>(materialsService.saveColor(form.toColor()), HttpStatus.OK);
     }
 
     @PutMapping(value = "/colors")
     public ResponseEntity<Boolean> updateColor(@Valid ColorForm form, BindingResult bindingResult) {
-        if (bindingResult.hasErrors() || form.getId() == null) {
-            throw ResponseException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .answerMessage(form.getId() == null ? "Id is null" : "")
-                    .build()
-                    .bindingResultToMessage(bindingResult);
-        }
-        if (materialsService.updateColor(form.toColor())) {
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        }
-        throw ResponseException.builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR).
-                errorMessage("MaterialsService.updateColor didn't work")
-                .build();
+        return new ResponseEntity<>(materialsService.updateColor(form.toColor()), HttpStatus.OK);
     }
 
 
@@ -74,37 +49,12 @@ public class MaterialsController {
 
     @PostMapping(value = "/materials")
     public ResponseEntity<Boolean> saveMaterial(@Valid MaterialForm form, @NotNull BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw ResponseException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .build()
-                    .bindingResultToMessage(bindingResult);
-        }
-        if (materialsService.saveMaterial(form.toMaterial())) {
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        }
-        throw ResponseException.builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR).
-                errorMessage("MaterialsService.saveMaterial didn't work")
-                .build();
+        return new ResponseEntity<>(materialsService.saveMaterial(form.toMaterial()), HttpStatus.OK);
     }
 
     @PutMapping(value = "/materials")
     public ResponseEntity<Boolean> updateMaterial(@Valid MaterialForm form, @NotNull BindingResult bindingResult) {
-        if (bindingResult.hasErrors() || form.getId() == null) {
-            throw ResponseException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .answerMessage(form.getId() == null ? "Id is null" : "")
-                    .build()
-                    .bindingResultToMessage(bindingResult);
-        }
-        if (materialsService.updateMaterial(form.toMaterial())) {
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        }
-        throw ResponseException.builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR).
-                errorMessage("MaterialsService.updateMaterial didn't work")
-                .build();
+        return new ResponseEntity<>(materialsService.updateMaterial(form.toMaterial()), HttpStatus.OK);
     }
 
 
