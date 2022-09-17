@@ -10,7 +10,7 @@ import sigma.nure.tailoring.tailoring.tools.CommentOrderForm;
 import java.util.List;
 
 public interface CommentService {
-    Answer<HttpStatus> save(User user, CommentOrderForm comment, BindingResult bindingResult);
+    boolean save(User user, CommentOrderForm comment);
 
     List<CommentOrderForm> findAllByOrderId(Long orderId);
 }

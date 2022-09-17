@@ -5,6 +5,7 @@ import org.springframework.validation.BindingResult;
 import sigma.nure.tailoring.tailoring.entities.CommentsUnderOrder;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
+import sigma.nure.tailoring.tailoring.exceptions.TriedToTakeSecurityDataException;
 import sigma.nure.tailoring.tailoring.repository.CommentsUnderOrderRepository;
 import sigma.nure.tailoring.tailoring.repository.OrderRepository;
 import sigma.nure.tailoring.tailoring.tools.Answer;
@@ -26,22 +27,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Answer<HttpStatus> save(User user, CommentOrderForm comment, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new Answer<>(HttpStatus.BAD_REQUEST, bindingResult.getFieldErrors()
-                    .stream().collect(Collectors
-                            .mapping(error -> error.getDefaultMessage(),
-                                    Collectors.joining("\n"))));
-        }
+    public boolean save(User user, CommentOrderForm comment) {
+        validByUserRights(user, comment);
 
-        var validAnswer = this.validByUserRights(user, comment);
-        if (!validAnswer.getValue().equals(HttpStatus.OK)) {
-            return validAnswer;
-        }
-
-        final boolean wasSave = commentRepository.save(convectorCommentFormToComment(comment));
-        return new Answer<>(wasSave ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
-                wasSave ? "" : "Sorry, repeat the request or write to the administration");
+        return commentRepository.save(convectorCommentFormToComment(comment));
     }
 
     @Override
@@ -58,9 +47,9 @@ public class CommentServiceImpl implements CommentService {
                         ));
     }
 
-    private Answer<HttpStatus> validByUserRights(User user, CommentOrderForm comment) {
+    private void validByUserRights(User user, CommentOrderForm comment) {
         if (user.getRole().equals(Role.ADMINISTRATION)) {
-            return new Answer<>(HttpStatus.OK, "");
+            return;
         }
 
         if (orderRepository.findBy(OrderSearchCriteria
@@ -71,10 +60,9 @@ public class CommentServiceImpl implements CommentService {
                         new Page())
                 .isEmpty()
         ) {
-            return new Answer<>(HttpStatus.BAD_REQUEST, "Sorry, it's not your order");
+            throw new TriedToTakeSecurityDataException("User with id = %d with name = %s %s tried added comment for order with id = %d"
+                    .formatted(user.getId(), user.getFirstname(), user.getLastname(), comment.getTailoringOrderId()));
         }
-
-        return new Answer<>(HttpStatus.OK, "");
     }
 
     private CommentsUnderOrder convectorCommentFormToComment(CommentOrderForm form) {
