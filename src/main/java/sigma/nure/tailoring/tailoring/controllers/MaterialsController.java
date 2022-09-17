@@ -18,8 +18,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@PropertySource("classpath:properties/rest-resources.properties")
-@RequestMapping("${material.url.resources}")
+@RequestMapping("/order-stuff")
 public class MaterialsController {
     private final MaterialsService materialsService;
 
