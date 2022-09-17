@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="sort_style.css">
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <title>Multiselect Dropdown Demo</title>
+</head>
+
+<body>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container-filter-and-info">
+    <form action="" class="filter-box" id="filter-id">
+        <button class="hidden-button" onclick="getOrHiddeFilter('filter-id')">Hide</button>
+
+        <label for="" class="filter-main-label filter-item-margin">Find by</label>
+
+        <!-- <input type="hidden" name="materials" value="1"> -->
+        <select name="materials" multiple id="materials-select-id" class="filter-input-box filter-item-margin" value="">
+            <option value="Wool">Wool</option>
+            <option value="Silk">Silk</option>
+            <option value="Cotton">Cotton</option>
+        </select>
+
+        <!-- <input type="hidden" name="colors" value="12"> -->
+        <select name="colors" multiple id="colors-select-id" class="filter-input-box filter-item-margin" value="">
+            <option value="Black">Black</option>
+            <option value="White">White</option>
+            <option value="Red">Red</option>
+        </select>
+
+        <!-- <input type="hidden" name="statesOrder" value="1"> -->
+        <select name="statesOrder" multiple id="state-order-select-id" class="filter-input-box filter-item-margin"
+                value="">
+            <option value="CANCELLED" selected>Cancelled</option>
+            <option value="DONE">Done</option>
+            <option value="PROCESSING">Processing</option>
+            <option value="UNDER_DEVELOPMENT">Under development</option>
+            <option value="AWAITING_PRICE_CONFIRMATION">Awaiting price confirmatio</option>
+            <option value="EXECUTED">Executed</option>
+        </select>
+
+        <!-- <input type="hidden" name="paymentStatesOrder" value="1"> -->
+        <select name="paymentStatesOrder" multiple id="payment-state-order-select-id"
+                class="filter-input-box filter-item-margin" value="">
+            <option value="PAYMENTED">Paymented</option>
+            <option value="NOT_PAYMENTED">Not paymented</option>
+            <option value="PAYMENTED_HALF">Paymented half</option>
+        </select>
+
+        <input type="text" placeholder="Phone number" class="filter-input-box filter-item-margin">
+
+        <input type="text" placeholder="Country" class="filter-input-box filter-item-margin">
+
+        <input type="text" placeholder="City" class="filter-input-box filter-item-margin">
+
+        <input type="text" placeholder="Firstname" class="filter-input-box filter-item-margin">
+
+        <div class="filter-item-margin">
+            <label for="" class="input-between-label">Price</label>
+            <div class="input-between-box">
+                <input type="number" name="" id="" class="input-between" placeholder="Min">
+                <input type="number" name="" id="" class="input-between" placeholder="Max">
+            </div>
+        </div>
+
+        <div class="filter-item-margin">
+            <label for="" class="input-between-label">Count</label>
+            <div class="input-between-box">
+                <input type="number" name="" id="" class="input-between" placeholder="Min">
+                <input type="number" name="" id="" class="input-between" placeholder="Max">
+            </div>
+        </div>
+
+        <div class="filter-item-margin">
+            <label for="" class="input-between-label">Date of creation</label>
+            <div class="input-between-box">
+                <input type="datetime-local" name="" id="" class="input-between data-style" placeholder="Min">
+                <input type="datetime-local" name="" id="" class="input-between data-style" placeholder="Max">
+            </div>
+        </div>
+
+        <div class="filter-item-margin">
+            <label for="" class="input-between-label">Date end</label>
+            <div class="input-between-box">
+                <input type="date" name="" id="" class="input-between data-style" placeholder="Min">
+                <input type="date" name="" id="" class="input-between data-style" placeholder="Max">
+            </div>
+        </div>
+        <div class="filter-item-margin">
+            <label for="" class="input-between-label">Type order</label>
+            <div class="input-between-box">
+                <div class="box-for-check-box">
+                    <input type="checkbox" name="" class="check-box-style" id="tempalte-id">
+                    <label for="tempalte-id" class="check-box-style-for-text">Template</label>
+                </div>
+                <div class="box-for-check-box">
+                    <input type="checkbox" name="" class="check-box-style" id="special-id">
+                    <label for="special-id" class="check-box-style-for-text">Special</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-item-margin">
+            <label for="" class="input-between-label">Gender</label>
+            <div class="input-between-box">
+                <div class="box-for-check-box">
+                    <input type="checkbox" name="" class="check-box-style" id="male-id">
+                    <label for="male-id" class="check-box-style-for-text">Male</label>
+                </div>
+                <div class="box-for-check-box">
+                    <input type="checkbox" name="" class="check-box-style" id="female-id">
+                    <label for="female-id" class="check-box-style-for-text">Female</label>
+                </div>
+            </div>
+        </div>
+
+        <input type="submit" value="Find" class="submit-input filter-item-margin" onclick="selectToMultipleSelect()">
+    </form>
+    <div class="order-and-sort-container">
+        <div class="pageable-box">
+            <select name="sortSelectField" form="filter-id" id="" class="sort-select">
+                <option value="date registration">Date registration</option>
+            </select>
+            <input form="filter-id" type="hidden" name="desc" id="sort-input-desc" value="true">
+            <button id="sort-button-id" onclick="changeDirection(this.id)" class="sort-button-style"></button>
+        </div>
+        <div class="order-container">
+            <div class="order-box">
+                <h2>Number: 1234</h2>
+                <p>Material : <samp style="color:#520974;">Silk</samp></p>
+                <p>Color : <samp style="color:#520974;">Red</samp></p>
+                <p>State : <samp style="color:#520974;">Done</samp></p>
+                <p>Payment state : <samp style="color:#520974;">Not paymented</samp></p>
+                <p>Address for send : <samp style="color:#520974;">Pushkina Ave, 77А, Dnipro, Dnipropetrovsk Oblast,
+                    49006</samp></p>
+                <p>Price : <samp style="color:#520974;">1000 UAH</samp></p>
+                <p>Count : <samp style="color:#520974;">1</samp></p>
+                <p>Date of creation : <samp style="color:#520974;">2022-09-10 11:15</samp></p>
+                <p>End date : <samp style="color:#520974;">2022-09-10</samp></p>
+                <p>Is from template : <samp style="color:#520974;">true</samp></p>
+                <p>Images count : <samp style="color:#520974;">0</samp></p>
+                <p>Past size count : <samp style="color:#520974;">0</samp></p>
+                <p>Customer firstname : <samp style="color:#520974;">Vald</samp></p>
+                <p>Customer phone number : <samp style="color:#520974;">380990273345</samp></p>
+                <p>Is Customer male : <samp style="color:#520974;">true</samp></p>
+                <p>Customer country : <samp style="color:#520974;">Ukrainian</samp></p>
+                <p>Customer city : <samp style="color:#520974;">Dnipro</samp></p>
+                <div class="link-button-box">
+                    <a href="#order">
+                        <button type="button" class="link-button">Details</button>
+                    </a>
+                </div>
+
+            </div>
+            <div class="order-box">
+                <h2>Number: 1234</h2>
+                <p>Material : <samp style="color:#520974;">Silk</samp></p>
+                <p>Color : <samp style="color:#520974;">Red</samp></p>
+                <p>State : <samp style="color:#520974;">Done</samp></p>
+                <p>Payment state : <samp style="color:#520974;">Not paymented</samp></p>
+                <p>Address for send : <samp style="color:#520974;">Pushkina Ave, 77А, Dnipro, Dnipropetrovsk Oblast,
+                    49006</samp></p>
+                <p>Price : <samp style="color:#520974;">1000 UAH</samp></p>
+                <p>Count : <samp style="color:#520974;">1</samp></p>
+                <p>Date of creation : <samp style="color:#520974;">2022-09-10 11:15</samp></p>
+                <p>End date : <samp style="color:#520974;">2022-09-10</samp></p>
+                <p>Is from template : <samp style="color:#520974;">true</samp></p>
+                <p>Images count : <samp style="color:#520974;">0</samp></p>
+                <p>Past size count : <samp style="color:#520974;">0</samp></p>
+                <p>Customer firstname : <samp style="color:#520974;">Vald</samp></p>
+                <p>Customer phone number : <samp style="color:#520974;">380990273345</samp></p>
+                <p>Is Customer male : <samp style="color:#520974;">true</samp></p>
+                <p>Customer country : <samp style="color:#520974;">Ukrainian</samp></p>
+                <p>Customer city : <samp style="color:#520974;">Dnipro</samp></p>
+                <div class="link-button-box">
+                    <a href="#order">
+                        <button type="button" class="link-button">Details</button>
+                    </a>
+                </div>
+
+            </div>
+            <div class="order-box">
+                <h2>Number: 1234</h2>
+                <p>Material : <samp style="color:#520974;">Silk</samp></p>
+                <p>Color : <samp style="color:#520974;">Red</samp></p>
+                <p>State : <samp style="color:#520974;">Done</samp></p>
+                <p>Payment state : <samp style="color:#520974;">Not paymented</samp></p>
+                <p>Address for send : <samp style="color:#520974;">Pushkina Ave, 77А, Dnipro, Dnipropetrovsk Oblast,
+                    49006</samp></p>
+                <p>Price : <samp style="color:#520974;">1000 UAH</samp></p>
+                <p>Count : <samp style="color:#520974;">1</samp></p>
+                <p>Date of creation : <samp style="color:#520974;">2022-09-10 11:15</samp></p>
+                <p>End date : <samp style="color:#520974;">2022-09-10</samp></p>
+                <p>Is from template : <samp style="color:#520974;">true</samp></p>
+                <p>Images count : <samp style="color:#520974;">0</samp></p>
+                <p>Past size count : <samp style="color:#520974;">0</samp></p>
+                <p>Customer firstname : <samp style="color:#520974;">Vald</samp></p>
+                <p>Customer phone number : <samp style="color:#520974;">380990273345</samp></p>
+                <p>Is Customer male : <samp style="color:#520974;">true</samp></p>
+                <p>Customer country : <samp style="color:#520974;">Ukrainian</samp></p>
+                <p>Customer city : <samp style="color:#520974;">Dnipro</samp></p>
+                <div class="link-button-box">
+                    <a href="#order">
+                        <button type="button" class="link-button">Details</button>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+<!-- <form action="">
+  <input type="hidden" name="myitems" value="" />
+  <select name="myitems[]" multiple>
+    <option value="1">Foo</option>
+    <option value="2">Bar</option>
+  </select>
+
+  <input type="submit" value="">
+</form> -->
+</body>
+<script src="multi-select-dropdown.js"></script>
+<script src="hidde_element.js"></script>
+<script src="sort-buttons.js"></script>
+<script>
+
+    arrayReplaceElements.push(classSwap(document.getElementById('filter-id')));
+    sortButtons.push(sortButton('sort-button-id', 'sort-input-desc', true));
+    setSymbols();
+    startCustomSelect([
+        multipleCustomeSelect('materials-select-id', "Choose material", 'selected-option'),
+        multipleCustomeSelect('colors-select-id', "Choose color", 'selected-option'),
+        multipleCustomeSelect('state-order-select-id', "Choose state", 'selected-option'),
+        multipleCustomeSelect('payment-state-order-select-id', "Choose payment", 'selected-option')
+    ]);
+</script>
+
+</html>
