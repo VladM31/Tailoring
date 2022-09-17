@@ -1,14 +1,11 @@
 package sigma.nure.tailoring.tailoring.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import sigma.nure.tailoring.tailoring.entities.CommentsUnderOrder;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.exceptions.TriedToTakeSecurityDataException;
-import sigma.nure.tailoring.tailoring.repository.CommentsUnderOrderRepository;
+import sigma.nure.tailoring.tailoring.repository.OrderCommentsRepository;
 import sigma.nure.tailoring.tailoring.repository.OrderRepository;
-import sigma.nure.tailoring.tailoring.tools.Answer;
 import sigma.nure.tailoring.tailoring.tools.CommentOrderForm;
 import sigma.nure.tailoring.tailoring.tools.OrderSearchCriteria;
 import sigma.nure.tailoring.tailoring.tools.Page;
@@ -18,19 +15,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommentServiceImpl implements CommentService {
-    private final CommentsUnderOrderRepository commentRepository;
+    private final OrderCommentsRepository orderCommentsRepository;
     private final OrderRepository orderRepository;
 
-    public CommentServiceImpl(CommentsUnderOrderRepository repository, OrderRepository orderRepository) {
-        this.commentRepository = repository;
+    public CommentServiceImpl(OrderCommentsRepository repository, OrderRepository orderRepository) {
+        this.orderCommentsRepository = repository;
         this.orderRepository = orderRepository;
     }
 
     @Override
     public boolean save(User user, CommentOrderForm comment) {
-        validByUserRights(user, comment);
+        checkUserRights(user, comment);
 
-        return commentRepository.save(convectorCommentFormToComment(comment));
+        return orderCommentsRepository.save(convectorCommentFormToComment(comment));
     }
 
     @Override
@@ -38,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
         if (orderId == null) {
             return new ArrayList<>();
         }
-        return commentRepository.findAllByOrderId(orderId)
+        return orderCommentsRepository.findAllByOrderId(orderId)
                 .stream()
                 .collect(
                         Collectors.mapping(
@@ -47,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
                         ));
     }
 
-    private void validByUserRights(User user, CommentOrderForm comment) {
+    private void checkUserRights(User user, CommentOrderForm comment) {
         if (user.getRole().equals(Role.ADMINISTRATION)) {
             return;
         }
@@ -60,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
                         new Page())
                 .isEmpty()
         ) {
-            throw new TriedToTakeSecurityDataException("User with id = %d with name = %s %s tried added comment for order with id = %d"
+            throw new TriedToTakeSecurityDataException("User with id = %d with name = %s %s tried to add comment for order with id = %d"
                     .formatted(user.getId(), user.getFirstname(), user.getLastname(), comment.getTailoringOrderId()));
         }
     }

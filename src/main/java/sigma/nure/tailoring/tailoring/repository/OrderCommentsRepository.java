@@ -4,7 +4,7 @@ import sigma.nure.tailoring.tailoring.entities.CommentsUnderOrder;
 
 import java.util.List;
 
-public interface CommentsUnderOrderRepository {
+public interface OrderCommentsRepository {
     boolean save(CommentsUnderOrder comment);
 
     List<CommentsUnderOrder> findAllByOrderId(Long orderId);
