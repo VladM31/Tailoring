@@ -1,0 +1,31 @@
+
+.sort-select {
+    height: 40px;
+    width: 200px;
+    border-color: #520974;
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+.sort-button-style {
+    margin-left: 5px;
+    height: 40px;
+    width: 40px;
+    color: #520974;
+    font-size: 20px;
+    border-radius: 5px;
+    font: inherit;
+    outline: inherit;
+    border: 1px solid #520974;
+    padding: 0px;
+}
+
+.sort-button-style:focus {
+    outline: none;
+}
+
+.pageable-box {
+    display: flex;
+    justify-content: left;
+    margin-left: 10px;
+}
