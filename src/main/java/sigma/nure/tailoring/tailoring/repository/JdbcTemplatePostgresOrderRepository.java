@@ -38,8 +38,9 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
                     "(:materialIdsAreNull OR o.material_id IN(:materialIds::int)) AND \n" +
                     "(:colorIdsAreNull OR o.color_id IN(:colorIds::int)) AND \n" +
                     "(:userIdsAreNull OR o.user_id IN(:userIds::bigint)) AND \n" +
-                    "(:templateIdsAreNull OR o.tailoring_templates_id IN(:templateIds::bigint) OR " +
-                    "  (:templateIdsContainingNull AND o.tailoring_templates_id IS NULL)) AND \n" +
+                    "(:templateIdsAreNull OR o.tailoring_templates_id IN(:templateIds::bigint)) AND \n" +
+                    "(:isNotTemplate OR o.tailoring_templates_id IS NULL) AND \n" +
+                    "(:isTemplate OR o.tailoring_templates_id IS NOT NULL) AND \n" +
                     "(:orderStatusesAreNull OR o.order_status IN(:orderStatuses)) AND \n" +
                     "(:paymentStatusesAreNull OR o.order_payment_status IN(:paymentStatuses)) AND \n" +
                     "(:address::varchar IS NULL OR o.address_for_send LIKE CONCAT ('%',:address::varchar, '%')) AND \n" +
@@ -130,10 +131,8 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         paramForFiltering.put("lessOrEqualsCost", Range.to(parameters.getCost()));
         paramForFiltering.put("greatOrEqualsCount", Range.from(parameters.getCount()));
         paramForFiltering.put("lessOrEqualsCount", Range.to(parameters.getCount()));
-        paramForFiltering.put("templateIdsContainingNull", parameters.getTemplateIds() == null ? false :
-                StreamSupport.stream(parameters.getTemplateIds().spliterator(), false)
-                        .anyMatch(id -> id == null)
-        );
+        paramForFiltering.put("isTemplate", parameters.getIsTemplate() == null ? true : !parameters.getIsTemplate());
+        paramForFiltering.put("isNotTemplate", parameters.getIsTemplate() == null ? true : parameters.getIsTemplate());
 
         return namedJdbc.query(scriptSelect, paramForFiltering, orderRowMapper);
     }
