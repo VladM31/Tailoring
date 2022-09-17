@@ -1,7 +1,5 @@
 package sigma.nure.tailoring.tailoring.controllers;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sigma.nure.tailoring.tailoring.entities.Color;
@@ -13,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order-stuff")
+@RequestMapping("/orders")
 @Validated
 public class MaterialsController {
     private final MaterialsService materialsService;
@@ -28,13 +26,13 @@ public class MaterialsController {
     }
 
     @PostMapping(value = "/colors")
-    @Validated({OnSave.class, Every.class})
+    @Validated({OnSave.class, AllOperation.class})
     public boolean saveColor(@Valid ColorForm form) {
         return materialsService.saveColor(form.toColor());
     }
 
     @PutMapping(value = "/colors")
-    @Validated({OnUpdate.class, Every.class})
+    @Validated({OnUpdate.class, AllOperation.class})
     public boolean updateColor(@Valid ColorForm form) {
         return materialsService.updateColor(form.toColor());
     }
@@ -45,13 +43,13 @@ public class MaterialsController {
     }
 
     @PostMapping(value = "/materials")
-    @Validated({OnSave.class, Every.class})
+    @Validated({OnSave.class, AllOperation.class})
     public boolean saveMaterial(@Valid MaterialForm form) {
         return materialsService.saveMaterial(form.toMaterial());
     }
 
     @PutMapping(value = "/materials")
-    @Validated({OnUpdate.class, Every.class})
+    @Validated({OnUpdate.class, AllOperation.class})
     public boolean updateMaterial(@Valid MaterialForm form) {
         return materialsService.updateMaterial(form.toMaterial());
     }
