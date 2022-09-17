@@ -13,16 +13,16 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class PopularTemplateServiceImpl implements PopularTemplateService {
-    private static final long DELAY_BEFORE_NEW_CALCULATION_IN_MICROSECOND = 21_600_000;
+    private static final Long DELAY_BEFORE_NEW_CALCULATION_IN_MICROSECOND = 21_600_000L;
     private static final Long ALL_ORDERS = Long.MAX_VALUE;
     private static final Long ALL_TEMPLATES = Long.MAX_VALUE;
+    private static final Long EMPTY_VALUE = 0L;
     private static final boolean MAN = true;
     private static final boolean WOMAN = false;
     private static final double IMPORTANCE_COEFFICIENT_FOR_SIZE_ORDERS = 0.7;
     private static final double IMPORTANCE_COEFFICIENT_FOR_POPULAR_GENDER = 0.5;
     private static final double IMPORTANCE_COEFFICIENT_FOR_NOT_POPULAR_GENDER = 0.3;
-    private static final Long EMPTY_VALUE = 0L;
-
+    
     private final OrderRepository orderRepository;
     private final TailoringTemplateRepository templateRepository;
     private List<PopularTailoringTemplate> popularTemplates;
@@ -99,7 +99,7 @@ public class PopularTemplateServiceImpl implements PopularTemplateService {
                         .build());
     }
 
-    private Map<Long, Double> templateIdAndImportanceCoefficient(boolean isPopularMale, Map<Long, Map<Boolean, Long>> processedData) {
+    private Map<Long, Double> getTemplateIdWithImportanceCoefficient(boolean isPopularMale, Map<Long, Map<Boolean, Long>> processedData) {
         Map<Long, Double> map = new HashMap<>();
 
         processedData.forEach((k, v) -> {
@@ -114,7 +114,7 @@ public class PopularTemplateServiceImpl implements PopularTemplateService {
     }
 
     private Comparator<TailoringTemplateWithMaterialIds> createComparator(boolean isPopularMale, Map<Long, Map<Boolean, Long>> processedData) {
-        final var importanceCoefficient = templateIdAndImportanceCoefficient(isPopularMale, processedData);
+        final var importanceCoefficient = getTemplateIdWithImportanceCoefficient(isPopularMale, processedData);
 
         return (first, second) -> Double.compare(
                 importanceCoefficient.getOrDefault(second.getId(), EMPTY_VALUE.doubleValue()),
