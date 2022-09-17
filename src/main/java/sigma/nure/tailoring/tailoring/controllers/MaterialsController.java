@@ -23,38 +23,37 @@ public class MaterialsController {
     }
 
     @GetMapping(value = {"/colors"})
-    public ResponseEntity<List<Color>> getAllColors() {
-        return new ResponseEntity<>(materialsService.findAllColors(), HttpStatus.OK);
+    public List<Color> getAllColors() {
+        return materialsService.findAllColors();
     }
 
     @PostMapping(value = "/colors")
     @Validated({OnSave.class, Every.class})
-    public ResponseEntity<Boolean> saveColor(@Valid ColorForm form) {
-        return new ResponseEntity<>(materialsService.saveColor(form.toColor()), HttpStatus.OK);
+    public boolean saveColor(@Valid ColorForm form) {
+        return materialsService.saveColor(form.toColor());
     }
 
     @PutMapping(value = "/colors")
     @Validated({OnUpdate.class, Every.class})
-    public ResponseEntity<Boolean> updateColor(@Valid ColorForm form) {
-        return new ResponseEntity<>(materialsService.updateColor(form.toColor()), HttpStatus.OK);
+    public boolean updateColor(@Valid ColorForm form) {
+        return materialsService.updateColor(form.toColor());
     }
 
-
     @GetMapping(value = {"/materials"})
-    public ResponseEntity<List<Material>> getAllMaterials() {
-        return new ResponseEntity<>(this.materialsService.findAllMaterial(), HttpStatus.OK);
+    public List<Material> getAllMaterials() {
+        return this.materialsService.findAllMaterial();
     }
 
     @PostMapping(value = "/materials")
     @Validated({OnSave.class, Every.class})
-    public ResponseEntity<Boolean> saveMaterial(@Valid MaterialForm form) {
-        return new ResponseEntity<>(materialsService.saveMaterial(form.toMaterial()), HttpStatus.OK);
+    public boolean saveMaterial(@Valid MaterialForm form) {
+        return materialsService.saveMaterial(form.toMaterial());
     }
 
     @PutMapping(value = "/materials")
     @Validated({OnUpdate.class, Every.class})
-    public ResponseEntity<Boolean> updateMaterial(@Valid MaterialForm form) {
-        return new ResponseEntity<>(materialsService.updateMaterial(form.toMaterial()), HttpStatus.OK);
+    public boolean updateMaterial(@Valid MaterialForm form) {
+        return materialsService.updateMaterial(form.toMaterial());
     }
 
 
