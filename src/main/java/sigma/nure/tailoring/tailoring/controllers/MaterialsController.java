@@ -9,25 +9,21 @@ import org.springframework.web.bind.annotation.*;
 import sigma.nure.tailoring.tailoring.entities.Color;
 import sigma.nure.tailoring.tailoring.entities.Material;
 import sigma.nure.tailoring.tailoring.service.MaterialsService;
-import sigma.nure.tailoring.tailoring.tools.Answer;
 import sigma.nure.tailoring.tailoring.tools.ColorForm;
 import sigma.nure.tailoring.tailoring.tools.MaterialForm;
+import sigma.nure.tailoring.tailoring.tools.ResponseException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @PropertySource("classpath:properties/rest-resources.properties")
 @RequestMapping("${material.url.resources}")
 public class MaterialsController {
-    private static final String EMPTY_DEFAULT_MESSAGE = "";
-    private final String errorMessage;
     private final MaterialsService materialsService;
 
-    public MaterialsController(MaterialsService materialsService, @Value("${error.message}") String errorMessage) {
-        this.errorMessage = errorMessage;
+    public MaterialsController(MaterialsService materialsService) {
         this.materialsService = materialsService;
     }
 
@@ -37,65 +33,80 @@ public class MaterialsController {
     }
 
     @PostMapping(value = "/colors")
-    public ResponseEntity<Answer<Boolean>> saveColor(@Valid ColorForm form, @NotNull BindingResult bindingResult) {
+    public ResponseEntity<Boolean> saveColor(@Valid @ModelAttribute ColorForm form, @NotNull BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return createErrorResponseWithStatus400(bindingResult, EMPTY_DEFAULT_MESSAGE);
+            throw ResponseException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .build()
+                    .bindingResultToMessage(bindingResult);
         }
-        final boolean wasSave = this.materialsService.saveColor(form.toColor());
-        return this.getResponse(wasSave);
+        if (materialsService.saveColor(form.toColor())) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        throw ResponseException.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR).
+                errorMessage("MaterialsService.saveColor didn't work")
+                .build();
     }
 
     @PutMapping(value = "/colors")
-    public ResponseEntity<Answer<Boolean>> updateColor(@Valid ColorForm form, @NotNull BindingResult bindingResult) {
+    public ResponseEntity<Boolean> updateColor(@Valid ColorForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors() || form.getId() == null) {
-            return createErrorResponseWithStatus400(bindingResult, "Id is null");
+            throw ResponseException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .answerMessage(form.getId() == null ? "Id is null" : "")
+                    .build()
+                    .bindingResultToMessage(bindingResult);
         }
-        final boolean wasUpdate = this.materialsService.updateColor(form.toColor());
-        return this.getResponse(wasUpdate);
+        if (materialsService.updateColor(form.toColor())) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        throw ResponseException.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR).
+                errorMessage("MaterialsService.updateColor didn't work")
+                .build();
     }
 
 
     @GetMapping(value = {"/materials"})
-    public ResponseEntity<List<Material>> getAllMaterials(){
+    public ResponseEntity<List<Material>> getAllMaterials() {
         return new ResponseEntity<>(this.materialsService.findAllMaterial(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/materials")
-    public ResponseEntity<Answer<Boolean>> saveMaterial(@Valid MaterialForm form, @NotNull BindingResult bindingResult) {
+    public ResponseEntity<Boolean> saveMaterial(@Valid MaterialForm form, @NotNull BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return createErrorResponseWithStatus400(bindingResult, EMPTY_DEFAULT_MESSAGE);
+            throw ResponseException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .build()
+                    .bindingResultToMessage(bindingResult);
         }
-        final boolean wasSave = this.materialsService.saveMaterial(form.toMaterial());
-        return this.getResponse(wasSave);
+        if (materialsService.saveMaterial(form.toMaterial())) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        throw ResponseException.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR).
+                errorMessage("MaterialsService.saveMaterial didn't work")
+                .build();
     }
 
     @PutMapping(value = "/materials")
-    public ResponseEntity<Answer<Boolean>> updateMaterial(@Valid MaterialForm form, @NotNull BindingResult bindingResult) {
+    public ResponseEntity<Boolean> updateMaterial(@Valid MaterialForm form, @NotNull BindingResult bindingResult) {
         if (bindingResult.hasErrors() || form.getId() == null) {
-            return createErrorResponseWithStatus400(bindingResult, "Id is null");
+            throw ResponseException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .answerMessage(form.getId() == null ? "Id is null" : "")
+                    .build()
+                    .bindingResultToMessage(bindingResult);
         }
-        final boolean wasUpdate = this.materialsService.updateMaterial(form.toMaterial());
-        return this.getResponse(wasUpdate);
+        if (materialsService.updateMaterial(form.toMaterial())) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        throw ResponseException.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR).
+                errorMessage("MaterialsService.updateMaterial didn't work")
+                .build();
     }
 
-    private ResponseEntity<Answer<Boolean>> createErrorResponseWithStatus400(@NotNull BindingResult bindingResult, String defaultMessage) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(new Answer(false, bindingResult
-                    .getFieldErrors()
-                    .stream()
-                    .collect(
-                            Collectors.mapping(e -> e.getDefaultMessage(),
-                                    Collectors.joining("\n"))
-                    )
-            ), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(new Answer<>(false, defaultMessage), HttpStatus.BAD_REQUEST);
-    }
 
-    private ResponseEntity<Answer<Boolean>> getResponse(boolean hasNotError) {
-        return new ResponseEntity<>(
-                new Answer<>(hasNotError, hasNotError ? "" : errorMessage),
-                hasNotError ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
-        );
-    }
 }
