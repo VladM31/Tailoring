@@ -34,11 +34,6 @@ public class PopularTemplateServiceImpl implements PopularTemplateService {
     }
 
     @Override
-    public List<PopularTailoringTemplate> getPopularTailoringTemplateWithLimit(Long limit) {
-        return popularTemplates.stream().limit(limit).collect(Collectors.toUnmodifiableList());
-    }
-
-    @Override
     public List<PopularTailoringTemplate> getPopularTailoringTemplate() {
         return popularTemplates;
     }
