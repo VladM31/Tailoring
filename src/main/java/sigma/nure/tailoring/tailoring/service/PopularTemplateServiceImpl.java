@@ -22,7 +22,7 @@ public class PopularTemplateServiceImpl implements PopularTemplateService {
     private static final double IMPORTANCE_COEFFICIENT_FOR_SIZE_ORDERS = 0.7;
     private static final double IMPORTANCE_COEFFICIENT_FOR_POPULAR_GENDER = 0.5;
     private static final double IMPORTANCE_COEFFICIENT_FOR_NOT_POPULAR_GENDER = 0.3;
-    
+
     private final OrderRepository orderRepository;
     private final TailoringTemplateRepository templateRepository;
     private List<PopularTailoringTemplate> popularTemplates;
@@ -38,8 +38,8 @@ public class PopularTemplateServiceImpl implements PopularTemplateService {
         return popularTemplates;
     }
 
-    @Scheduled(initialDelay = DELAY_BEFORE_NEW_CALCULATION_IN_MICROSECOND,
-            fixedDelay = DELAY_BEFORE_NEW_CALCULATION_IN_MICROSECOND)
+    @Scheduled(initialDelay = 21_600_000L,
+            fixedDelay = 21_600_000L)
     private void calculateTemplate() {
         var templates = getTemplates();
 

@@ -12,6 +12,6 @@ public interface OrderRepository {
     List<TailoringOrder> findBy(OrderSearchCriteria parameters, Page page);
 
     Optional<Long> save(TailoringOrder order);
-  
+
     boolean update(TailoringOrder order);
 }

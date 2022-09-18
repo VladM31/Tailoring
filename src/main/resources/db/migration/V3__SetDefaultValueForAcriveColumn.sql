@@ -1,1 +1,2 @@
-ALTER TABLE "user" ALTER COLUMN active SET DEFAULT true;
+ALTER TABLE "user"
+    ALTER COLUMN active SET DEFAULT true;

@@ -23,7 +23,7 @@ public class ConnectorConfig {
             @Value("${bd.info.url}") String url,
             @Value("${bd.info.username}") String username,
             @Value("${bd.info.password}") String password
-    ){
+    ) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
         dataSource.setDriverClassName("org.postgresql.Driver");
@@ -41,7 +41,7 @@ public class ConnectorConfig {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource){
-        return  new JdbcTemplate(dataSource);
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
     }
 }

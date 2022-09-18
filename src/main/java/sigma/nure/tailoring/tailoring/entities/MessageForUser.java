@@ -17,7 +17,7 @@ public class MessageForUser {
     private String describe;
     private List<MessageEntity> messageEntities;
 
-    public boolean isEmptyNumber(){
+    public boolean isEmptyNumber() {
         return phoneNumber.trim().isEmpty();
     }
 

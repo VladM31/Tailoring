@@ -1,19 +1,19 @@
-p,h1,h2{
+p, h1, h2 {
     margin: 0;
     padding: 0;
 }
 
-a:active, 
-a:hover,  
+a:active,
+a:hover,
 a {
-  text-decoration: none;
-  margin: 0;
-  padding: 0;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
     color: #520974;
 }
 
 
-.top-label-h1-text{
+.top-label-h1-text {
     font-family: 'Griffy';
     font-style: normal;
     font-weight: 500;
@@ -27,47 +27,47 @@ a {
     transition-duration: 0.5s;
 }
 
-.top-label-h1-text:hover{
+.top-label-h1-text:hover {
     font-size: 70px;
     transition-duration: 0.5s;
 }
 
-.line-button-box{
+.line-button-box {
     height: 60px;
     background: rgba(82, 9, 116, 0.9);
-    
+
     display: flex;
     justify-content: center;
 }
 
-.line-button-box-margin-top{
+.line-button-box-margin-top {
     height: 60px;
     display: flex;
     justify-content: center;
     flex-direction: column;
 }
 
-.line-button-box-margin-top-center{
+.line-button-box-margin-top-center {
     display: flex;
     justify-content: center;
     flex-direction: row;
 
-    color:white;
-  
+    color: white;
+
     font-family: 'Imprima';
     font-style: normal;
     font-size: 30px;
 }
 
-.line-button-box-margin-top-center a{
+.line-button-box-margin-top-center a {
     padding-left: 7px;
     padding-right: 7px;
-    color:white;
+    color: white;
     transition-duration: 0.5s;
 }
 
-.line-button-box-margin-top-center a:hover{
-    border-radius:20px;
+.line-button-box-margin-top-center a:hover {
+    border-radius: 20px;
     font-size: 35px;
     transition-duration: 0.5s;
 }
