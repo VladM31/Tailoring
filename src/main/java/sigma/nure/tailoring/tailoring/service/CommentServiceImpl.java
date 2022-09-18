@@ -3,7 +3,7 @@ package sigma.nure.tailoring.tailoring.service;
 import sigma.nure.tailoring.tailoring.entities.CommentsUnderOrder;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
-import sigma.nure.tailoring.tailoring.exceptions.TriedToTakeSecurityDataException;
+import sigma.nure.tailoring.tailoring.exceptions.TriedSetCommentForAnotherUserOrderException;
 import sigma.nure.tailoring.tailoring.repository.OrderCommentsRepository;
 import sigma.nure.tailoring.tailoring.repository.OrderRepository;
 import sigma.nure.tailoring.tailoring.tools.CommentOrderForm;
@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
     public boolean save(User user, CommentOrderForm comment) {
         checkUserRights(user, comment);
 
-        return orderCommentsRepository.save(convectorCommentFormToComment(comment));
+        return orderCommentsRepository.save(toComment(comment));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
                 .stream()
                 .collect(
                         Collectors.mapping(
-                                CommentServiceImpl::convectorCommentToCommentForm,
+                                CommentServiceImpl::toCommentForm,
                                 Collectors.toList()
                         ));
     }
@@ -57,12 +57,12 @@ public class CommentServiceImpl implements CommentService {
                         new Page())
                 .isEmpty()
         ) {
-            throw new TriedToTakeSecurityDataException("User with id = %d with name = %s %s tried to add comment for order with id = %d"
+            throw new TriedSetCommentForAnotherUserOrderException("User with id = %d with name = %s %s tried to add comment for order with id = %d"
                     .formatted(user.getId(), user.getFirstname(), user.getLastname(), comment.getTailoringOrderId()));
         }
     }
 
-    private CommentsUnderOrder convectorCommentFormToComment(CommentOrderForm form) {
+    private CommentsUnderOrder toComment(CommentOrderForm form) {
         CommentsUnderOrder comment = new CommentsUnderOrder();
 
         comment.setMessage(form.getMessage());
@@ -72,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
         return comment;
     }
 
-    private static CommentOrderForm convectorCommentToCommentForm(CommentsUnderOrder comment) {
+    private static CommentOrderForm toCommentForm(CommentsUnderOrder comment) {
         CommentOrderForm form = new CommentOrderForm(
                 comment.getMessage(),
                 comment.getUserId(),
