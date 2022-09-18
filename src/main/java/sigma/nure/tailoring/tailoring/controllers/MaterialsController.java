@@ -21,6 +21,7 @@ public class MaterialsController {
     }
 
     @GetMapping(value = {"/colors"})
+    @ResponseBody
     public List<Color> getAllColors() {
         return materialsService.findAllColors();
     }
@@ -38,6 +39,7 @@ public class MaterialsController {
     }
 
     @GetMapping(value = {"/materials"})
+    @ResponseBody
     public List<Material> getAllMaterials() {
         return this.materialsService.findAllMaterial();
     }
