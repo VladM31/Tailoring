@@ -23,7 +23,7 @@ h1, h2 {
 body {
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-image: url("body_back.jpg");
+    background-image: url("http://localhost:8095/api/v1/images/imagesMainPage/body_back.jpg");
     background-size: 100% 100%;
 
 }
@@ -60,7 +60,7 @@ body {
     width: 850px;
     border-radius: 35px;
 
-    background-image: url("wool.jpg");
+    background-image: url("http://localhost:8095/api/v1/images/imagesMainPage/wool.jpg");
 
     display: flex;
     justify-content: center;
@@ -119,7 +119,7 @@ body {
 }
 
 .template-box {
-    background-image: url("template_back.jpg");
+    background-image: url("http://localhost:8095/api/v1/images/imagesMainPage/template_back.jpg");
     background-size: 100% 100%;
     border-radius: 35px;
     margin-left: 6.5%;
