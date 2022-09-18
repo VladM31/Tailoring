@@ -3,6 +3,7 @@ package sigma.nure.tailoring.tailoring.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.service.PopularTemplateService;
 
 import java.util.function.Function;
@@ -23,9 +24,9 @@ public class MainPageController {
     }
 
     @GetMapping("/")
-    public String showMainPage(Model model){
+    public String showMainPage(User user, Model model){
 
-
+        handler.setUserDataOnTopLabel(model,user);
         model.addAttribute("findFrontImg",findFrontImage);
         model.addAttribute("popularTemplates",popularTemplateService
                 .getPopularTailoringTemplate()
