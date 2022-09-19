@@ -13,10 +13,11 @@ import java.util.stream.Stream;
 
 @Controller
 public class MainPageController {
-    private final PopularTemplateService popularTemplateService;
-    private final HandlerForControllers handler;
     private static final Function<Stream<String>,String> FIND_FRONT_IMAGE =
             (images) -> images.filter(img -> img.contains("front-")).findFirst().orElse("Error.png");
+
+    private final PopularTemplateService popularTemplateService;
+    private final HandlerForControllers handler;
 
     public MainPageController(PopularTemplateService popularTemplateService, HandlerForControllers handler) {
         this.popularTemplateService = popularTemplateService;
