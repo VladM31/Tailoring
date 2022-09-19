@@ -3,13 +3,11 @@ package sigma.nure.tailoring.tailoring.tools;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.UserState;
 import sigma.nure.tailoring.tailoring.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 @Data
@@ -23,7 +21,7 @@ public class UserFilter {
     private String country;
     private String firstname;
     private String lastname;
-    private Range<LocalDateTime> dataRegistration;
+    private Range<LocalDateTime> dateRegistration;
     private Boolean active;
     private Boolean male;
     private UserState[] userStates;
@@ -61,7 +59,7 @@ public class UserFilter {
                 .country(handlerFilter.checkString(this.country))
                 .firstname(handlerFilter.checkString(this.firstname))
                 .lastname(handlerFilter.checkString(this.lastname))
-                .dataRegistration(this.dataRegistration)
+                .dataRegistration(this.dateRegistration)
                 .active(this.active)
                 .male(this.male)
                 .userStates(handlerFilter.toList(this.userStates))

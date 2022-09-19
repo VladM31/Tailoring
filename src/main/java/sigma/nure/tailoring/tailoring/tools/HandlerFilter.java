@@ -17,6 +17,6 @@ public class HandlerFilter {
     }
 
     public String checkString(String string){
-        return string.isBlank() ? null : string;
+        return string == null ? null : string.isBlank() ? null : string;
     }
 }
