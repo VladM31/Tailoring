@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 public class MainPageController {
     private final PopularTemplateService popularTemplateService;
     private final HandlerForControllers handler;
-    private static final Function<Stream<String>,String> findFrontImage =
+    private static final Function<Stream<String>,String> FIND_FRONT_IMAGE =
             (images) -> images.filter(img -> img.contains("front-")).findFirst().orElse("Error.png");
 
     public MainPageController(PopularTemplateService popularTemplateService, HandlerForControllers handler) {
@@ -27,7 +27,7 @@ public class MainPageController {
     public String showMainPage(User user, Model model){
 
         handler.setUserDataOnTopLabel(model,user);
-        model.addAttribute("findFrontImg",findFrontImage);
+        model.addAttribute("findFrontImg",FIND_FRONT_IMAGE);
         model.addAttribute("popularTemplates",popularTemplateService
                 .getPopularTailoringTemplate()
                 .stream()
