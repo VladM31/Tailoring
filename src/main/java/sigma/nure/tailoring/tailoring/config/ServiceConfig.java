@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import sigma.nure.tailoring.tailoring.converters.UserServiceSortColumnConverter;
 import sigma.nure.tailoring.tailoring.repository.OrderRepository;
 import sigma.nure.tailoring.tailoring.repository.TailoringTemplateRepository;
 import sigma.nure.tailoring.tailoring.repository.UserRepository;
@@ -23,7 +24,8 @@ public class ServiceConfig {
 
     @Bean
     public UserService userServiceImpl(UserRepository userRepository,
-                                       @Value("${minutes.waiting.for.user.registration}") long minutesForWork){
-        return new UserServiceImpl(userRepository,minutesForWork);
+                                       @Value("${minutes.waiting.for.user.registration}") long minutesForWork,
+                                       UserServiceSortColumnConverter converter) {
+        return new UserServiceImpl(converter, userRepository, minutesForWork);
     }
 }
