@@ -29,10 +29,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity handleConstraintViolationException(ConstraintViolationException ex, WebRequest request){
-        LOGGER.warn(ex.getMessage(),ex);
+    public ResponseEntity handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage(), ex);
 
-        return new ResponseEntity(ex.getMessage(),HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 }

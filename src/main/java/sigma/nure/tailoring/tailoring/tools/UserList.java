@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 public class UserList {
     private List<UserDto> userDtos;
 
-    public UserList(List<User> users){
+    public UserList(List<User> users) {
         this.userDtos = toUserDtoList(users);
     }
 
-    private List<UserDto> toUserDtoList(List<User> users){
+    private List<UserDto> toUserDtoList(List<User> users) {
         return users.stream()
                 .collect(Collectors.mapping(
                         UserList::toUserDto,
@@ -51,7 +51,7 @@ public class UserList {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    static class UserDto{
+    static class UserDto {
         private Long id;
         private String phoneNumber;
         private String email;
