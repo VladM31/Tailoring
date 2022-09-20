@@ -8,7 +8,7 @@ import sigma.nure.tailoring.tailoring.entities.CommentsUnderOrder;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class CommentsUnderOrderRepositoryJdbcTemplatePostgres implements OrderCommentsRepository {
+public class JdbcTemplatePostgresOrderCommentsRepository implements OrderCommentsRepository {
 
     private static final String INSERT_COMMENT =
             "INSERT INTO comments_under_order(message,date_of_creation,user_id,tailoring_order_id) VALUES(?,?,?,?)";
@@ -26,7 +26,7 @@ public class CommentsUnderOrderRepositoryJdbcTemplatePostgres implements OrderCo
     private final JdbcTemplate jdbc;
     private final RowMapper<CommentsUnderOrder> rowMapper;
 
-    public CommentsUnderOrderRepositoryJdbcTemplatePostgres(JdbcTemplate jdbc) {
+    public JdbcTemplatePostgresOrderCommentsRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
         this.rowMapper = new BeanPropertyRowMapper<>(CommentsUnderOrder.class);
     }

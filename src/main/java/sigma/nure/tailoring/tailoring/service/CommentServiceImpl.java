@@ -3,7 +3,7 @@ package sigma.nure.tailoring.tailoring.service;
 import sigma.nure.tailoring.tailoring.entities.CommentsUnderOrder;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
-import sigma.nure.tailoring.tailoring.exceptions.TriedSetCommentForAnotherUserOrderException;
+import sigma.nure.tailoring.tailoring.exceptions.SetCommentWithoutRightsException;
 import sigma.nure.tailoring.tailoring.repository.OrderCommentsRepository;
 import sigma.nure.tailoring.tailoring.repository.OrderRepository;
 import sigma.nure.tailoring.tailoring.tools.CommentOrderForm;
@@ -57,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
                         new Page())
                 .isEmpty()
         ) {
-            throw new TriedSetCommentForAnotherUserOrderException("User with id = %d with name = %s %s tried to add comment for order with id = %d"
+            throw new SetCommentWithoutRightsException("User with id = %d with name = %s %s tried to add comment for order with id = %d"
                     .formatted(user.getId(), user.getFirstname(), user.getLastname(), comment.getTailoringOrderId()));
         }
     }
