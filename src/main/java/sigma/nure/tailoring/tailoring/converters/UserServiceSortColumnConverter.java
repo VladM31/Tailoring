@@ -11,7 +11,6 @@ public class UserServiceSortColumnConverter {
 
     public UserServiceSortColumnConverter() {
         sortColumnMap = new HashMap<>();
-        putParameters();
     }
 
     public String convert(String columnName) {
@@ -19,16 +18,19 @@ public class UserServiceSortColumnConverter {
     }
 
     private void putParameters() {
-        sortColumnMap.put("city", "u.city");
-        sortColumnMap.put("male", "u.male");
-        sortColumnMap.put("email", "u.email");
-        sortColumnMap.put("active", "u.active");
-        sortColumnMap.put("country", "u.country");
-        sortColumnMap.put("lastname", "u.lastname");
-        sortColumnMap.put("firstname", "u.firstname");
-        sortColumnMap.put("roleName", "r.name");
-        sortColumnMap.put("userState", "u.user_state");
-        sortColumnMap.put("phoneNumber", "u.phone_number");
+
+        sortColumnMap.putAll(Map.of(
+                "city", "u.city",
+                "male", "u.male",
+                "email", "u.email",
+                "active", "u.active",
+                "country", "u.country",
+                "lastname", "u.lastname",
+                "firstname", "u.firstname",
+                "roleName", "r.name",
+                "userState", "u.user_state",
+                "phoneNumber", "u.phone_number"
+        ));
         sortColumnMap.put("dateRegistration", "u.date_registration");
     }
 }
