@@ -2,6 +2,7 @@ package sigma.nure.tailoring.tailoring.converters;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,16 +11,16 @@ public class UserServiceSortColumnConverter {
     private final Map<String, String> sortColumnMap;
 
     public UserServiceSortColumnConverter() {
-        sortColumnMap = new HashMap<>();
+        sortColumnMap = this.buildMap();
     }
 
     public String convert(String columnName) {
         return sortColumnMap.getOrDefault(columnName, "u.date_registration");
     }
 
-    private void putParameters() {
-
-        sortColumnMap.putAll(Map.of(
+    private Map<String, String> buildMap() {
+        Map<String, String> columnMap = new HashMap<>();
+        columnMap.putAll(Map.of(
                 "city", "u.city",
                 "male", "u.male",
                 "email", "u.email",
@@ -31,6 +32,7 @@ public class UserServiceSortColumnConverter {
                 "userState", "u.user_state",
                 "phoneNumber", "u.phone_number"
         ));
-        sortColumnMap.put("dateRegistration", "u.date_registration");
+        columnMap.put("dateRegistration", "u.date_registration");
+        return Collections.unmodifiableMap(columnMap);
     }
 }
