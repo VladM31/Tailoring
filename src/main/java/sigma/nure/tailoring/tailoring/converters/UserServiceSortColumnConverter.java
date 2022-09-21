@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import static java.util.Map.entry;
 
 @Component
 public class UserServiceSortColumnConverter {
@@ -19,20 +20,18 @@ public class UserServiceSortColumnConverter {
     }
 
     private Map<String, String> buildMap() {
-        Map<String, String> columnMap = new HashMap<>();
-        columnMap.putAll(Map.of(
-                "city", "u.city",
-                "male", "u.male",
-                "email", "u.email",
-                "active", "u.active",
-                "country", "u.country",
-                "lastname", "u.lastname",
-                "firstname", "u.firstname",
-                "roleName", "r.name",
-                "userState", "u.user_state",
-                "phoneNumber", "u.phone_number"
-        ));
-        columnMap.put("dateRegistration", "u.date_registration");
-        return Collections.unmodifiableMap(columnMap);
+
+        return Map.ofEntries(
+                entry("city", "u.city"),
+                entry("male", "u.male"),
+                entry("email", "u.email"),
+                entry("active", "u.active"),
+                entry("country", "u.country"),
+                entry("lastname", "u.lastname"),
+                entry("firstname", "u.firstname"),
+                entry("roleName", "r.name"),
+                entry("userState", "u.user_state"),
+                entry("phoneNumber", "u.phone_number"),
+                entry("dateRegistration", "u.date_registration"));
     }
 }
