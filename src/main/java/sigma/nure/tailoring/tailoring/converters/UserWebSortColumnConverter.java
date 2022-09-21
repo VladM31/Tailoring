@@ -3,34 +3,35 @@ package sigma.nure.tailoring.tailoring.converters;
 import org.springframework.stereotype.Component;
 import sigma.nure.tailoring.tailoring.tools.UserSortColumn;
 
-import java.util.HashMap;
 import java.util.Map;
+import static java.util.Map.entry;
 
 @Component
 public class UserWebSortColumnConverter {
     private final Map<UserSortColumn, String> sortColumnMap;
 
     public UserWebSortColumnConverter() {
-        this.sortColumnMap = new HashMap<>();
-        putParameters();
+        this.sortColumnMap = buildMap();
     }
 
     public String convert(UserSortColumn userSortColumn) {
         return sortColumnMap.getOrDefault(userSortColumn, "dateRegistration");
     }
 
-    private void putParameters() {
-        sortColumnMap.put(UserSortColumn.CITY, "city");
-        sortColumnMap.put(UserSortColumn.MALE, "male");
-        sortColumnMap.put(UserSortColumn.EMAIL, "email");
-        sortColumnMap.put(UserSortColumn.ACTIVE, "active");
-        sortColumnMap.put(UserSortColumn.COUNTRY, "country");
-        sortColumnMap.put(UserSortColumn.LASTNAME, "lastname");
-        sortColumnMap.put(UserSortColumn.FIRSTNAME, "firstname");
-        sortColumnMap.put(UserSortColumn.ROLE_NAME, "name");
-        sortColumnMap.put(UserSortColumn.USER_STATE, "userState");
-        sortColumnMap.put(UserSortColumn.PHONE_NUMBER, "phoneNumber");
-        sortColumnMap.put(UserSortColumn.DATE_REGISTRATION, "dateRegistration");
+    private Map<UserSortColumn, String> buildMap() {
+        return Map.ofEntries(
+                entry(UserSortColumn.CITY, "city"),
+                entry(UserSortColumn.MALE, "male"),
+                entry(UserSortColumn.EMAIL, "email"),
+                entry(UserSortColumn.ACTIVE, "active"),
+                entry(UserSortColumn.COUNTRY, "country"),
+                entry(UserSortColumn.LASTNAME, "lastname"),
+                entry(UserSortColumn.FIRSTNAME, "firstname"),
+                entry(UserSortColumn.ROLE_NAME, "roleName"),
+                entry(UserSortColumn.USER_STATE, "userState"),
+                entry(UserSortColumn.PHONE_NUMBER, "phoneNumber"),
+                entry(UserSortColumn.DATE_REGISTRATION, "dateRegistration")
+        );
     }
 
 }
