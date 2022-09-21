@@ -3,9 +3,9 @@ package sigma.nure.tailoring.tailoring.exceptions;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class SetCommentWithoutRightsException extends RuntimeException {
+public class OrderCommentException extends RuntimeException {
 
-    public SetCommentWithoutRightsException(String message) {
+    public OrderCommentException(String message) {
         super(message);
     }
 }
