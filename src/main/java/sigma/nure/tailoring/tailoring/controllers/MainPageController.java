@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 @Controller
 public class MainPageController {
-    private static final Function<Stream<String>,String> FIND_FRONT_IMAGE =
+    private static final Function<Stream<String>, String> FIND_FRONT_IMAGE =
             (images) -> images.filter(img -> img.contains("front-")).findFirst().orElse("Error.png");
 
     private final PopularTemplateService popularTemplateService;
@@ -25,11 +25,11 @@ public class MainPageController {
     }
 
     @GetMapping("/")
-    public String showMainPage(User user, Model model){
+    public String showMainPage(User user, Model model) {
 
-        handler.setUserDataOnTopLabel(model,user);
-        model.addAttribute("findFrontImg",FIND_FRONT_IMAGE);
-        model.addAttribute("popularTemplates",popularTemplateService
+        handler.setUserDataOnTopLabel(model, user);
+        model.addAttribute("findFrontImg", FIND_FRONT_IMAGE);
+        model.addAttribute("popularTemplates", popularTemplateService
                 .getPopularTailoringTemplate()
                 .stream()
                 .limit(3)
