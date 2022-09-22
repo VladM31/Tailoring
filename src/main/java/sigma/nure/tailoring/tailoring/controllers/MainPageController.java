@@ -7,7 +7,6 @@ import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.service.PopularTemplateService;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,17 +16,16 @@ public class MainPageController {
             (images) -> images.filter(img -> img.contains("front-")).findFirst().orElse("Error.png");
 
     private final PopularTemplateService popularTemplateService;
-    private final HandlerForControllers handler;
+    private final ControllerHandler controllerHandler;
 
-    public MainPageController(PopularTemplateService popularTemplateService, HandlerForControllers handler) {
+    public MainPageController(PopularTemplateService popularTemplateService, ControllerHandler handler) {
         this.popularTemplateService = popularTemplateService;
-        this.handler = handler;
+        this.controllerHandler = handler;
     }
 
     @GetMapping("/")
     public String showMainPage(User user, Model model) {
-
-        handler.setUserDataOnTopLabel(model, user);
+        controllerHandler.setTopLabel(model, user);
         model.addAttribute("findFrontImg", FIND_FRONT_IMAGE);
         model.addAttribute("popularTemplates", popularTemplateService
                 .getPopularTailoringTemplate()
