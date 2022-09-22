@@ -3,12 +3,12 @@ package sigma.nure.tailoring.tailoring.tools;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sigma.nure.tailoring.tailoring.converters.UserWebSortColumnConverter;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.UserState;
 import sigma.nure.tailoring.tailoring.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -32,25 +32,25 @@ public class UserFilter {
     private Long offset;
     private UserSortColumn userSortColumn;
 
-    public UserList filtering(UserService userService,HandlerFilter handlerFilter, Map<UserSortColumn,String> sortColumnConvector){
+    public UserList filterAndConvertToUserList(UserService userService, HandlerFilter handlerFilter, UserWebSortColumnConverter sortColumnConvertor) {
         return new UserList(
                 userService.findBy(
                         toUserSearchCriteria(handlerFilter),
-                        toPage(sortColumnConvector)
+                        toPage(sortColumnConvertor)
                 ));
     }
 
-    private Page toPage(Map<UserSortColumn,String> sortColumnConvector){
+    private Page toPage(UserWebSortColumnConverter sortColumnConvertor) {
         return Page.builder()
                 .limit(limit)
                 .offset(offset)
                 .direction(desc ? Page.Direction.DESC : Page.Direction.ASC)
-                .orderBy(sortColumnConvector
-                        .get(userSortColumn != null ? userSortColumn : UserSortColumn.DATE_REGISTRATION))
+                .orderBy(sortColumnConvertor
+                        .convert(userSortColumn))
                 .build();
     }
 
-    private UserSearchCriteria toUserSearchCriteria(HandlerFilter handlerFilter){
+    private UserSearchCriteria toUserSearchCriteria(HandlerFilter handlerFilter) {
         return UserSearchCriteria.builder()
                 .ids(handlerFilter.toList(this.ids))
                 .phoneNumber(handlerFilter.checkString(this.phoneNumber))
