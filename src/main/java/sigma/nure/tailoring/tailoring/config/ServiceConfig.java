@@ -8,10 +8,8 @@ import sigma.nure.tailoring.tailoring.converters.UserServiceSortColumnConverter;
 import sigma.nure.tailoring.tailoring.repository.OrderRepository;
 import sigma.nure.tailoring.tailoring.repository.TailoringTemplateRepository;
 import sigma.nure.tailoring.tailoring.repository.UserRepository;
-import sigma.nure.tailoring.tailoring.service.PopularTemplateService;
-import sigma.nure.tailoring.tailoring.service.PopularTemplateServiceImpl;
-import sigma.nure.tailoring.tailoring.service.UserService;
-import sigma.nure.tailoring.tailoring.service.UserServiceImpl;
+import sigma.nure.tailoring.tailoring.service.*;
+import sigma.nure.tailoring.tailoring.convertors.FileConverter;
 
 @Configuration
 @EnableScheduling
