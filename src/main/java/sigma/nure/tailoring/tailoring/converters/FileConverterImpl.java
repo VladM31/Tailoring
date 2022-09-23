@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Component
 public class FileConverterImpl implements FileConverter {
@@ -26,7 +27,14 @@ public class FileConverterImpl implements FileConverter {
 
     @Override
     public List<File> toFiles(String directory, List<MultipartFile> multipartFiles) {
-        return this.toFiles(directory, multipartFiles, (name) -> getDefaultFileNameGenerator.get().apply(name));
+
+        var map = multipartFiles
+                .stream()
+                .map(f -> f.getOriginalFilename())
+                .distinct()
+                .collect(Collectors.toMap(fn -> fn, fn -> getDefaultFileNameGenerator.get()));
+
+        return this.toFiles(directory, multipartFiles, (name) -> map.get(name).apply(name));
     }
 
     @Override
