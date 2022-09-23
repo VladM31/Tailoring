@@ -102,26 +102,15 @@
         <h2 style="text-align: center;">POPULAR TEMPLATES</h2>
         <div class="template-container template-box">
 
-            <div class="template-data">
-                <a th:href="@{#orders/create(id=${popularTemplates.get(0).id})}">
-                    <img th:src="@{${findFrontImg.apply(popularTemplates.get(0).imagesUrl.stream())}}" alt="">
-                    <p th:text="${popularTemplates.get(0).name}">Blood dress</p>
+            <div class="template-data" th:each="template : ${popularTemplates}">
+                <a th:href="@{#orders/create(id=${template.id})}">
+                    <img th:src="@{ ${@environment.getProperty('template.image.server.directory')} + '/' + ${findFrontImg.apply(template.imagesUrl.stream())}}"
+                         alt="">
+                    <p th:text="${template.name}">Blood dress</p>
                 </a>
             </div>
 
-            <div class="template-data">
-                <a th:href="@{#orders/create(id=${popularTemplates.get(1).id})}">
-                    <img th:src="@{${findFrontImg.apply(popularTemplates.get(1).imagesUrl.stream())}}" alt="">
-                    <p th:text="${popularTemplates.get(1).name}">Lilac dress</p>
-                </a>
-            </div>
 
-            <div class="template-data">
-                <a th:href="@{#orders/create(id=${popularTemplates.get(2).id})}">
-                    <img th:src="@{${findFrontImg.apply(popularTemplates.get(2).imagesUrl.stream())}}" alt="">
-                    <p th:text="${popularTemplates.get(2).name}">T-short</p>
-                </a>
-            </div>
         </div>
     </div>
 

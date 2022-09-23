@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import sigma.nure.tailoring.tailoring.entities.CommentsUnderOrder;
 import sigma.nure.tailoring.tailoring.entities.User;
-import sigma.nure.tailoring.tailoring.tools.Answer;
 import sigma.nure.tailoring.tailoring.tools.CommentOrderForm;
 
 import java.util.List;
