@@ -1,25 +1,30 @@
 package sigma.nure.tailoring.tailoring.service;
 
+import sigma.nure.tailoring.tailoring.converters.UserServiceSortColumnConverter;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.repository.UserRepository;
 import sigma.nure.tailoring.tailoring.tools.Page;
 import sigma.nure.tailoring.tailoring.tools.UserSearchCriteria;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
+    private final UserServiceSortColumnConverter converter;
     private final UserRepository repository;
     private final long minutesForWork;
 
-    public UserServiceImpl(UserRepository repository, long minutesForWork) {
+    public UserServiceImpl(UserServiceSortColumnConverter converter, UserRepository repository, long minutesForWork) {
+        this.converter = converter;
         this.repository = repository;
         this.minutesForWork = minutesForWork;
     }
 
     @Override
     public List<User> findBy(UserSearchCriteria userParameters, Page pageable) {
+        pageable.setOrderBy(converter.convert(pageable.getOrderBy()));
         return repository.findBy(userParameters, pageable);
     }
 
@@ -42,4 +47,6 @@ public class UserServiceImpl implements UserService {
     public boolean update(User user) {
         return repository.update(user);
     }
+
+
 }

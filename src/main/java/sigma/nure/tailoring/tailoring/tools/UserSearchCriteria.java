@@ -15,15 +15,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserSearchCriteria {
     private Iterable<Long> ids;
-    private String phoneNumberContaining;
-    private String emailContaining;
-    private String cityContaining;
-    private String countryContaining;
-    private String firstnameContaining;
-    private String lastnameContaining;
-    private LocalDateTime afterOrEqualsDataRegistration;
-    private LocalDateTime beforeOrEqualsDataRegistration;
-    private Boolean activeUser;
+    private String phoneNumber;
+    private String email;
+    private String city;
+    private String country;
+    private String firstname;
+    private String lastname;
+    private Range<LocalDateTime> dataRegistration;
+    private Boolean active;
     private Boolean male;
     private Iterable<UserState> userStates;
     private Iterable<Role> roles;

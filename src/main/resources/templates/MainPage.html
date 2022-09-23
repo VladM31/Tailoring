@@ -10,17 +10,20 @@
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Neucha"/>
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <link rel="stylesheet" type="text/css" href="main-page.css"/>
+
     <link href='https://fonts.googleapis.com/css?family=Griffy' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Imprima' rel='stylesheet'>
+
+    <link rel="stylesheet" type="text/css" th:href="@{css/main_page.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{css/top_label_style.css}"/>
 </head>
 
 <body>
-
+<th:block th:include="/TopLablePage"></th:block>
 <div>
     <h1 style="text-align: center;">ABOUT AS</h1>
     <div class="box-elements-space-around-row">
-        <img class="about-ua-describe-image" src="WorkPeople.jpg" alt="WorkPeople" style="border-radius: 15px;">
+        <img class="about-ua-describe-image" th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/WorksPeople.png}" alt="WorkPeople" style="border-radius: 15px;">
 
         <p class="about-ua-describe-text">
             Our company was founded in 2022 as tailoring company. Since then, we have built a reputation as one of
@@ -53,7 +56,9 @@
             const elementTextSlide = document.getElementById('slide-text-p');
             const elementMaterialHref = document.getElementById('slide-href');
 
-            const photos = ["wool.jpg", "shelk.jpg", "cotton.jpg"];
+            const photos = ["http://localhost:8095/api/v1/images/imagesMainPage/wool.jpg",
+                "http://localhost:8095/api/v1/images/imagesMainPage/shelk.jpg",
+                "http://localhost:8095/api/v1/images/imagesMainPage/cotton.jpg"];
             const text = ["Wool", "Shelk", "Cotton"];
             const url = "#material=";
 
@@ -79,13 +84,13 @@
         <div class="box-elements-space-around-row what-we-do-order-box">
 
             <div class="what-we-do-order">
-                <img src="template.png" alt="">
+                <img th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/template.png}" alt="">
                 <h3>Based on template</h3>
                 <p>We have ready-made designs in which you can change the color, material and size. Their delivery
                     speed is fast.</p>
             </div>
             <div class="what-we-do-order">
-                <img src="not_template.png" alt="">
+                <img th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/not_template.png}" alt="">
                 <h3>Special the order</h3>
                 <p>If you want, what is not on the market. You can order from us using the convenient order creation
                     design.</p>
@@ -98,18 +103,24 @@
         <div class="template-container template-box">
 
             <div class="template-data">
-                <img src="template (1).png" alt="">
-                <p>Blood dress</p>
+                <a th:href="@{#orders/create(id=${popularTemplates.get(0).id})}">
+                    <img th:src="@{${findFrontImg.apply(popularTemplates.get(0).imagesUrl.stream())}}" alt="">
+                    <p th:text="${popularTemplates.get(0).name}">Blood dress</p>
+                </a>
             </div>
 
             <div class="template-data">
-                <img src="template (2).png" alt="">
-                <p>Lilac dress</p>
+                <a th:href="@{#orders/create(id=${popularTemplates.get(1).id})}">
+                    <img th:src="@{${findFrontImg.apply(popularTemplates.get(1).imagesUrl.stream())}}" alt="">
+                    <p th:text="${popularTemplates.get(1).name}">Lilac dress</p>
+                </a>
             </div>
 
             <div class="template-data">
-                <img src="template (3).jpg" alt="">
-                <p>T-short</p>
+                <a th:href="@{#orders/create(id=${popularTemplates.get(2).id})}">
+                    <img th:src="@{${findFrontImg.apply(popularTemplates.get(2).imagesUrl.stream())}}" alt="">
+                    <p th:text="${popularTemplates.get(2).name}">T-short</p>
+                </a>
             </div>
         </div>
     </div>
@@ -119,9 +130,9 @@
     <div class="basement">
         <div class="basement-info">
             <p class="basement-name-cite">Lilac tangerine</p>
-            <img class="basement-img" src="instagram-img.png" alt="instagram">
-            <img class="basement-img" src="facebook-img.png" alt="facebook">
-            <img class="basement-img" src="telegram-img.png" alt="telegram">
+            <img class="basement-img" th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/instagram-img.png}" alt="instagram">
+            <img class="basement-img" th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/facebook-img.png}" alt="facebook">
+            <img class="basement-img" th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/telegram-img.png}" alt="telegram">
         </div>
         <p style="text-align: right; padding-right: 20px;"> Delivery across Ukraine is carried out by delivery
             services: "Nova Poshta".
