@@ -32,15 +32,7 @@ public class UserFilter {
     private Long offset;
     private UserSortColumn userSortColumn;
 
-    public UserList filterAndConvertToUserList(UserService userService, HandlerFilter handlerFilter, UserWebSortColumnConverter sortColumnConvertor) {
-        return new UserList(
-                userService.findBy(
-                        toUserSearchCriteria(handlerFilter),
-                        toPage(sortColumnConvertor)
-                ));
-    }
-
-    private Page toPage(UserWebSortColumnConverter sortColumnConvertor) {
+    public Page toPage(UserWebSortColumnConverter sortColumnConvertor) {
         return Page.builder()
                 .limit(limit)
                 .offset(offset)
@@ -50,7 +42,7 @@ public class UserFilter {
                 .build();
     }
 
-    private UserSearchCriteria toUserSearchCriteria(HandlerFilter handlerFilter) {
+    public UserSearchCriteria toUserSearchCriteria(HandlerFilter handlerFilter) {
         return UserSearchCriteria.builder()
                 .ids(handlerFilter.toList(this.ids))
                 .phoneNumber(handlerFilter.checkString(this.phoneNumber))
