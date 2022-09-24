@@ -9,7 +9,6 @@ import sigma.nure.tailoring.tailoring.repository.OrderRepository;
 import sigma.nure.tailoring.tailoring.repository.TailoringTemplateRepository;
 import sigma.nure.tailoring.tailoring.repository.UserRepository;
 import sigma.nure.tailoring.tailoring.service.*;
-import sigma.nure.tailoring.tailoring.convertors.FileConverter;
 
 @Configuration
 @EnableScheduling
