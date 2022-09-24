@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.entities.UserState;
 import sigma.nure.tailoring.tailoring.tools.Page;
+import sigma.nure.tailoring.tailoring.tools.Range;
 import sigma.nure.tailoring.tailoring.tools.UserSearchCriteria;
 
 import java.sql.Timestamp;
@@ -99,15 +100,15 @@ public class JdbcTemplatePostgresUserRepository implements UserRepository {
 
         Map<String, Object> args = new HashMap<>();
 
-        args.put("phoneNumberContaining", param.getPhoneNumberContaining());
-        args.put("emailContaining", param.getEmailContaining());
-        args.put("cityContaining", param.getCityContaining());
-        args.put("countryContaining", param.getCountryContaining());
-        args.put("firstnameContaining", param.getFirstnameContaining());
-        args.put("lastnameContaining", param.getLastnameContaining());
-        args.put("afterOrEqualsDataRegistration", param.getAfterOrEqualsDataRegistration());
-        args.put("beforeOrEqualsDataRegistration", param.getBeforeOrEqualsDataRegistration());
-        args.put("activeUser", param.getActiveUser());
+        args.put("phoneNumberContaining", param.getPhoneNumber());
+        args.put("emailContaining", param.getEmail());
+        args.put("cityContaining", param.getCity());
+        args.put("countryContaining", param.getCountry());
+        args.put("firstnameContaining", param.getFirstname());
+        args.put("lastnameContaining", param.getLastname());
+        args.put("afterOrEqualsDataRegistration", Range.from(param.getDataRegistration()));
+        args.put("beforeOrEqualsDataRegistration", Range.to(param.getDataRegistration()));
+        args.put("activeUser", param.getActive());
         args.put("male", param.getMale());
 
         args.put("idsAreNull", param.getIds() == null);
