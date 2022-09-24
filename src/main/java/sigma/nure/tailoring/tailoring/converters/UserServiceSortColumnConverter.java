@@ -16,7 +16,7 @@ public class UserServiceSortColumnConverter {
     }
 
     public String convert(String columnName) {
-        return sortColumnMap.getOrDefault(columnName, "u.date_registration");
+        return sortColumnMap.getOrDefault(columnName == null ? "" : columnName, "u.date_registration");
     }
 
     private Map<String, String> buildMap() {

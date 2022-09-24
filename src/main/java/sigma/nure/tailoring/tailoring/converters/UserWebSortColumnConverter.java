@@ -15,7 +15,7 @@ public class UserWebSortColumnConverter {
     }
 
     public String convert(UserSortColumn userSortColumn) {
-        return sortColumnMap.getOrDefault(userSortColumn, "dateRegistration");
+        return sortColumnMap.get(userSortColumn != null ? userSortColumn : UserSortColumn.DATE_REGISTRATION);
     }
 
     private Map<UserSortColumn, String> buildMap() {

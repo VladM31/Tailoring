@@ -24,7 +24,10 @@ public class UserController {
 
     @GetMapping()
     public UserList getUsers(UserFilter userFilter) {
-        return userFilter.filterAndConvertToUserList(userService, handlerFilter, converter);
+        var users = userService.findBy(
+                userFilter.toUserSearchCriteria(handlerFilter),
+                userFilter.toPage(converter));
+        return new UserList(users);
     }
 
 
