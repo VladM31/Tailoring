@@ -3,11 +3,13 @@ package sigma.nure.tailoring.tailoring.tools;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.thymeleaf.util.StringUtils;
 import sigma.nure.tailoring.tailoring.entities.Role;
 import sigma.nure.tailoring.tailoring.entities.User;
 import sigma.nure.tailoring.tailoring.entities.UserState;
 
 import javax.validation.constraints.*;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -25,13 +27,10 @@ public class RegistrationUserForm {
     private String password;
     @Email(message = "Email is not correct")
     @Size(max = 60, message = "Email length must be less than 61", groups = OnSave.class)
-    @NotBlank(message = "Email mustn't be blank", groups = OnSave.class)
     private String email;
     @Size(max = 60, message = "City length must be less than 61", groups = OnSave.class)
-    @NotBlank(message = "City mustn't be blank", groups = OnSave.class)
     private String city;
     @Size(max = 60, message = "Country length must less than 61", groups = OnSave.class)
-    @NotBlank(message = "Country mustn't be blank", groups = OnSave.class)
     private String country;
     @Size(min = 2, max = 60, message = "Firstname length must be between 2 and 60", groups = OnSave.class)
     @NotBlank(message = "Firstname number mustn't be blank", groups = OnSave.class)
@@ -41,24 +40,24 @@ public class RegistrationUserForm {
     @NotBlank(message = "Lastname number mustn't be blank", groups = OnSave.class)
     @NotNull(message = "Lastname mustn't be null", groups = OnSave.class)
     private String lastname;
-    @NotNull(message = "Gender mustn't be null", groups = OnSave.class)
-    private Boolean male;
+    private boolean male;
 
     public User toUser() {
         User user = new User();
 
         user.setPhoneNumber(this.phoneNumber);
         user.setPassword(this.password);
-        user.setEmail(this.email);
-        user.setCity(this.city);
-        user.setCountry(this.country);
+        user.setEmail(StringUtils.isEmptyOrWhitespace(this.email) ? null : this.email);
+        user.setCity(StringUtils.isEmptyOrWhitespace(this.city) ? null : this.city);
+        user.setCountry(StringUtils.isEmptyOrWhitespace(this.country) ? null : this.country);
         user.setFirstname(this.firstname);
         user.setLastname(this.lastname);
         user.setMale(this.male);
 
         user.setActive(ACTIVE);
-        user.setUserState(UserState.REGISTERED);
+        user.setUserState(UserState.REGISTRATION);
         user.setRole(Role.CUSTOMER);
+        user.setDateRegistration(LocalDateTime.now());
 
         return user;
     }
