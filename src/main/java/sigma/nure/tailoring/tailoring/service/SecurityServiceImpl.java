@@ -2,6 +2,7 @@ package sigma.nure.tailoring.tailoring.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import sigma.nure.tailoring.tailoring.entities.TelegramMessage;
 import sigma.nure.tailoring.tailoring.entities.User;
@@ -49,9 +50,10 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
+    @Transactional
     public boolean confirmRegistration(ConfirmRegistrationForm confirmRegistrationForm) {
         User user = userService
-                .findByWorkCodeAndPhoneNumber(confirmRegistrationForm.getCode(), confirmRegistrationForm.getNumber())
+                .findByWorkCodeAndPhoneNumber(confirmRegistrationForm.getCode(), confirmRegistrationForm.getPhoneNumber())
                 .orElse(USER_NOT_FOUND);
 
         if (user == USER_NOT_FOUND) {
@@ -67,7 +69,10 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return userService.findBy(UserSearchCriteria.builder().username(username).build(), new Page())
+        return userService.findBy(UserSearchCriteria.builder()
+                        .username(username)
+                        .userStates(List.of(UserState.REGISTERED))
+                        .build(), new Page())
                 .stream()
                 .findFirst()
                 .orElse(USER_NOT_FOUND);
