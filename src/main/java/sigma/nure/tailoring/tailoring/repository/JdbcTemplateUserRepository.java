@@ -43,7 +43,7 @@ public class JdbcTemplateUserRepository implements UserRepository {
             "SET phone_number = ?, password = ?, " +
             "city = ?, country = ?, email = ?, " +
             "firstname = ?, lastname = ?, male = ?, user_state = ?, " +
-            "password = ?, role_id = ?, active = ? " +
+            "role_id = ?, active = ? " +
             "WHERE id = ? ";
 
     private static final String SELECT_WHERE_FIELDS_ARE = SELECT_USER +
@@ -173,8 +173,8 @@ public class JdbcTemplateUserRepository implements UserRepository {
         Map<String, Integer> idByRoleName = this.getMapFindIdByRoleName();
         return jdbc.update(UPDATE_A_LOT_OF_USER_FIELDS_BY_ID, user.getPhoneNumber(), user.getPassword(),
                 user.getCity(), user.getCountry(), user.getEmail(), user.getFirstname(),
-                user.getLastname(), user.isMale(), user.getUserState().name(), user.getId(),
-                user.getPassword(), idByRoleName.get(user.getRole().name()), user.isActive()) != 0;
+                user.getLastname(), user.isMale(), user.getUserState().name(),
+                idByRoleName.get(user.getRole().name()), user.isActive(), user.getId()) != 0;
     }
 
 }
