@@ -22,4 +22,9 @@ public class RepositoryConfig {
     public UserCodeRepository userCodeRepository(JdbcTemplate jdbc) {
         return new JdbcTemplatePostgresUserCodeRepository(jdbc);
     }
+
+    @Bean
+    public OrderCommentsRepository jdbcTemplateOrderCommentsRepository(JdbcTemplate jdbc) {
+        return new JdbcTemplateOrderCommentsRepository(jdbc);
+    }
 }

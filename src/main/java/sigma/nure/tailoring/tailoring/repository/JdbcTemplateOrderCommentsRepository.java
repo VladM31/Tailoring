@@ -11,17 +11,17 @@ import java.util.List;
 public class JdbcTemplateOrderCommentsRepository implements OrderCommentsRepository {
 
     private static final String INSERT_COMMENT =
-            "INSERT INTO comments_under_order(message,date_of_creation,user_id,tailoring_order_id) VALUES(?,?,?,?)";
+            "INSERT INTO comments_under_order(message,date_of_creation,user_id,needlework_order_id) VALUES(?,?,?,?)";
 
     private static final String SELECT_ALL_COMMENTS_BY_ORDER_ID =
             "SELECT id, message, " +
                     "date_of_creation AS dateOfCreation, " +
                     "user_id AS userId, " +
-                    "tailoring_order_id AS tailoringOrderId " +
+                    "needlework_order_id AS tailoringOrderId " +
                     "FROM " +
                     "comments_under_order " +
                     "WHERE " +
-                    "tailoring_order_id = ? ";
+                    "needlework_order_id = ? ";
 
     private final JdbcTemplate jdbc;
     private final RowMapper<CommentsUnderOrder> rowMapper;
