@@ -1,0 +1,112 @@
+p, h1, h2, a {
+    margin: 0;
+    padding: 0;
+}
+
+a:active,
+a:hover,
+a:focus,
+a {
+    all: unset;
+
+}
+
+em {
+    font-size: 20px;
+}
+
+.hidden-text {
+    width: 0px;
+    height: 0px;
+    font-size: 0px;
+
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    max-width: 1920px;
+    max-height: 980px;
+
+    background-image: url("http://localhost:8095/api/v1/images/authorization/check_code_fon.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+
+.container-form {
+    margin-top: 15%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+
+}
+
+.confirm-form {
+    border: 3px solid #520974;
+    width: 520px;
+    min-height: 100px;
+    border-radius: 30px;
+
+    display: flex;
+    justify-content: baseline;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: white;
+    opacity: 85%;
+}
+
+.confirm-form p {
+    padding: 7px;
+    font-size: 24px;
+    color: #520974;
+    margin-bottom: 10px;
+}
+
+.confirm-form em {
+    color: red;
+
+}
+
+.confirm-form input {
+    width: 400px;
+    height: 50px;
+
+    border: 2px solid #520974;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    padding-left: 5px;
+}
+
+.confirm-form button, a, a:hover, a:focus {
+    width: 230px;
+    height: 55px;
+
+    color: white;
+    background-color: #520974;
+
+    margin-bottom: 10px;
+    border: 2px solid #520974;
+    font-size: 32px;
+    border-radius: 15px;
+    opacity: 95%;
+    text-align: center;
+}
+
+.confirm-form button:hover, a:hover {
+    opacity: 100%;
+}
+
+
+.confirm-form input::placeholder {
+    font-size: 24px;
+}
+
+.confirm-form input:hover,
+.confirm-form input:focus {
+    border: 2px solid rgb(86, 207, 255);
+    outline: none;
+}
