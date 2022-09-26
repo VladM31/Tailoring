@@ -3,7 +3,7 @@ package sigma.nure.tailoring.tailoring.service;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sigma.nure.tailoring.tailoring.entities.MessageForUser;
+import sigma.nure.tailoring.tailoring.entities.TelegramMessage;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -49,7 +49,7 @@ public class HttpTelegramBotClient implements TelegramBotClient {
     }
 
     @Override
-    public boolean sendMessage(MessageForUser message) {
+    public boolean sendMessage(TelegramMessage message) {
         final Map<String, String> values = Map.of(
                 this.tokenParamName, this.token,
                 this.messageParamName, this.jsonConverter.toJson(message)
