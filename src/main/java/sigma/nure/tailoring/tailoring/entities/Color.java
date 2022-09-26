@@ -11,4 +11,8 @@ public class Color {
     private Integer id;
     private String name;
     private String code;
+
+    public Color(Integer id) {
+        this.id = id;
+    }
 }
