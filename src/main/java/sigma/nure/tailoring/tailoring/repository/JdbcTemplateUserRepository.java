@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class JdbcTemplatePostgresUserRepository implements UserRepository {
+public class JdbcTemplateUserRepository implements UserRepository {
 
     private static final String SELECT_USER = "SELECT u.id, u.password, u.city, " +
             "u.country, u.email, u.firstname, u.lastname, u.active, u.male, " +
@@ -43,15 +43,14 @@ public class JdbcTemplatePostgresUserRepository implements UserRepository {
             "SET phone_number = ?, password = ?, " +
             "city = ?, country = ?, email = ?, " +
             "firstname = ?, lastname = ?, male = ?, user_state = ?, " +
-            "password = ?, role_id = ?, active = ? " +
+            "role_id = ?, active = ? " +
             "WHERE id = ? ";
-
-    private static final String UPDATE_ACTIVE_USER_BY_ID = "UPDATE \"user\" SET active = ?  WHERE id = ? ";
 
     private static final String SELECT_WHERE_FIELDS_ARE = SELECT_USER +
             "WHERE " +
             "(:idsAreNull OR u.id IN(:ids)) AND " +
             "(:phoneNumberContaining::varchar IS NULL OR  u.phone_number LIKE CONCAT ('%',:phoneNumberContaining::varchar, '%')) AND " +
+            "(:username::varchar IS NULL OR  u.phone_number = :username::varchar) AND " +
             "(:emailContaining::varchar IS NULL OR  u.email LIKE CONCAT ('%',:emailContaining::varchar, '%')) AND " +
             "(:cityContaining::varchar IS NULL OR  u.city LIKE CONCAT ('%',:cityContaining::varchar, '%')) AND " +
             "(:countryContaining::varchar IS NULL OR  u.country LIKE CONCAT ('%',:countryContaining::varchar, '%')) AND " +
@@ -65,15 +64,13 @@ public class JdbcTemplatePostgresUserRepository implements UserRepository {
             "(:rolesAreNull OR r.name IN(:roles::varchar)) " +
             " ORDER BY :sortColumn :sortDirection LIMIT :limit OFFSET :offset ";
 
-    private static final String ORDER_BY_AND_LIMIT = " ORDER BY %s %s LIMIT %s OFFSET %s";
-
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertUser;
     private final RowMapper<User> rowMapper;
     private final NamedParameterJdbcTemplate namedJdbc;
     private final RepositoryHandler handler;
 
-    public JdbcTemplatePostgresUserRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
+    public JdbcTemplateUserRepository(JdbcTemplate jdbc, RepositoryHandler handler) {
         this.jdbc = jdbc;
         this.namedJdbc = new NamedParameterJdbcTemplate(jdbc.getDataSource());
         this.handler = handler;
@@ -101,6 +98,7 @@ public class JdbcTemplatePostgresUserRepository implements UserRepository {
         Map<String, Object> args = new HashMap<>();
 
         args.put("phoneNumberContaining", param.getPhoneNumber());
+        args.put("username", param.getUsername());
         args.put("emailContaining", param.getEmail());
         args.put("cityContaining", param.getCity());
         args.put("countryContaining", param.getCountry());
@@ -175,8 +173,8 @@ public class JdbcTemplatePostgresUserRepository implements UserRepository {
         Map<String, Integer> idByRoleName = this.getMapFindIdByRoleName();
         return jdbc.update(UPDATE_A_LOT_OF_USER_FIELDS_BY_ID, user.getPhoneNumber(), user.getPassword(),
                 user.getCity(), user.getCountry(), user.getEmail(), user.getFirstname(),
-                user.getLastname(), user.isMale(), user.getUserState().name(), user.getId(),
-                user.getPassword(), idByRoleName.get(user.getRole().name()), user.isActive()) != 0;
+                user.getLastname(), user.isMale(), user.getUserState().name(),
+                idByRoleName.get(user.getRole().name()), user.isActive(), user.getId()) != 0;
     }
 
 }

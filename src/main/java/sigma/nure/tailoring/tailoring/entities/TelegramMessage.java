@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class MessageForUser {
+public class TelegramMessage {
     private String phoneNumber;
     private String describe;
     private List<MessageEntity> messageEntities;
