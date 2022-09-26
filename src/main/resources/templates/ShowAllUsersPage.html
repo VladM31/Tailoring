@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="show_all_users.css">
+  <link rel="stylesheet" type="text/css" href="sort_style.css">
+  <link href="https://fonts.googleapis.com/css?family=Inter" rel="stylesheet">
+  <title>Show all users</title>
+</head>
+
+<body>
+
+<div class="container-filter-and-info">
+    <form action="" class="filter-box" id="filter-id">
+      <button class="hidden-button" onclick="getOrHiddeFilter('filter-id')">Hide</button>
+
+      <label for="" class="filter-main-label filter-item-margin">Find by</label>
+
+      <input type="text" name="firstname" placeholder="Firstname" class="filter-input-box filter-item-margin">
+
+      <input type="text" name="lastname" placeholder="Lastname" class="filter-input-box filter-item-margin">
+
+      <input type="text" name="phoneNumber" placeholder="Phone number" class="filter-input-box filter-item-margin">
+
+      <input type="text" name="email" placeholder="Email" class="filter-input-box filter-item-margin">
+
+      <input type="text" name="city" placeholder="City" class="filter-input-box filter-item-margin">
+
+      <input type="text" name="country" placeholder="Country" class="filter-input-box filter-item-margin">
+
+      <!-- <input type="hidden" name="materials" value="1"> -->
+      <select name="roles" multiple id="materials-select-id" class="filter-input-box filter-item-margin" value="">
+        <option value="Wool">Wool</option>
+        <option value="Silk">Silk</option>
+        <option value="Cotton">Cotton</option>
+      </select>
+
+      <!-- <input type="hidden" name="colors" value="12"> -->
+      <select name="userStates" multiple id="colors-select-id" class="filter-input-box filter-item-margin" value="">
+        <option value="Black">Black</option>
+        <option value="White">White</option>
+        <option value="Red">Red</option>
+      </select>
+
+      <div class="filter-item-margin">
+        <label for="" class="input-between-label">Date registration</label>
+        <div class="input-between-box">
+          <input type="datetime-local" name="dateRegistration.from" id="" class="input-between data-style"
+            placeholder="Min">
+          <input type="datetime-local" name="dateRegistration.to" id="" class="input-between data-style"
+            placeholder="Max">
+        </div>
+      </div>
+
+      <div class="filter-item-margin">
+        <label for="" class="input-between-label">Gender</label>
+        <div class="input-between-box">
+          <div class="box-for-check-box">
+            <input type="checkbox" name="male" class="check-box-style" id="male-id">
+            <label for="male-id" class="check-box-style-for-text">Male</label>
+          </div>
+          <div class="box-for-check-box">
+            <input type="checkbox" name="female" class="check-box-style" id="female-id">
+            <label for="female-id" class="check-box-style-for-text">Female</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-item-margin">
+        <label for="" class="input-between-label">Activity status</label>
+        <div class="input-between-box">
+          <div class="box-for-check-box">
+            <input type="checkbox" name="active" class="check-box-style" id="action-id">
+            <label for="action-id" class="check-box-style-for-text">Active</label>
+          </div>
+          <div class="box-for-check-box">
+            <input type="checkbox" name="inactive" class="check-box-style" id="inactive-id">
+            <label for="inactive-id" class="check-box-style-for-text">Inactive</label>
+          </div>
+        </div>
+      </div>
+
+
+
+      <input type="button" value="Find" class="submit-input filter-item-margin"
+        onclick="selectToMultipleSelect(),updateUserContainer()">
+    </form>
+    <div class="order-and-sort-container">
+      <div class="pageable-box">
+        <select name="userSortColumn" onchange="changeSort(this.value)" class="sort-select">
+          <option value="DATE_REGISTRATION" selected>Date registration</option>
+          <option value="PHONE_NUMBER">Phone number</option>
+          <option value="USER_STATE">User state</option>
+          <option value="COUNTRY">Country</option>
+        </select>
+        <input type="hidden" name="desc" id="sort-input-desc" value="true">
+        <button id="sort-button-id" onclick="changeDirection(this.id),changeDirectionSort()"
+          class="sort-button-style"></button>
+      </div>
+      <div class="user-container" id="user-container-id">
+        <div class="user-box">
+          <div class="user-data-container">
+            <div class="user-data-box">
+              <h5>Firstname</h5>
+              <p>Vladyslav</p>
+            </div>
+            <div class="user-data-box">
+              <h5>Lastname</h5>
+              <p>Mmm</p>
+            </div>
+            <div class="user-data-box">
+              <h5>Phone number</h5>
+              <p>380660993347</p>
+            </div>
+          </div>
+
+          <div class="user-data-container">
+            <div class="user-data-box">
+              <h5>Date registration</h5>
+              <p>11.11.2022 14:44</p>
+            </div>
+            <div class="user-data-box">
+              <h5>Status</h5>
+              <p>Registered</p>
+            </div>
+            <button class="activety-button">Active</button>
+          </div>
+          <div class="user-data-text-box">
+            <p>Email : <samp>thevald@vald.comua</samp></p>
+            <p>City : <samp>Dnipro</samp></p>
+            <p>Country : <samp>Ukraine</samp></p>
+            <p>Gender : <samp>Man</samp></p>
+            <p>Role : <samp>Customer</samp></p>
+
+          </div>
+        </div>
+        <div class="user-box">
+          <div class="user-data-container">
+            <div class="user-data-box">
+              <h5>Firstname</h5>
+              <p>Vladyslav</p>
+            </div>
+            <div class="user-data-box">
+              <h5>Lastname</h5>
+              <p>Mmm</p>
+            </div>
+            <div class="user-data-box">
+              <h5>Phone number</h5>
+              <p>380660993347</p>
+            </div>
+          </div>
+
+          <div class="user-data-container">
+            <div class="user-data-box">
+              <h5>Date registration</h5>
+              <p>11.11.2022 14:44</p>
+            </div>
+            <div class="user-data-box">
+              <h5>Status</h5>
+              <p>Registered</p>
+            </div>
+            <button class="activety-button inactive-button">Inactive</button>
+          </div>
+          <div class="user-data-text-box">
+            <p>Email : <samp>thevald@vald.comua</samp></p>
+            <p>City : <samp>Dnipro</samp></p>
+            <p>Country : <samp>Ukraine</samp></p>
+            <p>Gender : <samp>Man</samp></p>
+            <p>Role : <samp>Customer</samp></p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+</body>
+<script src="multi-select-dropdown.js"></script>
+<script src="hidde_element.js"></script>
+<script src="sort-buttons.js"></script>
+<script src="make_form_data_from_filter.js"></script>
+<script src="set_users.js"></script>
+<script>
+
+  arrayReplaceElements.push(classSwap(document.getElementById('filter-id')));
+  sortButtons.push(sortButton('sort-button-id', 'sort-input-desc', true));
+  setSymbols();
+  startCustomSelect([
+    multipleCustomeSelect('materials-select-id', "Choose roles", 'selected-option'),
+    multipleCustomeSelect('colors-select-id', "Choose statuses", 'selected-option')
+  ]);
+
+  setPair('male', 'female', 'male');
+  setPair('active', 'inactive', 'active');
+
+  setMultipleSelects(['roles', 'userStates']);
+
+  updateUserContainer();
+</script>
+
+</html>

@@ -9,12 +9,9 @@ import sigma.nure.tailoring.tailoring.repository.OrderRepository;
 import sigma.nure.tailoring.tailoring.repository.TailoringTemplateRepository;
 import sigma.nure.tailoring.tailoring.repository.UserCodeRepository;
 import sigma.nure.tailoring.tailoring.repository.UserRepository;
-import sigma.nure.tailoring.tailoring.service.PopularTemplateService;
-import sigma.nure.tailoring.tailoring.service.PopularTemplateServiceImpl;
-import sigma.nure.tailoring.tailoring.service.UserCodeService;
-import sigma.nure.tailoring.tailoring.service.UserCodeServiceImpl;
-import sigma.nure.tailoring.tailoring.service.UserService;
-import sigma.nure.tailoring.tailoring.service.UserServiceImpl;
+import sigma.nure.tailoring.tailoring.service.*;
+
+
 
 
 @Configuration
