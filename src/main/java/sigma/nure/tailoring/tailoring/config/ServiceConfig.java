@@ -37,11 +37,9 @@ public class ServiceConfig {
             TailoringTemplateRepository templateRepository,
             @Value("${template.image.directory}") String imagesDirectory,
             TailoringTemplateSortColumnConverter tailoringTemplateSortColumnConverter,
-            TailoringTemplateConvertor tailoringTemplateConvertor,
-            MaterialsRepository materialsRepository) {
-
+            TailoringTemplateConvertor tailoringTemplateConvertor) {
         return new TailoringTemplateServiceImpl(fileConverter, templateRepository, imagesDirectory,
-                materialsRepository, tailoringTemplateSortColumnConverter, tailoringTemplateConvertor);
+                tailoringTemplateSortColumnConverter, tailoringTemplateConvertor);
     }
 
     @Bean

@@ -24,16 +24,16 @@ public class TailoringTemplateServiceImpl implements TailoringTemplateService {
     private final Gson gson;
     private final String imagesDirectory;
     private final FileConverter fileConverter;
-    private final MaterialsRepository materialsRepository;
     private final TailoringTemplateRepository templateRepository;
     private final TailoringTemplateSortColumnConverter tailoringTemplateSortColumnConverter;
     private final TailoringTemplateConvertor tailoringTemplateConvertor;
 
-    public TailoringTemplateServiceImpl(FileConverter fileConverter, TailoringTemplateRepository templateRepository, String imagesDirectory, MaterialsRepository materialsRepository, TailoringTemplateSortColumnConverter tailoringTemplateSortColumnConverter, TailoringTemplateConvertor tailoringTemplateConvertor) {
+    public TailoringTemplateServiceImpl(FileConverter fileConverter, TailoringTemplateRepository templateRepository,
+                                        String imagesDirectory, TailoringTemplateSortColumnConverter tailoringTemplateSortColumnConverter,
+                                        TailoringTemplateConvertor tailoringTemplateConvertor) {
         this.fileConverter = fileConverter;
         this.templateRepository = templateRepository;
         this.imagesDirectory = imagesDirectory;
-        this.materialsRepository = materialsRepository;
         this.tailoringTemplateSortColumnConverter = tailoringTemplateSortColumnConverter;
         this.tailoringTemplateConvertor = tailoringTemplateConvertor;
         this.gson = new Gson();
@@ -47,7 +47,7 @@ public class TailoringTemplateServiceImpl implements TailoringTemplateService {
                 .findBy(criteria, page)
                 .stream()
                 .map(tailoringTemplateConvertor
-                        .getConverter(materialsRepository))
+                        .getConverter()::convert)
                 .collect(Collectors.toList());
     }
 
