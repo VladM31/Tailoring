@@ -8,33 +8,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class FileConverterImpl implements FileConverter {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileConverterImpl.class);
-    private static final int START_VALUE = 0;
-    private static final Supplier<Function<String, String>> getDefaultFileNameGenerator = () -> {
-        IntIncrement intIncrement = new IntIncrement();
-
-        return (name) -> setNumberToName(intIncrement.increment(), name);
-    };
 
     @Override
     public List<File> toFiles(String directory, List<MultipartFile> multipartFiles) {
-
-        var map = multipartFiles
-                .stream()
-                .map(f -> f.getOriginalFilename())
-                .distinct()
-                .collect(Collectors.toMap(fn -> fn, fn -> getDefaultFileNameGenerator.get()));
-
-        return this.toFiles(directory, multipartFiles, (name) -> map.get(name).apply(name));
+        return this.toFiles(directory, multipartFiles, (name) -> name);
     }
 
     @Override
@@ -43,53 +32,49 @@ public class FileConverterImpl implements FileConverter {
             return List.of();
         }
 
-        List<File> files = new ArrayList<>(multipartFiles.size());
-        try {
-            for (int i = 0, size = multipartFiles.size(); i < size; i++) {
-                try {
-                    files.add(changNameIfExist(
-                            directory,
-                            multipartFiles.get(i).getOriginalFilename(),
-                            fileNameGenerator)
-                    );
+        List<File> files = multipartFiles
+                .stream()
+                .map(this.getFileConverter(directory, fileNameGenerator))
+                .filter(file -> file != null)
+                .toList();
 
-                    Files.copy(multipartFiles.get(i).getInputStream(), files.get(i).toPath());
-                } catch (FileExistsException existsException) {
-                    LOGGER.debug(existsException.getMessage());
-                    files.remove(i);
-                    --i;
-                }
+        boolean hasNotError = files.size() == multipartFiles.size();
 
+        if (hasNotError) {
+            return files;
+        }
+
+        files.forEach(FileConverterImpl::removedFile);
+        throw new UncheckedIOException(new FileExistsException(getNameExistFiles(multipartFiles, files)));
+    }
+
+
+    public Function<MultipartFile, File> getFileConverter(String directory, Function<String, String> fileNameGenerator) {
+        return (multipartFile -> {
+            File file = new File(directory, fileNameGenerator.apply(multipartFile.getOriginalFilename()));
+            try {
+                Files.copy(multipartFile.getInputStream(), file.toPath());
+            } catch (IOException exception) {
+                LOGGER.error("Files not saved", exception);
+                return null;
             }
-        } catch (IOException exception) {
-            LOGGER.error("Files not saved", exception);
-            return List.of();
-        }
-
-        return files;
+            return file;
+        });
     }
 
-    private File changNameIfExist(String directory, String name, Function<String, String> fileNameGenerator) {
-        File file = new File(directory, fileNameGenerator.apply(name));
-        while (file.exists()) {
-            file = new File(directory, fileNameGenerator.apply(name));
-
+    public static void removedFile(File file) {
+        try {
+            Files.deleteIfExists(file.toPath());
+        } catch (IOException e) {
+            LOGGER.error("Files not delete", e);
         }
-        return file;
     }
 
-    private static String setNumberToName(int number, String name) {
-        if (number == START_VALUE) {
-            return name;
-        }
-        return name.substring(0, name.indexOf(".")) + " (" + number + ")" + name.substring(name.indexOf("."));
-    }
+    public String getNameExistFiles(List<MultipartFile> multipartFiles, List<File> files) {
+        List<String> nameExistFiles = multipartFiles.stream().map(mf -> mf.getOriginalFilename()).toList();
 
-    private static class IntIncrement {
-        int value = START_VALUE;
+        nameExistFiles.removeAll(files.stream().map(f -> f.getName()).toList());
 
-        public int increment() {
-            return value++;
-        }
+        return nameExistFiles.stream().collect(Collectors.joining(", "));
     }
 }
