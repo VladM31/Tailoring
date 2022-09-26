@@ -24,11 +24,11 @@ public class ServiceConfig {
     }
 
     @Bean
-
     public UserCodeService userCodeService(UserCodeRepository userCodeRepository) {
         return new UserCodeServiceImpl(userCodeRepository);
-        }
+    }
 
+    @Bean
     public UserService userServiceImpl(UserRepository userRepository,
                                        @Value("${minutes.waiting.for.user.registration}") long minutesForWork,
                                        UserServiceSortColumnConverter converter) {
