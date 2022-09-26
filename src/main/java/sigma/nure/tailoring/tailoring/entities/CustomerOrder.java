@@ -15,4 +15,7 @@ public class CustomerOrder {
     private String firstname;
     private boolean isMale;
 
+    public CustomerOrder(Long id) {
+        this.id = id;
+    }
 }

@@ -11,4 +11,8 @@ public class Material {
     private Integer id;
     private String name;
     private int cost;
+
+    public Material(Integer id) {
+        this.id = id;
+    }
 }
