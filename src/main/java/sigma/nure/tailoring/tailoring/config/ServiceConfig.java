@@ -30,20 +30,7 @@ public class ServiceConfig {
     public PopularTemplateService popularTemplateServiceImpl(OrderRepository orderRepository, TailoringTemplateRepository templateRepository) {
         return new PopularTemplateServiceImpl(orderRepository, templateRepository);
     }
-
-    @Bean
-
-    public UserCodeService userCodeService(UserCodeRepository userCodeRepository) {
-        return new UserCodeServiceImpl(userCodeRepository);
-        }
-
-    @Bean
-    public UserService userServiceImpl(UserRepository userRepository,
-                                       @Value("${minutes.waiting.for.user.registration}") long minutesForWork,
-                                       UserServiceSortColumnConverter converter) {
-        return new UserServiceImpl(converter, userRepository, minutesForWork);
-    }
-
+    
     @Bean
     public TailoringTemplateService tailoringTemplateServiceImpl(
             FileConverter fileConverter,
@@ -55,5 +42,18 @@ public class ServiceConfig {
 
         return new TailoringTemplateServiceImpl(fileConverter, templateRepository, imagesDirectory,
                 materialsRepository, tailoringTemplateSortColumnConverter, tailoringTemplateConvertor);
+    }
+
+    @Bean
+
+    public UserCodeService userCodeService(UserCodeRepository userCodeRepository) {
+        return new UserCodeServiceImpl(userCodeRepository);
+    }
+
+    @Bean
+    public UserService userServiceImpl(UserRepository userRepository,
+                                       @Value("${minutes.waiting.for.user.registration}") long minutesForWork,
+                                       UserServiceSortColumnConverter converter) {
+        return new UserServiceImpl(converter, userRepository, minutesForWork);
     }
 }
