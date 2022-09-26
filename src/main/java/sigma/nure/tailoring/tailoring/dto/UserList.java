@@ -1,4 +1,4 @@
-package sigma.nure.tailoring.tailoring.tools;
+package sigma.nure.tailoring.tailoring.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
