@@ -4,15 +4,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import sigma.nure.tailoring.tailoring.converters.FileConverter;
 import sigma.nure.tailoring.tailoring.converters.OrderServiceSortColumnConverter;
 import sigma.nure.tailoring.tailoring.converters.UserServiceSortColumnConverter;
 import sigma.nure.tailoring.tailoring.repository.*;
 import sigma.nure.tailoring.tailoring.service.*;
-
-
-import java.util.List;
-import java.util.Random;
 
 @Configuration
 @EnableScheduling
@@ -54,8 +51,10 @@ public class ServiceConfig {
 
     @Bean
 
-    public SecurityService securityServiceImpl(UserService userService, UserCodeService userCodeService, TelegramBotClient telegramBotClient) {
-        return new SecurityServiceImpl(userService, userCodeService, telegramBotClient);
+    public SecurityService securityServiceImpl(UserService userService, UserCodeService userCodeService,
+                                               TelegramBotClient telegramBotClient,
+                                               PasswordEncoder passwordEncoder) {
+        return new SecurityServiceImpl(userService, userCodeService, telegramBotClient, passwordEncoder);
     }
 
     @Bean
