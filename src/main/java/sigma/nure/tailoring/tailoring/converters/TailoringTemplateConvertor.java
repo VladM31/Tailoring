@@ -24,47 +24,39 @@ public class TailoringTemplateConvertor {
 
     public TemplateConvertor getConverter() {
 
-        final var toMaterials = createMaterialsConverter(materialsRepository.findAllMaterial());
+        final var materialsConverter = new StuffConverter<>(materialsRepository.findAllMaterial(),
+                (m) -> m.getId());
 
-        final var toColors = createColorsConverter(materialsRepository.findAllColors());
+        final var colorsConverter = new StuffConverter<>(materialsRepository.findAllColors(), c -> c.getId());
 
-        return new TemplateConvertor(toMaterials, toColors);
+        return new TemplateConvertor(materialsConverter, colorsConverter);
     }
 
+    private class StuffConverter<Stuff> {
+        private final Map<Integer, Stuff> stuffMap;
 
-    private Function<Iterable<Integer>, Set<Material>> createMaterialsConverter(List<Material> materialList) {
-        final Map<Integer, Material> materialMap = materialList.stream().collect(Collectors.toMap(m -> m.getId(), m -> m));
+        public StuffConverter(List<Stuff> stuffList, Function<Stuff, Integer> getId) {
+            stuffMap = stuffList.stream().collect(Collectors.toMap(s -> getId.apply(s), s -> s));
+        }
 
-        return (ids) -> {
-            Set<Material> materials = new HashSet<>();
+        public Set<Stuff> convert(Iterable<Integer> ids) {
+            Set<Stuff> stuffs = new HashSet<>();
 
-            ids.forEach(id -> materials.add(materialMap.get(id)));
+            ids.forEach(id -> stuffs.add(stuffMap.get(id)));
 
-            return materials;
-        };
-    }
-
-    private Function<Iterable<Integer>, Set<Color>> createColorsConverter(List<Color> colorList) {
-        final Map<Integer, Color> colorMap = colorList.stream().collect(Collectors.toMap(c -> c.getId(), c -> c));
-
-        return (ids) -> {
-            Set<Color> colors = new HashSet<>();
-
-            ids.forEach(id -> colors.add(colorMap.get(id)));
-
-            return colors;
-        };
+            return stuffs;
+        }
     }
 
     public class TemplateConvertor {
-        private final Function<Iterable<Integer>, Set<Material>> toMaterials;
-        private final Function<Iterable<Integer>, Set<Color>> toColors;
+        private final StuffConverter<Material> materialsConverter;
+        private final StuffConverter<Color> colorsConverter;
 
 
-        public TemplateConvertor(Function<Iterable<Integer>, Set<Material>> toMaterials,
-                                 Function<Iterable<Integer>, Set<Color>> toColors) {
-            this.toMaterials = toMaterials;
-            this.toColors = toColors;
+        public TemplateConvertor(StuffConverter<Material> materialsConverter,
+                                 StuffConverter<Color> colorsConverter) {
+            this.materialsConverter = materialsConverter;
+            this.colorsConverter = colorsConverter;
         }
 
 
@@ -79,8 +71,8 @@ public class TailoringTemplateConvertor {
             template.setTypeTemplate(templateFromRepo.getTypeTemplate());
             template.setTemplateDescription(templateFromRepo.getTemplateDescription());
 
-            template.setMaterials(toMaterials.apply(templateFromRepo.getMaterialIds()));
-            template.setColors(toColors.apply(templateFromRepo.getColorIds()));
+            template.setMaterials(materialsConverter.convert(templateFromRepo.getMaterialIds()));
+            template.setColors(colorsConverter.convert(templateFromRepo.getColorIds()));
 
             template.setImagesUrl(templateFromRepo.getImagesUrl());
             template.setPartSizeForTemplates(templateFromRepo.getPartSizeForTemplates());
