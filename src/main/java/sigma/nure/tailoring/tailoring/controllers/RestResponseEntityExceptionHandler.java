@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import sigma.nure.tailoring.tailoring.exceptions.UserNotFound;
 
 import javax.validation.ConstraintViolationException;
 
@@ -28,8 +29,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     @ResponseBody
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
+    @ExceptionHandler({ConstraintViolationException.class, UserNotFound.class})
+    public ResponseEntity handleConstraintViolationException(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage(), ex);
 
         return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
