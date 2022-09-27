@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("tailoring-order")
+@RequestMapping("order")
 public class OrderCommentController {
     private final CommentService commentService;
 
@@ -22,14 +22,15 @@ public class OrderCommentController {
         this.commentService = commentService;
     }
 
-    @GetMapping("comments")
-    public List<CommentOrderForm> getComments(/*@AuthenticationPrincipal*/ User user, @RequestParam Long orderId) {
+    @GetMapping("{orderId}/comments")
+    public List<CommentOrderForm> getComments(@AuthenticationPrincipal User user, @PathVariable Long orderId) {
         return commentService.findAllByOrderId(user, orderId);
     }
 
-    @PostMapping("comments")
+    @PostMapping("{orderId}/comments")
     @Validated(OnSave.class)
-    public boolean saveComment(/*@AuthenticationPrincipal*/ User user, @Valid CommentOrderForm commentOrderForm) {
+    public boolean saveComment(@AuthenticationPrincipal User user, @Valid CommentOrderForm commentOrderForm, @PathVariable Long orderId) {
+        commentOrderForm.setTailoringOrderId(orderId);
         return commentService.save(user, commentOrderForm);
     }
 

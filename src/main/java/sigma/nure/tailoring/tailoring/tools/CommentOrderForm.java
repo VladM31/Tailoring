@@ -19,7 +19,6 @@ public class CommentOrderForm {
     private String message;
     @NotNull(message = "User id not set", groups = OnSave.class)
     private Long userId;
-    @NotNull(message = "Order id not set", groups = OnSave.class)
     private Long tailoringOrderId;
     private LocalDateTime dateOfCreation;
 }
