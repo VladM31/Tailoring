@@ -1,4 +1,4 @@
-<div style="padding-bottom: 45px">
+<div style="padding-bottom: 45px" xmlns:sec="http://www.w3.org/1999/xhtml">
     <h1 class="top-label-h1-text"><a href="#main-page" style="color: #520974">Lilac tangerine</a></h1>
     <div class="line-button-box">
         <div class="line-button-box-margin-top">
@@ -8,11 +8,11 @@
                 <a href="#2">Create your own order</a>
                 <p>&nbsp|&nbsp</p>
 
-                <a href="#3" th:if="${isAuthorized}">Personal office</a>
-                <p th:if="${isAuthorized}">&nbsp|&nbsp</p>
-                <a href="#Sign-out" th:if="${isAuthorized}">Sign out</a>
+                <a href="#3" sec:authorize="isAuthenticated()">Personal office</a>
+                <p sec:authorize="isAuthenticated()">&nbsp|&nbsp</p>
+                <a th:href="@{/logout}" sec:authorize="isAuthenticated()">Sign out</a>
 
-                <a href="#Sign-in" th:unless="${isAuthorized}">Sign in</a>
+                <a th:href="@{/authorization/login}" sec:authorize="isAuthenticated() == false">Sign in</a>
 
             </div>
         </div>
