@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="show_all_users.css">
-  <link rel="stylesheet" type="text/css" href="sort_style.css">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/show_all_users.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/sort_style.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/top_label_style.css}"/>
+
   <link href="https://fonts.googleapis.com/css?family=Inter" rel="stylesheet">
   <title>Show all users</title>
 </head>
 
 <body>
+<th:block th:include="/TopLablePage"></th:block>
 
 <div class="container-filter-and-info">
     <form action="" class="filter-box" id="filter-id">
@@ -33,25 +36,24 @@
 
       <!-- <input type="hidden" name="materials" value="1"> -->
       <select name="roles" multiple id="materials-select-id" class="filter-input-box filter-item-margin" value="">
-        <option value="Wool">Wool</option>
-        <option value="Silk">Silk</option>
-        <option value="Cotton">Cotton</option>
+        <option th:each="role : ${T(sigma.nure.tailoring.tailoring.entities.Role).values()}" th:value="${role.name()}"
+                th:text="${role.name().charAt(0)} + ${role.name().substring(1).replaceAll('_',' ').toLowerCase()}"></option>
       </select>
 
       <!-- <input type="hidden" name="colors" value="12"> -->
       <select name="userStates" multiple id="colors-select-id" class="filter-input-box filter-item-margin" value="">
-        <option value="Black">Black</option>
-        <option value="White">White</option>
-        <option value="Red">Red</option>
+        <option th:each="userState : ${T(sigma.nure.tailoring.tailoring.entities.UserState).values()}"
+                th:value="${userState.name()}"
+                th:text="${userState.name().charAt(0)} + ${userState.name().substring(1).replaceAll('_',' ').toLowerCase()}"></option>
       </select>
 
       <div class="filter-item-margin">
         <label for="" class="input-between-label">Date registration</label>
         <div class="input-between-box">
-          <input type="datetime-local" name="dateRegistration.from" id="" class="input-between data-style"
-            placeholder="Min">
-          <input type="datetime-local" name="dateRegistration.to" id="" class="input-between data-style"
-            placeholder="Max">
+          <input type="datetime-local" name="dateRegistration.from" class="input-between data-style"
+                 placeholder="Min">
+          <input type="datetime-local" name="dateRegistration.to" class="input-between data-style"
+                 placeholder="Max">
         </div>
       </div>
 
@@ -91,10 +93,10 @@
     <div class="order-and-sort-container">
       <div class="pageable-box">
         <select name="userSortColumn" onchange="changeSort(this.value)" class="sort-select">
-          <option value="DATE_REGISTRATION" selected>Date registration</option>
-          <option value="PHONE_NUMBER">Phone number</option>
-          <option value="USER_STATE">User state</option>
-          <option value="COUNTRY">Country</option>
+          <option th:each="sortColumn : ${T(sigma.nure.tailoring.tailoring.tools.UserSortColumn).values()}"
+                  th:value="${sortColumn.name()}"
+                  th:text="${sortColumn.name().charAt(0)} + ${sortColumn.name().substring(1).replaceAll('_',' ').toLowerCase()}"
+                  th:selected="${sortColumn.equals(T(sigma.nure.tailoring.tailoring.tools.UserSortColumn).DATE_REGISTRATION)}"></option>
         </select>
         <input type="hidden" name="desc" id="sort-input-desc" value="true">
         <button id="sort-button-id" onclick="changeDirection(this.id),changeDirectionSort()"
@@ -177,14 +179,15 @@
     </div>
 
 
-  </div>
+</div>
 
 </body>
-<script src="multi-select-dropdown.js"></script>
-<script src="hidde_element.js"></script>
-<script src="sort-buttons.js"></script>
-<script src="make_form_data_from_filter.js"></script>
-<script src="set_users.js"></script>
+<script th:src="@{/js/active_or_inactive_user.js}"></script>
+<script th:src="@{/js/multi-select-dropdown.js}"></script>
+<script th:src="@{/js/hidde_element.js}"></script>
+<script th:src="@{/js/sort-buttons.js}"></script>
+<script th:src="@{/js/make_form_data_from_filter.js}"></script>
+<script th:src="@{/js/set_users.js}"></script>
 <script>
 
   arrayReplaceElements.push(classSwap(document.getElementById('filter-id')));
