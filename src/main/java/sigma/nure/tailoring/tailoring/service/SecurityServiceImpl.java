@@ -1,7 +1,7 @@
 package sigma.nure.tailoring.tailoring.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import sigma.nure.tailoring.tailoring.entities.TelegramMessage;
@@ -21,11 +21,13 @@ public class SecurityServiceImpl implements SecurityService {
     private final UserService userService;
     private final UserCodeService userCodeService;
     private final TelegramBotClient botClient;
+    private final PasswordEncoder passwordEncoder;
 
-    public SecurityServiceImpl(UserService userService, UserCodeService userCodeService, TelegramBotClient botClient) {
+    public SecurityServiceImpl(UserService userService, UserCodeService userCodeService, TelegramBotClient botClient, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.userCodeService = userCodeService;
         this.botClient = botClient;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -35,6 +37,8 @@ public class SecurityServiceImpl implements SecurityService {
         }
 
         User user = registrationUserForm.toUser();
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         Long userId = userService.saveAndReturnUserId(user).orElseThrow();
 
