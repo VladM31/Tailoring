@@ -21,6 +21,7 @@ public class UserSearchCriteria {
     private String country;
     private String firstname;
     private String lastname;
+    private String username;
     private Range<LocalDateTime> dataRegistration;
     private Boolean active;
     private Boolean male;

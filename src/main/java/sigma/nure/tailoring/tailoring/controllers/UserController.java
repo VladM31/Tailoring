@@ -7,7 +7,7 @@ import sigma.nure.tailoring.tailoring.converters.UserWebSortColumnConverter;
 import sigma.nure.tailoring.tailoring.service.UserService;
 import sigma.nure.tailoring.tailoring.tools.HandlerFilter;
 import sigma.nure.tailoring.tailoring.tools.UserFilter;
-import sigma.nure.tailoring.tailoring.tools.UserList;
+import sigma.nure.tailoring.tailoring.dto.UserList;
 
 @RestController
 @RequestMapping("/users")

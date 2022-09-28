@@ -15,3 +15,14 @@ function getObjectByFunctionId(array, id, functionGetId) {
     }
     return null;
 }
+
+const getNewId = {
+    id: 0,
+    getId: function () {
+        return ++this.id;
+    }
+}
+
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}

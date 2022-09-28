@@ -13,6 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import sigma.nure.tailoring.tailoring.exceptions.FormException;
 import sigma.nure.tailoring.tailoring.tools.TailoringTemplateForm;
+import sigma.nure.tailoring.tailoring.exceptions.OrderCommentException;
+
 
 import javax.validation.ConstraintViolationException;
 
@@ -38,10 +40,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     @ResponseBody
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
+    @ExceptionHandler({ConstraintViolationException.class, OrderCommentException.class})
+    public ResponseEntity handleConstraintViolationException(RuntimeException ex) {
         LOGGER.warn(ex.getMessage(), ex);
-
         return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

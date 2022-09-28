@@ -1,0 +1,150 @@
+p, h1, h2, a {
+    margin: 0;
+    padding: 0;
+}
+
+a:active,
+a:hover,
+a {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    max-width: 1920px;
+    max-height: 980px;
+
+    background-image: url("http://localhost:8095/api/v1/images/authorization/sign_in_fon.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+
+.container-form {
+    margin-top: 13%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+
+}
+
+.form-sign-up {
+    border: 3px solid #520974;
+    width: 370px;
+    height: 300px;
+    border-radius: 30px;
+
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: white;
+    opacity: 85%;
+}
+
+.form-sign-up h2 {
+    text-align: center;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 52px;
+    line-height: 48px;
+
+    color: #520974;
+}
+
+.user-field-input-with-text-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.user-field-input-with-text-container a {
+    width: 70px;
+    padding-top: 4px;
+    font-size: 20px;
+    color: #520974;
+    transition: 0.3s;
+}
+
+.user-field-input-with-text-container a:hover {
+    color: rgb(38, 194, 255);
+    transition: 0.3s;
+}
+
+.user-field-input {
+    box-sizing: border-box;
+    width: 300px;
+    height: 50px;
+
+    background: rgba(255, 255, 255, 0.85);
+    border: 2px solid rgba(82, 9, 116, 0.85);
+    border-radius: 5px;
+
+    font-family: 'Inter';
+    padding-left: 5px;
+    font-size: 32px;
+}
+
+.user-field-input::placeholder {
+    font-size: 36px;
+    font-family: 'Inter';
+    line-height: inherit;
+}
+
+.form-button-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.form-button-container button {
+    box-sizing: border-box;
+
+    margin: 5px;
+    width: 130px;
+    height: 40px;
+    border: 2px solid rgba(82, 9, 116, 0.95);
+    border-radius: 15px;
+
+    color: #520974;
+    font-size: 22px;
+    transition: 0.3s;
+}
+
+.form-button-container button:hover,
+.form-button-container button:focus {
+    background-color: #520974;
+    color: white;
+
+    margin: 0px;
+    width: 140px;
+    height: 50px;
+    border: 0px solid rgba(82, 9, 116, 0.95);
+    font-size: 28px;
+
+    transition: 0.5s;
+}
+
+.user-field-input:hover,
+.user-field-input:focus {
+    border: 2px solid rgb(86, 207, 255);
+    outline: none;
+}
+
+.gender-container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+
+    width: 300px;
+    height: 50px;
+}
+
+.errorMessage {
+    color: red;
+    font-size: 20px;
+}
