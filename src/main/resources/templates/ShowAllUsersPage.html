@@ -36,13 +36,13 @@
 
       <!-- <input type="hidden" name="materials" value="1"> -->
       <select name="roles" multiple id="materials-select-id" class="filter-input-box filter-item-margin" value="">
-        <option th:each="role : ${T(sigma.nure.tailoring.tailoring.entities.Role).values()}" th:value="${role.name()}"
+        <option th:each="role : ${T(sigma.tailoring.entities.Role).values()}" th:value="${role.name()}"
                 th:text="${role.name().charAt(0)} + ${role.name().substring(1).replaceAll('_',' ').toLowerCase()}"></option>
       </select>
 
       <!-- <input type="hidden" name="colors" value="12"> -->
       <select name="userStates" multiple id="colors-select-id" class="filter-input-box filter-item-margin" value="">
-        <option th:each="userState : ${T(sigma.nure.tailoring.tailoring.entities.UserState).values()}"
+        <option th:each="userState : ${T(sigma.tailoring.entities.UserState).values()}"
                 th:value="${userState.name()}"
                 th:text="${userState.name().charAt(0)} + ${userState.name().substring(1).replaceAll('_',' ').toLowerCase()}"></option>
       </select>
@@ -93,7 +93,7 @@
     <div class="order-and-sort-container">
       <div class="pageable-box">
         <select name="userSortColumn" onchange="changeSort(this.value)" class="sort-select">
-          <option th:each="sortColumn : ${T(sigma.nure.tailoring.tailoring.tools.UserSortColumn).values()}"
+          <option th:each="sortColumn : ${T(sigma.tailoring.tools.UserSortColumn).values()}"
                   th:value="${sortColumn.name()}"
                   th:text="${sortColumn.name().charAt(0)} + ${sortColumn.name().substring(1).replaceAll('_',' ').toLowerCase()}"
                   th:selected="${sortColumn.equals(T(sigma.nure.tailoring.tailoring.tools.UserSortColumn).DATE_REGISTRATION)}"></option>
