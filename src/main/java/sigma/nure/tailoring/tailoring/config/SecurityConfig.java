@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -56,37 +55,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/**")
-//                .permitAll()
-//                .anyRequest()
-//                .authenticated()
-//                .and().csrf().disable()
-//                .formLogin()
-//                .loginPage("/authorization/login")
-//                .failureUrl("/authorization/login?error=true")
-//                .permitAll()
-//                .defaultSuccessUrl("/",true);
-//
-//    }
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService).passwordEncoder(NoOpPasswordEncoder.getInstance());
-//    }
-//
-//
-//
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web
-//           .ignoring()
-//           .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
-//    }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
