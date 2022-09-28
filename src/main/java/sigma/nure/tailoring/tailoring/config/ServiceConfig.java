@@ -7,12 +7,20 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import sigma.nure.tailoring.tailoring.converters.FileConverter;
 import sigma.nure.tailoring.tailoring.converters.OrderServiceSortColumnConverter;
 import sigma.nure.tailoring.tailoring.converters.UserServiceSortColumnConverter;
-import sigma.nure.tailoring.tailoring.repository.*;
+import sigma.nure.tailoring.tailoring.converters.FileConverter;
+import sigma.nure.tailoring.tailoring.converters.TailoringTemplateConvertor;
+import sigma.nure.tailoring.tailoring.converters.TailoringTemplateSortColumnConverter;
+import sigma.nure.tailoring.tailoring.repository.MaterialsRepository;
+import sigma.nure.tailoring.tailoring.repository.OrderRepository;
+import sigma.nure.tailoring.tailoring.repository.TailoringTemplateRepository;
+import sigma.nure.tailoring.tailoring.repository.UserCodeRepository;
+import sigma.nure.tailoring.tailoring.repository.UserRepository;
 import sigma.nure.tailoring.tailoring.service.*;
 
-
-import java.util.List;
-import java.util.Random;
+import sigma.nure.tailoring.tailoring.service.PopularTemplateService;
+import sigma.nure.tailoring.tailoring.service.PopularTemplateServiceImpl;
+import sigma.nure.tailoring.tailoring.service.TailoringTemplateService;
+import sigma.nure.tailoring.tailoring.service.TailoringTemplateServiceImpl;
 
 @Configuration
 @EnableScheduling
@@ -21,6 +29,17 @@ public class ServiceConfig {
     @Bean
     public PopularTemplateService popularTemplateServiceImpl(OrderRepository orderRepository, TailoringTemplateRepository templateRepository) {
         return new PopularTemplateServiceImpl(orderRepository, templateRepository);
+    }
+    
+    @Bean
+    public TailoringTemplateService tailoringTemplateServiceImpl(
+            FileConverter fileConverter,
+            TailoringTemplateRepository templateRepository,
+            @Value("${template.image.directory}") String imagesDirectory,
+            TailoringTemplateSortColumnConverter tailoringTemplateSortColumnConverter,
+            TailoringTemplateConvertor tailoringTemplateConvertor) {
+        return new TailoringTemplateServiceImpl(fileConverter, templateRepository, imagesDirectory,
+                tailoringTemplateSortColumnConverter, tailoringTemplateConvertor);
     }
 
     @Bean
