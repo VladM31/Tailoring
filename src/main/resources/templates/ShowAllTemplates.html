@@ -17,86 +17,149 @@
     <link rel="stylesheet" type="text/css" href="show_all_templates_style.css"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
 </head>
 
 <body>
 
 <br>
-<form class="container-elements">
-    <div class="column-container" enctype="multipart/form-data">
-        <div>
-            <label class="added-file-lable" for="image_uploads">Add images (PNG, JPG)</label>
-            <input class="hidden-input-files" type="file" id="image_uploads" name="image_uploads"
-                   accept=".jpg, .jpeg, .png" multiple>
+<div class="container-elements">
+    <form class="filter-box">
+        <h2 class="filter-label-find">Find by:</h2>
+        <div class="filter-box-lable-and-input">
+            <label class="filter-input-lable" for="name-order-id">Name order</label>
+            <input id="name-order-id" type="text">
         </div>
-        <div id="imageBoxContainer">
 
+        <div class="filter-box-lable-and-input">
+            <label class="filter-input-lable" for="select-color-id">Colors</label>
+            <select class="filter-box-select-height" name="colors" id="select-color-id" multiple>
+                <option value="Yellow">Yellow</option>
+                <option value="Red">Red</option>
+                <option value="Blue">Blue</option>
+            </select>
         </div>
+
+        <div class="filter-box-lable-and-input">
+            <label class="filter-input-lable" for="select-materials-id">Materials</label>
+            <select class="filter-box-select-height" name="materials" id="select-materials-id" multiple>
+                <option value="Catton">Catton</option>
+                <option value="Wool">Wool</option>
+                <option value="Shelk">Shelk</option>
+            </select>
+        </div>
+
+        <div class="filter-box-lable-and-input">
+            <label class="filter-input-lable" for="select-order-type-id">Type</label>
+            <select class="filter-box-select-height" name="typeOrder" id="select-order-type-id" multiple>
+                <option value="Dress">Dress</option>
+                <option value="Polo">Polo</option>
+                <option value="T-short">T-short</option>
+                <option value="Jeans">Jeans</option>
+            </select>
+        </div>
+
+        <div class="filter-box-lable-and-input">
+            <label class="filter-input-lable-between">Cost</label>
+            <div class="filter-box-between">
+                <input type="number" name="startCost" class="filter-box-input-between" placeholder="Start">
+                <input type="number" name="endCost" class="filter-box-input-between" placeholder="End">
+            </div>
+        </div>
+
+        <input class="filter-input-find-submit" type="submit" value="Find" onclick="selectToMultipleSelect()">
+
+    </form>
+
+    <div class="container-orders">
+        <div class="template-box">
+            <p class="cost-lable">950 UAH</p>
+
+            <a href="#item1"> <img src="t-short.png" alt=""></a>
+
+            <div class="material-and-colors-select-box">
+                <select class="select-template">
+                    <option value="" disabled selected>Materials</option>
+                    <option value="" disabled>Wool</option>
+                </select>
+                <select class="select-template">
+                    <option value="" disabled selected>Colors</option>
+                    <option value="" disabled>Red</option>
+                </select>
+            </div>
+
+            <p class="template-name">T-short</p>
+        </div>
+
+        <div class="template-box">
+            <p class="cost-lable">1450 UAH</p>
+
+            <a href="#item2"> <img src="template (1).png" alt=""></a>
+
+            <div class="material-and-colors-select-box">
+                <select class="select-template">
+                    <option value="" disabled selected>Materials</option>
+                    <option value="" disabled>Wool</option>
+                </select>
+                <select class="select-template">
+                    <option value="" disabled selected>Colors</option>
+                    <option value="" disabled>Red</option>
+                </select>
+            </div>
+
+            <p class="template-name">Blood dress</p>
+        </div>
+
+        <div class="template-box">
+            <p class="cost-lable">1950 UAH</p>
+
+            <a href="#item3"> <img src="template (2).png" alt=""></a>
+
+            <div class="material-and-colors-select-box">
+                <select class="select-template">
+                    <option value="" disabled selected>Materials</option>
+                    <option value="" disabled>Wool</option>
+                </select>
+                <select class="select-template">
+                    <option value="" disabled selected>Colors</option>
+                    <option value="" disabled>Red</option>
+                </select>
+            </div>
+
+            <p class="template-name">Lilac drees</p>
+        </div>
+
+        <div class="template-box">
+            <p class="cost-lable">2950 UAH</p>
+
+            <a href="#item4"> <img src="template (3).jpg" alt=""></a>
+
+            <div class="material-and-colors-select-box">
+                <select class="select-template">
+                    <option value="" disabled selected>Materials</option>
+                    <option value="" disabled>Wool</option>
+                </select>
+                <select class="select-template">
+                    <option value="" disabled selected>Colors</option>
+                    <option value="" disabled>Red</option>
+                </select>
+            </div>
+
+            <p class="template-name">Cute dress</p>
+        </div>
+
+
     </div>
-
-    <div>
-        <div class="input-data-container">
-
-            <div class="input-data-container-text-and-put">
-                <label for="color-id" class="input-data-label">Color</label>
-                <select type="text" name="color" id="color-id" class="input-data-box" required></select>
-            </div>
-            <div class="input-data-container-text-and-put">
-                <label for="material-id" class="input-data-label">Material</label>
-                <select type="text" name="material" id="material-id" class="input-data-box" required></select>
-            </div>
-            <div class="input-data-container-text-and-put">
-                <label for="address-for-send-id" class="input-data-label">Address for send</label>
-                <input type="text" name="addressForSend" id="address-for-send-id" class="input-data-box"
-                       style="width: 330px;" required>
-            </div>
-            <div class="input-data-container-text-and-put">
-                <label for="count-order-id" class="input-data-label">Count</label>
-                <div class="count-container">
-                    <button type="button" class="count-changer-box count-minus-box"
-                            onclick="counterObject.minus()">⁻
-                    </button>
-                    <input readonly type="number" name="count" id="count-order-id" class="input-data-box count-box"
-                           value="1">
-                    <button type="button" class="count-changer-box count-plus-box"
-                            onclick="counterObject.plus()">⁺
-                    </button>
-                </div>
-
-            </div>
-
-            <input type="button" value="Made" class="made-button" onclick="partSizeArrayToJsonAndSetToInput()">
-
-            <input type="hidden" name="partSizes" id="part-size-value-id">
-
-        </div>
-        <div class="wishes-container">
-            <label for="" class="wishes-label">Wishes</label>
-            <textarea class="wishes-box">
-
-                </textarea>
-        </div>
-
-        <div class="order-part-size-conteiner" id="order-part-size-box-conteiner-id">
-
-
-        </div>
-    </div>
-
-
-</form>
+</div>
 
 
 </body>
-<script src="js_library.js"></script>
-<script src="file_upload.js"></script>
-<script src="counter.js"></script>
-<script src="order_part_size_api.js"></script>
-
+<script src="multi-select-dropdown.js"></script>
 <script>
-    counterObject.input = document.getElementById('count-order-id');
-    setPartSizeBoxesByPartSizeMainArray();
+    startCustomSelect([
+        multipleCustomeSelect('select-color-id', "Choose color", 'selected-option'),
+        multipleCustomeSelect('select-materials-id', "Choose material", 'selected-option'),
+        multipleCustomeSelect('select-order-type-id', "Choose type", 'selected-option')
+    ]);
 </script>
 
 </html>
