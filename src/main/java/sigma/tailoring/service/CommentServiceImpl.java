@@ -30,10 +30,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentOrderForm> findAllByOrderId(Long orderId) {
-        if (orderId == null) {
-            return new ArrayList<>();
-        }
     public List<CommentOrderForm> findAllByOrderId(User user, Long orderId) {
         checkUserRights(user, orderId);
 
