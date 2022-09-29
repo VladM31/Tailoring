@@ -27,7 +27,7 @@
 
         <p class="about-ua-describe-text">
             Our company was founded in 2022 as tailoring company. Since then, we have built a reputation as one of
-            the leading Tailoring companies in the Ukrainion. We develop our own design without relying on trends.
+            the leading Tailoring companies in the Ukraine. We develop our own design without relying on trends.
             And if you want something of your own, we can help you with the implementation.
         </p>
 
@@ -103,7 +103,7 @@
         <div class="template-container template-box">
 
             <div class="template-data" th:each="template : ${popularTemplates}">
-                <a th:href="@{#orders/create(id=${template.id})}">
+                <a th:href="@{/orders/create/based-on-template/{id}(id=${template.id})}">
                     <img th:src="@{ ${@environment.getProperty('template.image.server.directory')} + '/' + ${findFrontImg.apply(template.imagesUrl.stream())}}"
                          alt="">
                     <p th:text="${template.name}">Blood dress</p>
