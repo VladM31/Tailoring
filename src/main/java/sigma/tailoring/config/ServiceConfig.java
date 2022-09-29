@@ -7,6 +7,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import sigma.tailoring.converters.FileConverter;
 import sigma.tailoring.converters.OrderServiceSortColumnConverter;
 import sigma.tailoring.converters.UserServiceSortColumnConverter;
+import sigma.nure.tailoring.tailoring.repository.*;
+import sigma.nure.tailoring.tailoring.service.*;
+import sigma.tailoring.repository.*;
 import sigma.tailoring.converters.TailoringTemplateConvertor;
 import sigma.tailoring.converters.TailoringTemplateSortColumnConverter;
 import sigma.tailoring.repository.OrderRepository;
@@ -14,7 +17,6 @@ import sigma.tailoring.repository.TailoringTemplateRepository;
 import sigma.tailoring.repository.UserCodeRepository;
 import sigma.tailoring.repository.UserRepository;
 import sigma.nure.tailoring.tailoring.service.*;
-
 import sigma.tailoring.service.PopularTemplateService;
 import sigma.tailoring.service.PopularTemplateServiceImpl;
 import sigma.tailoring.service.TailoringTemplateService;
@@ -40,6 +42,7 @@ public class ServiceConfig {
         return new TailoringTemplateServiceImpl(fileConverter, templateRepository, imagesDirectory,
                 tailoringTemplateSortColumnConverter, tailoringTemplateConvertor);
     }
+
 
     @Bean
     public TelegramBotClient httpTelegramBotClient(@Value("${telegram.bot.connector.token}") String token,

@@ -63,19 +63,20 @@ function userToDiv(user){
           <div class="user-data-container">
             <div class="user-data-box">
               <h5>Date registration</h5>
-              <p>${user.dateRegistration.replace('T',' ').substr(0,16)}</p>
+              <p>${user.dateRegistration.replace('T', ' ').substr(0, 16)}</p>
             </div>
             <div class="user-data-box">
               <h5>Status</h5>
               <p>${toTitleCase(user.userState)}</p>
             </div>
-            <button class="activety-button ${user.active ? '' : 'inactive-button'}">
+            <button class="activety-button ${user.active ? '' : 'inactive-button'}" 
+            onclick="updateUserActiveAndUpdateContainer(${user.id},${!user.active})">
                 ${user.active ? 'Active' : 'Inactive'}
             </button>
           </div>
           <div class="user-data-text-box">
             <p>Email : <samp>${user.email}</samp></p>
-            <p>City : <samp>>${user.city}</samp></p>
+            <p>City : <samp>${user.city}</samp></p>
             <p>Country : <samp>${user.country}</samp></p>
             <p>Gender : <samp>${user.male ? 'Man' : 'Female'}</samp></p>
             <p>Role : <samp>${toTitleCase(user.role)}</samp></p>
@@ -86,7 +87,13 @@ function userToDiv(user){
     `
 }
 
+async function updateUserActiveAndUpdateContainer(userId, active) {
+    await updateUserActive(userId, active);
+
+    await updateUserContainer();
+}
+
 function toTitleCase(txt) {
-    txt.replace('_',' ');
+    txt.replace('_', ' ');
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 }

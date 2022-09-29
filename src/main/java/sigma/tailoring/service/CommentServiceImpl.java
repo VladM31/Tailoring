@@ -10,6 +10,7 @@ import sigma.tailoring.tools.CommentOrderForm;
 import sigma.tailoring.tools.OrderSearchCriteria;
 import sigma.tailoring.tools.Page;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,11 +26,14 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public boolean save(User user, CommentOrderForm comment) {
         checkUserRights(user, comment.getTailoringOrderId());
-
         return orderCommentsRepository.save(toComment(comment));
     }
 
     @Override
+    public List<CommentOrderForm> findAllByOrderId(Long orderId) {
+        if (orderId == null) {
+            return new ArrayList<>();
+        }
     public List<CommentOrderForm> findAllByOrderId(User user, Long orderId) {
         checkUserRights(user, orderId);
 
@@ -41,6 +45,7 @@ public class CommentServiceImpl implements CommentService {
                                 Collectors.toList()
                         ));
     }
+
 
     private void checkUserRights(User user, Long tailoringOrderId) {
         if (user.getRole().equals(Role.ADMINISTRATION)) {

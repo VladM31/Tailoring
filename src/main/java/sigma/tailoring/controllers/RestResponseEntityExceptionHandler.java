@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import sigma.tailoring.exceptions.UserNotFound;
 import sigma.tailoring.exceptions.FormException;
 import sigma.tailoring.exceptions.OrderCommentException;
 
@@ -39,7 +40,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     @ResponseBody
-    @ExceptionHandler({ConstraintViolationException.class, OrderCommentException.class})
+    @ExceptionHandler({ConstraintViolationException.class, OrderCommentException.class, UserNotFound.class})
     public ResponseEntity handleConstraintViolationException(RuntimeException ex) {
         LOGGER.warn(ex.getMessage(), ex);
         return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);

@@ -1,16 +1,20 @@
 package sigma.tailoring.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import sigma.tailoring.converters.UserWebSortColumnConverter;
 import sigma.tailoring.service.UserService;
 import sigma.tailoring.tools.HandlerFilter;
+import sigma.tailoring.tools.OnUpdate;
+import sigma.tailoring.tools.UserActiveForm;
 import sigma.tailoring.tools.UserFilter;
 import sigma.tailoring.dto.UserList;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
+@Validated
 public class UserController {
     private final UserWebSortColumnConverter converter;
     private final UserService userService;
@@ -30,5 +34,10 @@ public class UserController {
         return new UserList(users);
     }
 
+    @PutMapping("{id}/active")
+    @Validated(OnUpdate.class)
+    public boolean updateActive(@Valid UserActiveForm userActiveForm, @PathVariable Long id) {
+        return userService.update(userActiveForm.toUser(userService, id));
+    }
 
 }
