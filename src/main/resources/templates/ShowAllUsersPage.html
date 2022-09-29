@@ -96,7 +96,7 @@
           <option th:each="sortColumn : ${T(sigma.tailoring.tools.UserSortColumn).values()}"
                   th:value="${sortColumn.name()}"
                   th:text="${sortColumn.name().charAt(0)} + ${sortColumn.name().substring(1).replaceAll('_',' ').toLowerCase()}"
-                  th:selected="${sortColumn.equals(T(sigma.nure.tailoring.tailoring.tools.UserSortColumn).DATE_REGISTRATION)}"></option>
+                  th:selected="${sortColumn.equals(T(sigma.tailoring.tools.UserSortColumn).DATE_REGISTRATION)}"></option>
         </select>
         <input type="hidden" name="desc" id="sort-input-desc" value="true">
         <button id="sort-button-id" onclick="changeDirection(this.id),changeDirectionSort()"
