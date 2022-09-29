@@ -25,16 +25,15 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public boolean save(User user, CommentOrderForm comment) {
-        checkUserRights(user, comment);
+        checkUserRights(user, comment.getTailoringOrderId());
 
         return orderCommentsRepository.save(toComment(comment));
     }
 
     @Override
-    public List<CommentOrderForm> findAllByOrderId(Long orderId) {
-        if (orderId == null) {
-            return new ArrayList<>();
-        }
+    public List<CommentOrderForm> findAllByOrderId(User user, Long orderId) {
+        checkUserRights(user, orderId);
+
         return orderCommentsRepository.findAllByOrderId(orderId)
                 .stream()
                 .collect(
@@ -44,21 +43,26 @@ public class CommentServiceImpl implements CommentService {
                         ));
     }
 
-    private void checkUserRights(User user, CommentOrderForm comment) {
+    private void checkUserRights(User user, Long tailoringOrderId) {
         if (user.getRole().equals(Role.ADMINISTRATION)) {
             return;
         }
 
-        if (orderRepository.findBy(OrderSearchCriteria
-                                .builder()
-                                .userIds(List.of(user.getId()))
-                                .templateIds(List.of(comment.getTailoringOrderId()))
+        var search = OrderSearchCriteria
+                .builder()
+                .userIds(List.of(user.getId()));
+
+        if (tailoringOrderId != null) {
+            search.orderIds(List.of(tailoringOrderId));
+        }
+
+        if (orderRepository.findBy(search
                                 .build(),
                         new Page())
                 .isEmpty()
         ) {
             throw new OrderCommentException("User with id = %d with name = %s %s tried to add comment for order with id = %d"
-                    .formatted(user.getId(), user.getFirstname(), user.getLastname(), comment.getTailoringOrderId()));
+                    .formatted(user.getId(), user.getFirstname(), user.getLastname(), tailoringOrderId));
         }
     }
 

@@ -1,0 +1,348 @@
+p, h1, h2, a {
+    margin: 0;
+    padding: 0;
+}
+
+a:active,
+a:hover,
+a {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+}
+
+.container-elements {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.column-container {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.added-file-lable {
+    width: 500px;
+    height: 70px;
+    background: rgba(82, 9, 116, 0.9);
+    border-radius: 30px;
+
+    font-family: 'Imprima';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 35px;
+
+    color: #FFFFFF;
+
+    text-align: center;
+    padding-top: 20px;
+}
+
+.hidden-input-files {
+    height: 0px;
+    width: 0px;
+}
+
+.images-box {
+    margin-top: 20px;
+    height: 100px;
+    border: 2px solid rgba(82, 9, 116);
+
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.image-style {
+    height: 96px;
+    width: 96px;
+    border-left: 2px solid rgba(82, 9, 116);
+}
+
+.image-info {
+    width: 400px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.files-warn-info {
+    color: rgb(116, 9, 18);
+    font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.wishes-container {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.wishes-box {
+    max-width: 1120px;
+    min-height: 100px;
+    background: #FFFFFF;
+    border: 0.75px solid #520974;
+    border-radius: 10px;
+    margin-top: 5px;
+    padding-top: 5px;
+    padding-left: 5px;
+    font-size: 20px;
+}
+
+.wishes-label {
+    font-family: 'Imprima';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 21px;
+
+    color: #520974;
+    padding-left: 10px;
+}
+
+.input-data-container {
+    max-width: 1140px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.input-data-container-text-and-put {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.input-data-label {
+    color: #520974;
+    font-size: 24px;
+    text-align: center;
+}
+
+.input-data-box {
+    border: 1px solid #520974;
+    border-radius: 5px;
+    height: 40px;
+    padding-left: 5px;
+    font-size: 20px;
+    width: 170px;
+}
+
+.count-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.count-box {
+    width: 80px;
+    border-radius: 0px;
+
+    color: #520974;
+
+    text-align: center;
+    padding-left: 15px;
+}
+
+.count-changer-box {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #520974;
+    font-size: 35px;
+    padding-top: -90px;
+    color: #520974;
+    transition: 0.5s;
+}
+
+.count-changer-box:hover {
+    background-color: #520974;
+    color: white;
+    transition: 0.5s;
+}
+
+
+.count-minus-box {
+    border-width: 1px 0px 1px 1px;
+    border-radius: 25px 0px 0px 25px;
+    background-color: #FFFFFF;
+}
+
+.count-plus-box {
+    border-width: 1px 1px 1px 0px;
+    border-radius: 0px 25px 25px 0px;
+    background-color: #FFFFFF;
+}
+
+.make-button {
+    width: 220px;
+    height: 55px;
+    font-size: 32px;
+
+    color: #520974;
+    background: white;
+    border: 1px solid #520974;
+    border-radius: 25px;
+    transition: 0.3s;
+}
+
+.make-button:hover {
+    color: white;
+    transition: 0.5s;
+    background: #520974;
+}
+
+.make-button-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 2%;
+}
+
+.made-button {
+    background-color: #FFFFFF;
+    border: 2px solid #520974;
+    border-radius: 25px;
+
+    width: 220px;
+    height: 55px;
+
+    font-size: 32px;
+    color: #520974;
+    margin-top: 42px;
+    transition: 0.4s;
+
+    padding: 0%;
+}
+
+.made-button:hover {
+    color: #FFFFFF;
+    background-color: #520974;
+    font-size: 36px;
+    transition: 0.6s;
+
+}
+
+select:focus,
+textarea:focus,
+input[type=text]:focus,
+input[type=number]:focus {
+    outline: none;
+    border: 3px solid rgb(86, 207, 255);
+}
+
+.create-part-size-button {
+    all: unset;
+    text-align: center;
+    height: 125px;
+    width: 125px;
+
+
+    background-color: #FFFFFF;
+    border: 3px solid #520974;
+    border-radius: 50%;
+
+    color: #520974;
+    font-size: 36px;
+    font-weight: bolder;
+    transition: 0.3s;
+
+}
+
+.create-part-size-button:hover {
+    background-color: #520974;
+    color: #FFFFFF;
+    transition: 0.4s;
+    font-size: 40px;
+}
+
+.order-part-size-conteiner {
+    margin-top: 20px;
+    display: flex;
+    justify-content: baseline;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.part-size-box {
+    width: 500px;
+    height: 150px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+
+    border: 1px solid #520974;
+    border-radius: 10px;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.name-with-remove-utton-box {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.name-with-remove-utton-box input[type=text] {
+    width: 420px;
+    height: 40px;
+    background: #FFFFFF;
+    border: 0.75px solid #520974;
+    font-size: 24px;
+    padding-left: 5px;
+}
+
+.name-with-remove-utton-box input[type=text]::placeholder {
+    padding-top: 10px;
+    padding-left: 5px;
+    font-size: 26px;
+}
+
+.name-with-remove-utton-box button {
+    height: 40px;
+    width: 40px;
+
+    background-color: #520974;
+    border: 0.75px solid #520974;
+    color: #FFFFFF;
+
+    font-size: 36px;
+}
+
+.part-size-input-container {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.part-size-input-box {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.part-size-input-box label {
+    color: #520974;
+    text-align: center;
+    font-size: 20px;
+}
+
+.part-size-input-box input[type=number] {
+    width: 105px;
+    height: 35px;
+
+    font-size: 20px;
+    border: 0.75px solid #520974;
+    border-radius: 5px;
+    text-align: center;
+}
