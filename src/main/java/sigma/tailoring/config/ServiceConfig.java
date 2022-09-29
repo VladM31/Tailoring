@@ -2,8 +2,10 @@ package sigma.tailoring.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sigma.tailoring.converters.FileConverter;
 import sigma.tailoring.converters.OrderServiceSortColumnConverter;
@@ -24,12 +26,24 @@ import sigma.tailoring.service.*;
 @Configuration
 @EnableScheduling
 public class ServiceConfig {
+    private static final int STRENGTH = 10;
+
+    @Bean
+    public PasswordEncoder bcryptPasswordEncoder() {
+        return new BCryptPasswordEncoder(STRENGTH);
+    }
+
+    @Bean
+    public SecurityService securityServiceImpl(UserService userService, UserCodeService userCodeService,
+                                               TelegramBotClient telegramBotClient, PasswordEncoder passwordEncoder) {
+        return new SecurityServiceImpl(userService, userCodeService, telegramBotClient, passwordEncoder);
+    }
 
     @Bean
     public PopularTemplateService popularTemplateServiceImpl(OrderRepository orderRepository, TailoringTemplateRepository templateRepository) {
         return new PopularTemplateServiceImpl(orderRepository, templateRepository);
     }
-    
+
     @Bean
     public TailoringTemplateService tailoringTemplateServiceImpl(
             FileConverter fileConverter,
@@ -70,12 +84,6 @@ public class ServiceConfig {
         return new CommentServiceImpl(orderCommentsRepository, orderRepository);
     }
 
-    @Bean
-    public SecurityService securityServiceImpl(UserService userService, UserCodeService userCodeService,
-                                               TelegramBotClient telegramBotClient,
-                                               PasswordEncoder passwordEncoder) {
-        return new SecurityServiceImpl(userService, userCodeService, telegramBotClient, passwordEncoder);
-    }
 
     @Bean
     public TailoringOrderService tailoringOrderServiceImpl(

@@ -1,6 +1,7 @@
-package sigma.nure.tailoring.tailoring.config;
+package sigma.tailoring.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,21 +12,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import sigma.tailoring.service.*;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private static final int STRENGTH = 10;
     private final UserDetailsService userService;
 
     public SecurityConfig(UserDetailsService userService) {
         this.userService = userService;
     }
 
-    @Bean
-    public PasswordEncoder bcryptPasswordEncoder() {
-        return new BCryptPasswordEncoder(STRENGTH);
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
@@ -62,4 +59,5 @@ public class SecurityConfig {
                 .ignoring()
                 .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
     }
+
 }

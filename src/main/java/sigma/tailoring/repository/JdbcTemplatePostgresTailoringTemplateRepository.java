@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 import sigma.tailoring.entities.PartSizeForTemplate;
 import sigma.tailoring.entities.TailoringTemplateWithMaterialIds;
 import sigma.tailoring.tools.Page;
+import sigma.tailoring.tools.Range;
 import sigma.tailoring.tools.TailoringTemplateSearchCriteria;
 
 import java.util.*;
+
 
 @Repository
 public class JdbcTemplatePostgresTailoringTemplateRepository implements TailoringTemplateRepository {
@@ -82,14 +84,11 @@ public class JdbcTemplatePostgresTailoringTemplateRepository implements Tailorin
         args.put("name", criteria.getName());
         args.put("isActive", criteria.getIsActive());
 
-        args.put("startCost", Optional.ofNullable(criteria.getCost())
-                .map(c -> c.getFrom()).orElse(null));
-        args.put("endCost", Optional.ofNullable(criteria.getCost())
-                .map(c -> c.getTo()).orElse(null));
-        args.put("startDateOfCreation", Optional.ofNullable(criteria.getDateOfCreation())
-                .map(date -> date.getFrom()).orElse(null));
-        args.put("endDateOfCreation", Optional.ofNullable(criteria.getDateOfCreation())
-                .map(date -> date.getTo()).orElse(null));
+
+        args.put("startCost", Range.from(criteria.getCost()));
+        args.put("endCost", Range.to(criteria.getCost()));
+        args.put("startDateOfCreation", Range.from(criteria.getDateOfCreation()));
+        args.put("endDateOfCreation", Range.to(criteria.getDateOfCreation()));
 
         return namedJdbc.query(script, args, templateRowMapper);
     }
