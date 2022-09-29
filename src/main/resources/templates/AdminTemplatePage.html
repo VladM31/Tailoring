@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/adminka_style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/sort_style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/top_label_style.css}"/>
+
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <title>Template management</title>
+</head>
+
+<body>
+<th:block th:include="/TopLablePage"></th:block>
+
+<div class="container-filter-and-info">
+    <div class="container-forms">
+        <div class="sort-box">
+            <div class="pageable-box">
+                <select name="sortSelectField" form="filter-id" class="sort-select"
+                        onchange="sortByColumn(this.value)">
+                    <option value="NAME">Name</option>
+                    <option value="COST">Cost</option>
+                    <option value="ACTIVE">Active</option>
+                    <option value="TYPE_TEMPLATE">Type template</option>
+                    <option value="DATA_OF_CREATION" selected>Date registration</option>
+                </select>
+                <input form="filter-id" type="hidden" name="desc" id="sort-input-desc" value="true">
+                <button id="sort-button-id" onclick="changeDirection(this.id),setDirection()"
+                        class="sort-button-style"></button>
+            </div>
+        </div>
+
+        <form action="" class="filter-box" id="filter-id">
+
+            <label for="" class="filter-main-label filter-item-margin">Find by</label>
+
+            <!-- <input type="hidden" name="materials" value="1"> -->
+            <select name="materialIds" multiple id="materials-select-id" class="filter-input-box filter-item-margin"
+                    value="">
+                <option th:each="material : ${@materialsServiceImpl.findAllMaterial()}" th:value="${material.id}"
+                        th:text="${material.name}">...
+                </option>
+            </select>
+
+            <!-- <input type="hidden" name="colors" value="12"> -->
+            <select name="colorIds" multiple id="colors-select-id" class="filter-input-box filter-item-margin"
+                    value="">
+                <option th:each="color : ${@materialsServiceImpl.findAllColors()}" th:value="${color.id}"
+                        th:text="${color.name}">...
+                </option>
+            </select>
+
+            <!-- <input type="hidden" name="statesOrder" value="1"> -->
+            <select name="types" multiple id="state-order-select-id" class="filter-input-box filter-item-margin">
+                <option th:each="type : ${@tailoringTemplateServiceImpl.findAllTypeTemplate()}" th:value="${type}"
+                        th:text="${type}">...
+                </option>
+            </select>
+
+            <input type="text" placeholder="Name" name="name" class="filter-input-box filter-item-margin">
+
+            <div class="filter-item-margin">
+                <label for="" class="input-between-label">Price</label>
+                <div class="input-between-box">
+                    <input type="number" name="cost.from" id="" class="input-between" placeholder="Min">
+                    <input type="number" name="cost.to" id="" class="input-between" placeholder="Max">
+                </div>
+            </div>
+
+            <div class="filter-item-margin">
+                <label for="" class="input-between-label">Date of creation</label>
+                <div class="input-between-box">
+                    <input type="datetime-local" name="dateOfCreation.from" id="" class="input-between data-style"
+                           placeholder="Min">
+                    <input type="datetime-local" name="dateOfCreation.to" id="" class="input-between data-style"
+                           placeholder="Max">
+                </div>
+            </div>
+
+
+            <div class="filter-item-margin">
+                <label for="" class="input-between-label">State</label>
+                <div class="input-between-box">
+                    <div class="box-for-check-box">
+                        <input type="checkbox" name="active" class="check-box-style" id="male-id">
+                        <label for="male-id" name="" class="check-box-style-for-text">Active</label>
+                    </div>
+                    <div class="box-for-check-box">
+                        <input type="checkbox" name="inactive" class="check-box-style" id="female-id">
+                        <label for="female-id" name="" class="check-box-style-for-text">Inactive</label>
+                    </div>
+                </div>
+            </div>
+
+            <input type="button" value="Find" class="submit-input filter-item-margin"
+                   onclick="selectToMultipleSelect(), toFilterTemplates()">
+            <input type="hidden">
+            <input type="hidden">
+
+        </form>
+
+
+    </div>
+
+
+    <div class="order-and-sort-container">
+
+        <div class="order-container" id="template-container-id">
+            <div class="order-box">
+                <h2>Number: 1234</h2>
+                <p>Name : <samp style="color:#520974;">T-shirt</samp></p>
+                <p>State : <samp style="color:#520974;">Active</samp></p>
+
+                <p>Price : <samp style="color:#520974;">1000 UAH</samp></p>
+                <p>Type : <samp style="color:#520974;">T-SHIRT</samp></p>
+                <p>Date of creation : <samp style="color:#520974;">2022-09-10 11:15</samp></p>
+
+                <p>Images count : <samp style="color:#520974;">0</samp></p>
+                <p>Past size count : <samp style="color:#520974;">0</samp></p>
+
+                <select>
+                    <option value="" selected disabled>Color</option>
+                    <option value="" disabled>Red</option>
+                    <option value="" disabled>Blue</option>
+                </select>
+                <select>
+                    <option value="" selected disabled>Material</option>
+                </select>
+                <div class="link-button-box">
+                    <a href="#order">
+                        <button type="button" class="link-button">Edit</button>
+                    </a>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="administation-tools-button">
+        <h2>Tools</h2>
+        <a th:href="@{/users/management}">Users</a>
+        <a th:href="@{#}">Orders</a>
+        <a th:href="@{/templates/create}">Create template</a>
+    </div>
+</div>
+
+</body>
+<script th:src="@{/js/multi-select-dropdown.js}"></script>
+<script th:src="@{/js/js_library.js}"></script>
+<script th:src="@{/js/sort-buttons.js}"></script>
+<script th:src="@{/js/make_form_data_from_filter.js}"></script>
+<script th:src="@{/js/template_admin_controller.js}"></script>
+<script>
+
+
+    sortButtons.push(sortButton('sort-button-id', 'sort-input-desc', true));
+    setSymbols();
+    startCustomSelect([
+        multipleCustomeSelect('materials-select-id', "Choose material", 'selected-option'),
+        multipleCustomeSelect('colors-select-id', "Choose color", 'selected-option'),
+        multipleCustomeSelect('state-order-select-id', "Choose type", 'selected-option'),
+
+    ]);
+
+    setMultipleSelects(['colorIds', 'materialIds', 'types']);
+    setPair('active', 'inactive', 'isActive');
+    toFilterTemplates();
+</script>
+
+</html>
