@@ -39,4 +39,5 @@ public class UserController {
     public boolean updateActive(@Valid UserActiveForm userActiveForm, @PathVariable Long id) {
         return userService.update(userActiveForm.toUser(userService, id));
     }
+
 }

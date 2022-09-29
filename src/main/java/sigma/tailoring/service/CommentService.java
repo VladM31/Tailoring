@@ -8,5 +8,5 @@ import java.util.List;
 public interface CommentService {
     boolean save(User user, CommentOrderForm comment);
 
-    List<CommentOrderForm> findAllByOrderId(Long orderId);
+    List<CommentOrderForm> findAllByOrderId(User user, Long orderId);
 }

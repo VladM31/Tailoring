@@ -10,6 +10,17 @@ import sigma.tailoring.converters.UserServiceSortColumnConverter;
 import sigma.nure.tailoring.tailoring.repository.*;
 import sigma.nure.tailoring.tailoring.service.*;
 import sigma.tailoring.repository.*;
+import sigma.tailoring.converters.TailoringTemplateConvertor;
+import sigma.tailoring.converters.TailoringTemplateSortColumnConverter;
+import sigma.tailoring.repository.OrderRepository;
+import sigma.tailoring.repository.TailoringTemplateRepository;
+import sigma.tailoring.repository.UserCodeRepository;
+import sigma.tailoring.repository.UserRepository;
+import sigma.nure.tailoring.tailoring.service.*;
+import sigma.tailoring.service.PopularTemplateService;
+import sigma.tailoring.service.PopularTemplateServiceImpl;
+import sigma.tailoring.service.TailoringTemplateService;
+import sigma.tailoring.service.TailoringTemplateServiceImpl;
 import sigma.tailoring.service.*;
 
 @Configuration
@@ -20,6 +31,18 @@ public class ServiceConfig {
     public PopularTemplateService popularTemplateServiceImpl(OrderRepository orderRepository, TailoringTemplateRepository templateRepository) {
         return new PopularTemplateServiceImpl(orderRepository, templateRepository);
     }
+    
+    @Bean
+    public TailoringTemplateService tailoringTemplateServiceImpl(
+            FileConverter fileConverter,
+            TailoringTemplateRepository templateRepository,
+            @Value("${template.image.directory}") String imagesDirectory,
+            TailoringTemplateSortColumnConverter tailoringTemplateSortColumnConverter,
+            TailoringTemplateConvertor tailoringTemplateConvertor) {
+        return new TailoringTemplateServiceImpl(fileConverter, templateRepository, imagesDirectory,
+                tailoringTemplateSortColumnConverter, tailoringTemplateConvertor);
+    }
+
 
     @Bean
     public TelegramBotClient httpTelegramBotClient(@Value("${telegram.bot.connector.token}") String token,

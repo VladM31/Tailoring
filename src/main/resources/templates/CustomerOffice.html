@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="sort_style.css">
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <title>Offise</title>
+</head>
+
+<body>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container-filter-and-info">
+    <div class="filter-and-user-info-container">
+        <div class="user-info-label-box">
+            <img src="UserPhoto.jpg" alt="user img">
+            <div class="user-info">
+                <p>Владислав Mmm</p>
+                <p>380660660660</p>
+            </div>
+        </div>
+
+        <form action="http://127.0.0.1:5500/index.html" class="filter-box" id="filter-id">
+
+            <label for="" class="filter-main-label filter-item-margin">Find by</label>
+
+            <select name="materials" multiple id="materials-select-id" class="filter-input-box filter-item-margin"
+                    value="">
+                <option value="Wool">Wool</option>
+                <option value="Silk">Silk</option>
+                <option value="Cotton">Cotton</option>
+            </select>
+
+            <select name="colors" multiple id="colors-select-id" class="filter-input-box filter-item-margin" value="">
+                <option value="Black">Black</option>
+                <option value="White">White</option>
+                <option value="Red">Red</option>
+            </select>
+
+            <div class="filter-item-margin">
+                <label for="" class="input-between-label">Price</label>
+                <div class="input-between-box">
+                    <input type="number" name="" id="" class="input-between" placeholder="Min">
+                    <input type="number" name="" id="" class="input-between" placeholder="Max">
+                </div>
+            </div>
+
+            <div class="filter-item-margin">
+                <label for="" class="input-between-label">Date of creation</label>
+                <div class="input-between-box">
+                    <input type="datetime-local" name="" id="" class="input-between data-style" placeholder="Min">
+                    <input type="datetime-local" name="" id="" class="input-between data-style" placeholder="Max">
+                </div>
+            </div>
+
+            <input type="submit" value="Find" class="submit-input filter-item-margin"
+                   onclick="selectToMultipleSelect()">
+        </form>
+    </div>
+
+
+    <div class="order-and-sort-container">
+        <div class="office-pageable-box">
+            <p class="your-orders-label">Your orders</p>
+            <input form="filter-id" type="hidden" name="desc" id="sort-input-desc" value="true">
+            <div class="sort-box">
+                <select name="sortSelectField" form="filter-id" id="" class="sort-select">
+                    <option value="date registration">Date registration</option>
+                </select>
+
+                <button id="sort-button-id" onclick="changeDirection(this.id)" class="sort-button-style"></button>
+            </div>
+        </div>
+
+        <div class="short-orders-container">
+            <div class="short-order-box">
+                <div class="state-number-dare-order-box">
+                    <div class="color-state-box"></div>
+                    <div class="number-dare-order-box">
+                        <p>№ 12131 from 11.12.12 12:12:11</p>
+                        <p>Done</p>
+                    </div>
+                </div>
+
+                <div class="payment-state-and-price-boxs">
+                    <span>Payment status</span>
+                    <p>Paid</p>
+                </div>
+
+                <div class="payment-state-and-price-boxs">
+                    <span>Order price</span>
+                    <p>950 UAH</p>
+                </div>
+
+                <div class="img-and-more-details-box">
+                    <img src="t-shirt.png" alt="">
+                    <a href="#to-order">></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+<script src="multi-select-dropdown.js"></script>
+<script src="sort-buttons.js"></script>
+<script>
+
+
+    sortButtons.push(sortButton('sort-button-id', 'sort-input-desc', true));
+    setSymbols();
+    startCustomSelect([
+        multipleCustomeSelect('materials-select-id', "Order status", 'selected-option'),
+        multipleCustomeSelect('colors-select-id', "Payment status", 'selected-option'),
+    ]);
+</script>
+
+</html>
