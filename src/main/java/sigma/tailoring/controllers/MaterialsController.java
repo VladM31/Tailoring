@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import sigma.tailoring.entities.Color;
 import sigma.tailoring.entities.Material;
 import sigma.tailoring.service.MaterialsService;
-import sigma.nure.tailoring.tailoring.tools.*;
+import sigma.tailoring.tools.*;
 import sigma.tailoring.tools.*;
 
 import javax.validation.Valid;

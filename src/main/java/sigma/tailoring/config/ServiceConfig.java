@@ -4,16 +4,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import sigma.tailoring.converters.FileConverter;
 import sigma.tailoring.converters.OrderServiceSortColumnConverter;
 import sigma.tailoring.converters.UserServiceSortColumnConverter;
 import sigma.tailoring.converters.TailoringTemplateConvertor;
 import sigma.tailoring.converters.TailoringTemplateSortColumnConverter;
-import sigma.tailoring.repository.OrderRepository;
-import sigma.tailoring.repository.TailoringTemplateRepository;
-import sigma.tailoring.repository.UserCodeRepository;
-import sigma.tailoring.repository.UserRepository;
-import sigma.nure.tailoring.tailoring.service.*;
+import sigma.tailoring.repository.*;
+import sigma.tailoring.service.*;
 
 import sigma.tailoring.service.PopularTemplateService;
 import sigma.tailoring.service.PopularTemplateServiceImpl;
@@ -71,9 +70,10 @@ public class ServiceConfig {
     }
 
     @Bean
-
-    public SecurityService securityServiceImpl(UserService userService, UserCodeService userCodeService, TelegramBotClient telegramBotClient) {
-        return new SecurityServiceImpl(userService, userCodeService, telegramBotClient);
+    public SecurityService securityServiceImpl(UserService userService, UserCodeService userCodeService,
+                                               TelegramBotClient telegramBotClient,
+                                               PasswordEncoder passwordEncoder) {
+        return new SecurityServiceImpl(userService, userCodeService, telegramBotClient, passwordEncoder);
     }
 
     @Bean

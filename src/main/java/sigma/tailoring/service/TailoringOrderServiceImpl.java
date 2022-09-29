@@ -4,7 +4,7 @@ import sigma.tailoring.converters.FileConverter;
 import sigma.tailoring.converters.OrderServiceSortColumnConverter;
 import sigma.tailoring.dto.ModifyTailoringOrder;
 import sigma.tailoring.dto.TailoringOrderList;
-import sigma.nure.tailoring.tailoring.entities.*;
+import sigma.tailoring.entities.*;
 import sigma.tailoring.repository.OrderRepository;
 import sigma.tailoring.tools.OrderSearchCriteria;
 import sigma.tailoring.tools.Page;

@@ -1,7 +1,7 @@
 package sigma.tailoring.service;
 
 import org.springframework.scheduling.annotation.Scheduled;
-import sigma.nure.tailoring.tailoring.entities.*;
+import sigma.tailoring.entities.*;
 import sigma.tailoring.repository.OrderRepository;
 import sigma.tailoring.repository.TailoringTemplateRepository;
 import sigma.tailoring.tools.OrderSearchCriteria;

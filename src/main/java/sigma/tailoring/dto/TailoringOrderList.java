@@ -3,7 +3,7 @@ package sigma.tailoring.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sigma.nure.tailoring.tailoring.entities.*;
+import sigma.tailoring.entities.*;
 import sigma.tailoring.entities.*;
 
 import java.io.File;

@@ -3,7 +3,7 @@ package sigma.tailoring.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import sigma.nure.tailoring.tailoring.repository.*;
+import sigma.tailoring.repository.*;
 import sigma.tailoring.repository.*;
 
 @Configuration
