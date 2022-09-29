@@ -1,0 +1,328 @@
+p, h1, h2, a {
+    margin: 0;
+    padding: 0;
+}
+
+a:active,
+a:hover,
+a {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+}
+
+.container-elements {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+
+select:focus,
+textarea:focus,
+input[type=text]:focus,
+input[type=number]:focus {
+    outline: none;
+    border: 3px solid rgb(86, 207, 255);
+}
+
+
+.order-part-size-conteiner {
+
+    display: flex;
+    justify-content: baseline;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    max-width: 880px;
+    min-width: 430px;
+    min-height: 150px;
+    margin-left: 10px;
+}
+
+
+.part-size-box {
+    width: 420px;
+    height: 110px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+
+    border: 1px solid #520974;
+    border-radius: 10px;
+
+    display: flex;
+    justify-content: baseline;
+    flex-direction: column;
+}
+
+.name-with-remove-utton-box {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.name-with-remove-utton-box p {
+    color: #520974;
+    font-size: 32px;
+    padding-top: 0px;
+}
+
+.part-size-input-container {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.part-size-input-box {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.part-size-input-box label {
+    color: #520974;
+    text-align: center;
+    font-size: 18px;
+}
+
+.part-size-input-box input[type=number] {
+    width: 90px;
+    height: 25px;
+
+    font-size: 20px;
+    border: 0.75px solid #520974;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.images-container {
+    display: flex;
+    justify-content: baseline;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 340px;
+    min-width: 230px;
+}
+
+.image-box {
+    display: flex;
+    justify-content: baseline;
+    flex-direction: column;
+
+    width: 100px;
+    /* border: 2px solid #520974; */
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.image-box img {
+    min-height: 100px;
+    max-height: 120px
+}
+
+.image-box label {
+    text-align: center;
+    color: #520974;
+    font-size: 22px;
+}
+
+.other-order-info-container {
+    width: 600px;
+
+
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.left-conteiner {
+    display: flex;
+    justify-content: baseline;
+    flex-direction: column;
+}
+
+.hide-button-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.hide-button-container button {
+    height: 20px;
+    width: 150px;
+
+    border: 0px;
+    background-color: #520974;
+    border-radius: 0px 0px 20px 20px;
+
+    color: white;
+    font-size: 12px;
+    transition: 0.3s;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+.hide-button-container button:hover {
+    height: 30px;
+    font-size: 18px;
+    transition: 0.5s;
+    margin-bottom: 0px;
+}
+
+.chat-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+.chat-container textarea {
+    max-width: 845px;
+    min-width: 600px;
+    margin-left: 10px;
+    height: 200px;
+
+    border: 2px solid #520974;
+    border-radius: 20px;
+    padding: 5px 0px 5px 5px;
+    resize: none;
+
+}
+
+.chat-container label {
+    color: #520974;
+    font-size: 20px;
+    padding-left: 30px;
+}
+
+.chat-container textarea::-webkit-scrollbar {
+    border-radius: 10px;
+    cursor: move;
+}
+
+.describe-order-container {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+
+    border-radius: 25px;
+    border: 1px solid #520974;
+    min-height: 420px;
+    margin-bottom: 20px;
+}
+
+.describe-order-container h2 {
+    text-align: center;
+    padding-top: 5px;
+    color: #520974;
+}
+
+.describe-order-container p {
+    color: rgb(88, 88, 88);
+    padding-left: 10px;
+    font-size: 24px;
+}
+
+.describe-order-container p samp {
+    color: #520974;
+}
+
+.buttons-for-order-container {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    margin-top: 1%;
+}
+
+.buttons-for-order-container a {
+    width: 130px;
+    height: 40px;
+
+    margin: 5px;
+
+    background-color: #520974;
+    border-radius: 20px;
+
+    color: white;
+    text-align: center;
+    font-size: 26px;
+    transition: 0.3s;
+}
+
+.buttons-for-order-container a:hover {
+    margin: 0px;
+    width: 140px;
+    height: 50px;
+    font-size: 32px;
+    transition: 0.5s;
+}
+
+.admin-container {
+    min-height: 150px;
+    margin-top: 20px;
+    width: 460px;
+
+
+    border-radius: 25px;
+    border: 1px solid #520974;
+}
+
+.admin-container h2 {
+    text-align: center;
+    color: #520974;
+}
+
+.admin-container form {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.admin-container form div {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+}
+
+.admin-input {
+    width: 200px;
+    height: 35px;
+    border: 1px solid #520974;
+    border-radius: 10px;
+    padding-left: 10px;
+    font-size: 20px;
+}
+
+.admin-input:focus {
+    outline: none;
+    border: 3px solid rgb(86, 207, 255);
+}
+
+.admin-container div div label {
+    margin-top: 5px;
+    padding-left: 10px;
+    font-size: 20px;
+
+    color: #520974;
+    font-size: 20px;
+
+}
+
+.admin-send-button {
+    width: 170px;
+    height: 45px;
+
+    margin-top: 20px;
+    border: 2px solid #520974;
+    border-radius: 10px;
+
+    font-size: 24px;
+    color: #520974;
+    transition: 0.5s;
+}
+
+.admin-send-button:hover {
+    background-color: #520974;
+    color: white;
+    transition: 0.5s;
+}
