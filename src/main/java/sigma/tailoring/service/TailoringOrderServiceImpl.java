@@ -1,5 +1,6 @@
 package sigma.tailoring.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import sigma.tailoring.converters.FileConverter;
 import sigma.tailoring.converters.OrderServiceSortColumnConverter;
 import sigma.tailoring.dto.ModifyTailoringOrder;
@@ -12,6 +13,7 @@ import sigma.tailoring.entities.*;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -24,7 +26,7 @@ public class TailoringOrderServiceImpl implements TailoringOrderService {
                         order.getId(),
                         order.getCustomerId(),
                         System.currentTimeMillis(),
-                        name.replaceAll("[:;,]", "_")
+                        name.replaceAll("[:;, \'\"]", "_")
                 );
     };
 
@@ -64,10 +66,7 @@ public class TailoringOrderServiceImpl implements TailoringOrderService {
     private TailoringOrder toTailoringOrder(ModifyTailoringOrder order) {
         if (!order.getUploadImages().isEmpty()) {
             List<File> files = fileConverter.toFiles(orderImageDirectory, order.getUploadImages(), GET_FILE_NAME_GENERATOR.apply(order));
-            order.setImages(files
-                    .stream()
-                    .map(f -> new Image(f.getName()))
-                    .collect(Collectors.toList()));
+            order.setImages(this.toImages(files, order.getUploadImages()));
         }
 
         TailoringOrder tailoringOrder = new TailoringOrder();
@@ -88,5 +87,15 @@ public class TailoringOrderServiceImpl implements TailoringOrderService {
         tailoringOrder.setId(order.getId());
 
         return tailoringOrder;
+    }
+
+    private List<Image> toImages(List<File> files, List<MultipartFile> uploadFiles) {
+        List<Image> images = new ArrayList<>(files.size());
+        for (int i = 0, size = files.size(); i < size; i++) {
+            images.add(new Image(
+                    files.get(i).getName(),
+                    uploadFiles.get(i).getOriginalFilename()));
+        }
+        return images;
     }
 }

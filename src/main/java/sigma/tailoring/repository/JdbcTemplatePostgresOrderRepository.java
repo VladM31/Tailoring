@@ -120,10 +120,10 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
         paramForFiltering.put("country", parameters.getCountry());
         paramForFiltering.put("firstname", parameters.getFirstname());
 
-        paramForFiltering.put("beforeOrEqualsEndDate", Range.from(parameters.getEndDate()));
-        paramForFiltering.put("afterOrEqualsEndDate", Range.to(parameters.getEndDate()));
-        paramForFiltering.put("beforeOrEqualsDateOfCreation", Range.from(parameters.getDateOfCreation()));
-        paramForFiltering.put("afterOrEqualsDareOfCreation", Range.to(parameters.getDateOfCreation()));
+        paramForFiltering.put("beforeOrEqualsEndDate", Range.to(parameters.getEndDate()));
+        paramForFiltering.put("afterOrEqualsEndDate", Range.from(parameters.getEndDate()));
+        paramForFiltering.put("beforeOrEqualsDateOfCreation", Range.to(parameters.getDateOfCreation()));
+        paramForFiltering.put("afterOrEqualsDareOfCreation", Range.from(parameters.getDateOfCreation()));
 
         paramForFiltering.put("userIsMale", parameters.getIsMale());
         paramForFiltering.put("greatOrEqualsCost", Range.from(parameters.getCost()));
@@ -195,7 +195,7 @@ public class JdbcTemplatePostgresOrderRepository implements OrderRepository {
             Color color = new Color();
             color.setId(r.getInt("colorId"));
             color.setName(r.getString("colorName"));
-            color.setCode("code");
+            color.setCode(r.getString("code"));
             order.setColor(color);
 
             Material material = new Material();
