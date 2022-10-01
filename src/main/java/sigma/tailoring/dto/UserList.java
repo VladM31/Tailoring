@@ -28,6 +28,7 @@ public class UserList {
                         Collectors.toList()));
     }
 
+
     private static UserDto toUserDto(User user) {
         UserDto userDto = new UserDto();
 
