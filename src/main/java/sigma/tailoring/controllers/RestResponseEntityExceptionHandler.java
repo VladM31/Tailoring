@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import sigma.tailoring.exceptions.ReadyDesignOrderFormException;
 import sigma.tailoring.exceptions.UserNotFound;
 import sigma.tailoring.exceptions.FormException;
 import sigma.tailoring.exceptions.OrderCommentException;
@@ -46,4 +47,15 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+
+    @ExceptionHandler(ReadyDesignOrderFormException.class)
+    public String handleReadyDesignOrderFormException(ReadyDesignOrderFormException orderFormException, Model model) {
+        LOGGER.warn(orderFormException.getMessage(), orderFormException);
+
+        orderFormException
+                .getAttributes()
+                .forEach((name, value) -> model.addAttribute(name, value));
+
+        return orderFormException.getPageName();
+    }
 }
