@@ -1,0 +1,324 @@
+p, h1, h2, a {
+    margin: 0;
+    padding: 0;
+}
+
+
+button {
+    border: 0px;
+    background-color: white
+}
+
+.container-elements {
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+}
+
+
+.added-file-lable {
+    width: 500px;
+    height: 70px;
+    background: rgba(82, 9, 116, 0.9);
+}
+
+.hidden-style {
+    height: 0px;
+    width: 0px;
+    padding: 0%;
+    margin: 0%;
+    font-size: 0%;
+}
+
+select:focus,
+input[type=text]:focus,
+input[type=number]:focus,
+textarea:focus {
+    border: 1px solid rgb(86, 207, 255);
+    outline: none;
+}
+
+@keyframes fade {
+    from {
+        opacity: .4
+    }
+    to {
+        opacity: 1
+    }
+}
+
+.button-change-image {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    /* border: 1px solid red; */
+    transition: 0.3s;
+    padding: auto;
+    margin-top: 40%;
+}
+
+.button-change-image:hover {
+    font-size: 30px;
+    height: 60px;
+    border-radius: 10px;
+    transition: 0.5s;
+    color: white;
+    background-color: rgb(0, 0, 0, 0.8);
+    margin-top: 39%;
+}
+
+.photo-fade {
+    animation-name: fade;
+    animation-duration: 1.2s;
+
+}
+
+.template-order-image {
+    width: 550px;
+    height: 600px;
+}
+
+.container-colom {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+}
+
+.container-row {
+    display: flex;
+    justify-content: start;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.price-label {
+    width: 220px;
+    height: 80px;
+
+    font-family: 'Imprima';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 29px;
+
+    color: #FFFFFF;
+    background: #520974;
+    border-radius: 35px 0px;
+    text-align: center;
+    padding-top: 25px;
+    margin-right: 20px;
+}
+
+.name-template {
+    height: 50px;
+    font-family: 'Imprima';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 110px;
+    line-height: 58px;
+    padding-top: 8px;
+
+    color: rgba(82, 9, 116, 0.9);
+}
+
+.describe-template {
+    padding-top: 10px;
+    font-family: 'Imprima';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 29px;
+
+    padding-right: 50px;
+    color: #520974;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    margin-left: 1%;
+}
+
+.part-size-container {
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.part-size-box {
+    margin-top: 20px;
+    margin-right: 20px;
+    width: 360px;
+    height: 100px;
+
+    background: #FFFFFF;
+    border: 1px solid rgba(82, 9, 116, 0.9);
+    border-radius: 10px;
+}
+
+.label-part-size {
+    padding-top: 10px;
+    text-align: center;
+
+    font-family: 'Imprima';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 19px;
+
+    color: #520974;
+}
+
+.part-size-name {
+    font-family: 'Imprima';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 9px;
+    text-align: center;
+
+    color: #520974;
+}
+
+.part-size-select {
+    margin-top: 5px;
+    width: 70px;
+    height: 30px;
+
+    background: #FFFFFF;
+    border: 0.5px solid #520974;
+    border-radius: 3px;
+    text-align: center;
+}
+
+.part-size-items {
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.box-part-name-and-select {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+}
+
+.wishes-container {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.wishes-box {
+    max-width: 1120px;
+    min-height: 100px;
+    background: #FFFFFF;
+    border: 0.75px solid #520974;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+.wishes-label {
+    font-family: 'Imprima';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 21px;
+
+    color: #520974;
+    padding-left: 10px;
+}
+
+.input-data-container {
+    max-width: 1140px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.input-data-container-text-and-put {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.input-data-label {
+    color: #520974;
+    font-size: 24px;
+    text-align: center;
+}
+
+.input-data-box {
+    border: 1px solid #520974;
+    border-radius: 5px;
+    height: 40px;
+    padding-left: 5px;
+    font-size: 20px;
+    width: 235px;
+}
+
+.count-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.count-box {
+    width: 80px;
+    border-radius: 0px;
+
+    color: #520974;
+    text-align: center;
+    padding-left: 15px;
+}
+
+.count-changer-box {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #520974;
+    font-size: 35px;
+    padding-top: -90px;
+    color: #520974;
+    transition: 0.5s;
+}
+
+.count-changer-box:hover {
+    background-color: #520974;
+    color: white;
+    transition: 0.5s;
+}
+
+
+.count-minus-box {
+    border-width: 1px 0px 1px 1px;
+    border-radius: 25px 0px 0px 25px;
+}
+
+.count-plus-box {
+    border-width: 1px 1px 1px 0px;
+    border-radius: 0px 25px 25px 0px;
+}
+
+.make-button {
+    width: 220px;
+    height: 55px;
+    font-size: 32px;
+
+    color: #520974;
+    background: white;
+    border: 1px solid #520974;
+    border-radius: 25px;
+    transition: 0.3s;
+}
+
+.make-button:hover {
+    color: white;
+    transition: 0.5s;
+    background: #520974;
+}
