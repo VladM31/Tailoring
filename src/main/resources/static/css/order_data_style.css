@@ -97,19 +97,22 @@ input[type=number]:focus {
 
 .images-container {
     display: flex;
-    justify-content: baseline;
+    justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
     max-width: 340px;
     min-width: 230px;
+
+    max-height: 400px;
 }
 
 .image-box {
     display: flex;
-    justify-content: baseline;
+    justify-content: start;
     flex-direction: column;
 
     width: 100px;
+    max-height: 150px;
     /* border: 2px solid #520974; */
     margin-bottom: 10px;
     margin-left: 10px;

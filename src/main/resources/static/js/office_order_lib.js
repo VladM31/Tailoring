@@ -1,7 +1,12 @@
+const HIDDED_ORDER_ID = document.getElementById('hidden-order-id');
+const ORDER_ID = HIDDED_ORDER_ID.value;
+HIDDED_ORDER_ID.remove();
+const ORDER_STATUS_TEXT = document.getElementById("order-status-id");
+
 // ******************* Hide elements ****************
 function createReplaceObject(replaceElementId, hideElement) {
-    var replaceObject = document.getElementById(replaceElementId);
-    var hiddenObject = hideElement;
+    let replaceObject = document.getElementById(replaceElementId);
+    let hiddenObject = hideElement;
     return function () {
         replaceObject.replaceWith(hiddenObject);
         const temp = replaceObject;

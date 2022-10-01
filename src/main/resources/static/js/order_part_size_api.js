@@ -9,7 +9,7 @@ const partSizeMainArray = [createPartSize()];
 const addButton = `<button type="button" class="create-part-size-button" id="add-button-id"
 onclick="createPartSizeBoxEvent()">Add</button>`;
 
-const maxSize = 15;
+const maxSize = 10;
 
 const hiddenInputForPartSize = document.getElementById('part-size-value-id');
 
@@ -96,5 +96,19 @@ function createPartSizeBoxEvent() {
 
 
 function partSizeArrayToJsonAndSetToInput() {
+    for (const partSize of partSizeMainArray) {
+        if (isBlank("" + partSize.width)) {
+            partSize.width = null;
+        }
+        if (isBlank("" + partSize.length)) {
+            partSize.length = null;
+        }
+        if (isBlank("" + partSize.volumn)) {
+            partSize.volumn = null;
+        }
+        if (isBlank("" + partSize.height)) {
+            partSize.height = null;
+        }
+    }
     hiddenInputForPartSize.value = JSON.stringify(partSizeMainArray);
 }
