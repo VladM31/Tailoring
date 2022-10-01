@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Neucha"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+
+    <link href='https://fonts.googleapis.com/css?family=Griffy' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Imprima' rel='stylesheet'>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/chat_order_style.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+<br>
+<input type="hidden" th:value="${user.id}" id="user-id">
+<input type="hidden" th:value="${order.clientOrder.id}" id="order-owner-id">
+<input type="hidden" th:value="${order.clientOrder.firstname}" id="order-owner-name-id">
+<input type="hidden" th:value="${order.id}" id="order-id">
+<div class="chat-container">
+    <div class="chat-box" id="chat-container-id">
+        <div class="text-box">
+            <label>Admin</label>
+            <p></p>
+        </div>
+
+
+    </div>
+
+    <div class="send-message-container">
+        <textarea name="" cols="30" rows="2" id="text-box-id"></textarea>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+
+</body>
+<script th:src="@{/js/js_library.js}"></script>
+<script th:src="@{/js/chat_logic.js}"></script>
+
+<script>
+    startChat();
+    setComments();
+</script>
+
+</html>
