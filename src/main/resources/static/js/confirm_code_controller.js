@@ -24,13 +24,13 @@ function getNumber(numberInputId) {
 }
 
 async function checkNumber() {
-    const respound = await fetch(CHECK_PHONE_NUMBER_URL + '?number=' + NUMBER);
-    if (respound.status > 299) {
-        alert('Please reload the page. ' + await respound.text());
+    const respond = await fetch(CHECK_PHONE_NUMBER_URL + '?number=' + NUMBER);
+    if (respond.status > 299) {
+        alert('Please reload the page. ' + await respond.text());
         return false;
     }
 
-    return await respound.json();
+    return await respond.json();
 }
 
 async function chengeFormAfterConfirmNumber() {

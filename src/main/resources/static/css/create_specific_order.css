@@ -108,7 +108,7 @@ a {
 }
 
 .input-data-container {
-    max-width: 1140px;
+    max-width: 1300px;
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -267,8 +267,9 @@ input[type=number]:focus {
 
 .order-part-size-conteiner {
     margin-top: 20px;
+    max-width: 1200px;
     display: flex;
-    justify-content: baseline;
+    justify-content: start;
     flex-direction: row;
     flex-wrap: wrap;
 }

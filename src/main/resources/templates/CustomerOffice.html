@@ -1,29 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="stylesheet" type="text/css" href="sort_style.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/customer_office_style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/sort_style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/top_label_style.css}"/>
+
     <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
-    <title>Offise</title>
+    <link href='https://fonts.googleapis.com/css?family=Griffy' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Imprima' rel='stylesheet'>
+
+    <title>Office</title>
 </head>
 
 <body>
-<br>
-<br>
-<br>
-<br>
-<br>
+<th:block th:include="/TopLablePage"></th:block>
+
 <div class="container-filter-and-info">
     <div class="filter-and-user-info-container">
         <div class="user-info-label-box">
-            <img src="UserPhoto.jpg" alt="user img">
+            <img th:src="@{/images/UserPhoto.jpg}" alt="user img">
             <div class="user-info">
-                <p>Владислав Mmm</p>
-                <p>380660660660</p>
+                <p th:text="${#authentication.getPrincipal().firstname} + ' ' + ${#authentication.getPrincipal().lastname}">
+                    Владислав Mmm</p>
+                <p sec:authentication="principal.phoneNumber">380660660660</p>
             </div>
         </div>
 
@@ -31,37 +35,42 @@
 
             <label for="" class="filter-main-label filter-item-margin">Find by</label>
 
-            <select name="materials" multiple id="materials-select-id" class="filter-input-box filter-item-margin"
+            <select name="statuses" multiple id="statuses-select-id" class="filter-input-box filter-item-margin"
                     value="">
-                <option value="Wool">Wool</option>
-                <option value="Silk">Silk</option>
-                <option value="Cotton">Cotton</option>
+                <option th:each="status : ${T(sigma.tailoring.entities.OrderStatus).values()}"
+                        th:value="${status.name()}" th:text="${@controllerHandler.toTitleCase(status)}"
+                >Status
+                </option>
             </select>
 
-            <select name="colors" multiple id="colors-select-id" class="filter-input-box filter-item-margin" value="">
-                <option value="Black">Black</option>
-                <option value="White">White</option>
-                <option value="Red">Red</option>
+            <select name="paymentStatuses" multiple id="payment-statuses-select-id"
+                    class="filter-input-box filter-item-margin" value="">
+                <option th:each="payStatus : ${T(sigma.tailoring.entities.OrderPaymentStatus).values()}"
+                        th:value="${payStatus.name()}" th:text="${@controllerHandler.toTitleCase(payStatus)}"
+                >PAYMENTED
+                </option>
             </select>
 
             <div class="filter-item-margin">
                 <label for="" class="input-between-label">Price</label>
                 <div class="input-between-box">
-                    <input type="number" name="" id="" class="input-between" placeholder="Min">
-                    <input type="number" name="" id="" class="input-between" placeholder="Max">
+                    <input type="number" name="cost.from" class="input-between" placeholder="Min">
+                    <input type="number" name="cost.to" class="input-between" placeholder="Max">
                 </div>
             </div>
 
             <div class="filter-item-margin">
                 <label for="" class="input-between-label">Date of creation</label>
                 <div class="input-between-box">
-                    <input type="datetime-local" name="" id="" class="input-between data-style" placeholder="Min">
-                    <input type="datetime-local" name="" id="" class="input-between data-style" placeholder="Max">
+                    <input type="datetime-local" name="dateOfCreation.from" class="input-between data-style"
+                           placeholder="Min">
+                    <input type="datetime-local" name="dateOfCreation.to" class="input-between data-style"
+                           placeholder="Max">
                 </div>
             </div>
 
-            <input type="submit" value="Find" class="submit-input filter-item-margin"
-                   onclick="selectToMultipleSelect()">
+            <input type="button" value="Find" class="submit-input filter-item-margin"
+                   onclick="selectToMultipleSelect(),updateOrderContainer()">
         </form>
     </div>
 
@@ -71,57 +80,51 @@
             <p class="your-orders-label">Your orders</p>
             <input form="filter-id" type="hidden" name="desc" id="sort-input-desc" value="true">
             <div class="sort-box">
-                <select name="sortSelectField" form="filter-id" id="" class="sort-select">
-                    <option value="date registration">Date registration</option>
+                <select name="sortSelectField" form="filter-id" class="sort-select"
+                        onchange="sortByColumn(this.value,updateOrderContainer)">
+                    <option th:each="sortColumn : ${T(sigma.tailoring.tools.BuyerOrderFilter).AVAILABLE_COLUMNS_TO_SORT}"
+                            th:value="${sortColumn}"
+                            th:text="${@controllerHandler.toTitleCase(sortColumn).replaceAll('_',' ')}"
+
+                    >DATE_OF_CREATION
+                    </option>
+
                 </select>
 
-                <button id="sort-button-id" onclick="changeDirection(this.id)" class="sort-button-style"></button>
+                <button id="sort-button-id" onclick="changeDirection(this.id),setDirection(updateOrderContainer)"
+                        class="sort-button-style"></button>
             </div>
         </div>
 
-        <div class="short-orders-container">
-            <div class="short-order-box">
-                <div class="state-number-dare-order-box">
-                    <div class="color-state-box"></div>
-                    <div class="number-dare-order-box">
-                        <p>№ 12131 from 11.12.12 12:12:11</p>
-                        <p>Done</p>
-                    </div>
-                </div>
-
-                <div class="payment-state-and-price-boxs">
-                    <span>Payment status</span>
-                    <p>Paid</p>
-                </div>
-
-                <div class="payment-state-and-price-boxs">
-                    <span>Order price</span>
-                    <p>950 UAH</p>
-                </div>
-
-                <div class="img-and-more-details-box">
-                    <img src="t-shirt.png" alt="">
-                    <a href="#to-order">></a>
-                </div>
-            </div>
+        <div class="short-orders-container" id="short-orders-container-id">
         </div>
     </div>
 
 
 </div>
-
+<input id="image-order-derictory-id" th:value="${@environment.getProperty('order.image.server.directory')}"
+       type="hidden">
+<input id="image-order-from-template-directory-id"
+       th:value="${@environment.getProperty('template.image.server.directory')}" type="hidden">
 </body>
-<script src="multi-select-dropdown.js"></script>
-<script src="sort-buttons.js"></script>
+<script th:src="@{/js/multi-select-dropdown.js}"></script>
+<script th:src="@{/js/sort-buttons.js}"></script>
+<script th:src="@{/js/js_library.js}"></script>
+<script th:src="@{/js/page.js}"></script>
+<script th:src="@{/js/make_form_data_from_filter.js}"></script>
+<script th:src="@{/js/customer_office_controller.js}"></script>
 <script>
 
 
     sortButtons.push(sortButton('sort-button-id', 'sort-input-desc', true));
     setSymbols();
     startCustomSelect([
-        multipleCustomeSelect('materials-select-id', "Order status", 'selected-option'),
-        multipleCustomeSelect('colors-select-id', "Payment status", 'selected-option'),
+        multipleCustomeSelect('statuses-select-id', "Order status", 'selected-option'),
+        multipleCustomeSelect('payment-statuses-select-id', "Payment status", 'selected-option'),
     ]);
+
+    setMultipleSelects(['statuses', 'paymentStatuses']);
+    updateOrderContainer();
 </script>
 
 </html>

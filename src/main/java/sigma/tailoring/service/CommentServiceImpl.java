@@ -7,20 +7,22 @@ import sigma.tailoring.exceptions.OrderCommentException;
 import sigma.tailoring.repository.OrderCommentsRepository;
 import sigma.tailoring.repository.OrderRepository;
 import sigma.tailoring.tools.CommentOrderForm;
+import sigma.tailoring.tools.OrderHandler;
 import sigma.tailoring.tools.OrderSearchCriteria;
 import sigma.tailoring.tools.Page;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommentServiceImpl implements CommentService {
     private final OrderCommentsRepository orderCommentsRepository;
     private final OrderRepository orderRepository;
+    private final OrderHandler orderHandler;
 
-    public CommentServiceImpl(OrderCommentsRepository repository, OrderRepository orderRepository) {
+    public CommentServiceImpl(OrderCommentsRepository repository, OrderRepository orderRepository, OrderHandler orderHandler) {
         this.orderCommentsRepository = repository;
         this.orderRepository = orderRepository;
+        this.orderHandler = orderHandler;
     }
 
     @Override
@@ -42,28 +44,11 @@ public class CommentServiceImpl implements CommentService {
                         ));
     }
 
-
     private void checkUserRights(User user, Long tailoringOrderId) {
-        if (user.getRole().equals(Role.ADMINISTRATION)) {
-            return;
-        }
-
-        var search = OrderSearchCriteria
-                .builder()
-                .userIds(List.of(user.getId()));
-
-        if (tailoringOrderId != null) {
-            search.orderIds(List.of(tailoringOrderId));
-        }
-
-        if (orderRepository.findBy(search
-                                .build(),
-                        new Page())
-                .isEmpty()
-        ) {
-            throw new OrderCommentException("User with id = %d with name = %s %s tried to add comment for order with id = %d"
-                    .formatted(user.getId(), user.getFirstname(), user.getLastname(), tailoringOrderId));
-        }
+        orderHandler.getOrderByRole(user, tailoringOrderId,
+                new OrderCommentException("User with id = %d with name = %s %s tried to add comment for order with id = %d"
+                        .formatted(user.getId(), user.getFirstname(), user.getLastname(), tailoringOrderId))
+        );
     }
 
     private CommentsUnderOrder toComment(CommentOrderForm form) {

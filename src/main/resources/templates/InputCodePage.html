@@ -26,7 +26,8 @@
     <input type="hidden" id="number-id" th:value="${param.phoneNumber}">
 
     <form class="confirm-form" id="confirm-form-id">
-        <p>Confirm your phone number with Telegram bot. Your number is <strong>380660992244</strong></p>
+        <p>Confirm your phone number with Telegram bot. Your number is <strong th:text="${param.phoneNumber}">380660992244</strong>
+        </p>
 
         <a href="https://t.me/needlework_number_bot" target="_blank" rel="noopener noreferrer">Telegram bot</a>
 

@@ -14,16 +14,17 @@
     <link href='https://fonts.googleapis.com/css?family=Griffy' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Imprima' rel='stylesheet'>
 
-    <link rel="stylesheet" type="text/css" href="show_all_templates_style.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/create_specific_order.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/top_label_style.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 </head>
 
 <body>
+<th:block th:include="/TopLablePage"></th:block>
 
-<br>
-<form class="container-elements">
+<div class="container-elements">
     <div class="column-container" enctype="multipart/form-data">
         <div>
             <label class="added-file-lable" for="image_uploads">Add images (PNG, JPG)</label>
@@ -35,19 +36,27 @@
         </div>
     </div>
 
-    <div>
+    <form id="order-form-id">
         <div class="input-data-container">
 
             <div class="input-data-container-text-and-put">
                 <label for="color-id" class="input-data-label">Color</label>
-                <select type="text" name="color" id="color-id" class="input-data-box" required></select>
+                <select type="text" name="color" id="color-id" class="input-data-box" required>
+                    <option th:each="color : ${@materialsServiceImpl.findAllColors()}" th:value="${color.id}"
+                            th:text="${color.name}">...
+                    </option>
+                </select>
             </div>
             <div class="input-data-container-text-and-put">
                 <label for="material-id" class="input-data-label">Material</label>
-                <select type="text" name="material" id="material-id" class="input-data-box" required></select>
+                <select type="text" name="material" id="material-id" class="input-data-box" required>
+                    <option th:each="material : ${@materialsServiceImpl.findAllMaterial()}" th:value="${material.id}"
+                            th:text="${material.name}">...
+                    </option>
+                </select>
             </div>
             <div class="input-data-container-text-and-put">
-                <label for="address-for-send-id" class="input-data-label">Address for send</label>
+                <label for="address-for-send-id" class="input-data-label">Delivery address</label>
                 <input type="text" name="addressForSend" id="address-for-send-id" class="input-data-box"
                        style="width: 330px;" required>
             </div>
@@ -66,37 +75,34 @@
 
             </div>
 
-            <input type="button" value="Made" class="made-button" onclick="partSizeArrayToJsonAndSetToInput()">
+            <input type="button" value="Made" class="made-button"
+                   onclick="partSizeArrayToJsonAndSetToInput(),sendOrderForm()">
 
-            <input type="hidden" name="partSizes" id="part-size-value-id">
+            <input type="hidden" name="partSizeJson" id="part-size-value-id">
 
         </div>
         <div class="wishes-container">
             <label for="" class="wishes-label">Wishes</label>
-            <textarea class="wishes-box">
-
-                </textarea>
+            <textarea name="wishes" id="wishes-order-id" class="wishes-box"></textarea>
         </div>
 
         <div class="order-part-size-conteiner" id="order-part-size-box-conteiner-id">
 
-
         </div>
-    </div>
-
-
-</form>
+    </form>
+</div>
 
 
 </body>
-<script src="js_library.js"></script>
-<script src="file_upload.js"></script>
-<script src="counter.js"></script>
-<script src="order_part_size_api.js"></script>
-
+<script th:src="@{/js/js_library.js}"></script>
+<script th:src="@{/js/file_upload.js}"></script>
+<script th:src="@{/js/counter.js}"></script>
+<script th:src="@{/js/order_part_size_api.js}"></script>
+<script th:src="@{/js/specific_order_creater.js}"></script>
 <script>
     counterObject.input = document.getElementById('count-order-id');
     setPartSizeBoxesByPartSizeMainArray();
+
 </script>
 
 </html>

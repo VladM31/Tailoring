@@ -1,15 +1,19 @@
 <div style="padding-bottom: 45px" xmlns:sec="http://www.w3.org/1999/xhtml">
-    <h1 class="top-label-h1-text"><a href="#main-page" style="color: #520974">Lilac tangerine</a></h1>
+    <h1 class="top-label-h1-text"><a th:href="@{/}" style="color: #520974">Lilac tangerine</a></h1>
     <div class="line-button-box">
         <div class="line-button-box-margin-top">
             <div class="line-button-box-margin-top-center">
-                <a href="#1">Ready templates</a>
+                <a th:href="@{/templates/show}">Ready templates</a>
                 <p>&nbsp|&nbsp</p>
-                <a href="#2">Create your own order</a>
+                <a th:href="@{/orders/create/specific}">Create your own order</a>
                 <p>&nbsp|&nbsp</p>
 
-                <a href="#3" sec:authorize="isAuthenticated()">Personal office</a>
-                <p sec:authorize="isAuthenticated()">&nbsp|&nbsp</p>
+
+                <a th:href="@{/templates/management}" sec:authorize="hasAuthority('ADMINISTRATION')">Management</a>
+                <p sec:authorize="hasAuthority('ADMINISTRATION')">&nbsp|&nbsp</p>
+
+                <a th:href="@{/orders/customer/show}" sec:authorize="hasAuthority('CUSTOMER')">Personal office</a>
+                <p sec:authorize="hasAuthority('CUSTOMER')">&nbsp|&nbsp</p>
                 <a th:href="@{/logout}" sec:authorize="isAuthenticated()">Sign out</a>
 
                 <a th:href="@{/authorization/login}" sec:authorize="isAuthenticated() == false">Sign in</a>

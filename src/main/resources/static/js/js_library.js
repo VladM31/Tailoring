@@ -26,3 +26,17 @@ const getNewId = {
 function isBlank(str) {
     return (!str || /^\s*$/.test(str));
 }
+
+function titleCase(str) {
+    return (str.charAt(0).toUpperCase() + str.slice(1).toLowerCase());
+}
+
+function getValueWithRemoveElement(idElement) {
+    const element = document.getElementById(idElement);
+
+    const value = element.value;
+
+    element.remove();
+
+    return value;
+}

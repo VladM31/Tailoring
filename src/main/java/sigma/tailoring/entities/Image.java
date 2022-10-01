@@ -9,4 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Image {
     private String name;
+    private String originalName;
+
+    public Image(String name) {
+        this.name = name;
+    }
 }

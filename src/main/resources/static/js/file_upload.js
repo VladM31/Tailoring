@@ -9,7 +9,7 @@ const IMAGE_BOX_CONTAINER = document.getElementById('imageBoxContainer');
 function updateImageDisplay() {
 
     IMAGE_BOX_CONTAINER.innerHTML = "";
-    var curFiles = INPUT_FILES.files;
+    const curFiles = INPUT_FILES.files;
 
     if (curFiles.length === 0) {
         IMAGE_BOX_CONTAINER.innerHTML = `<p class="files-warn-info"> Files not choose </p>`
@@ -21,7 +21,7 @@ function updateImageDisplay() {
         return;
     }
 
-    for (var i = 0; i < curFiles.length; i++) {
+    for (let i = 0; i < curFiles.length; i++) {
         if (validFileType(curFiles[i])) {
             IMAGE_BOX_CONTAINER.innerHTML += createImageBox(curFiles[i].name, returnFileSize(curFiles[i].size), window.URL.createObjectURL(curFiles[i]));
         } else {
@@ -31,7 +31,7 @@ function updateImageDisplay() {
 }
 
 
-var fileTypes = [
+const fileTypes = [
     'image/jpeg',
     'image/pjpeg',
     'image/png'

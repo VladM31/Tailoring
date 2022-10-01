@@ -2,7 +2,6 @@ package sigma.tailoring.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +21,7 @@ import sigma.tailoring.service.PopularTemplateServiceImpl;
 import sigma.tailoring.service.TailoringTemplateService;
 import sigma.tailoring.service.TailoringTemplateServiceImpl;
 import sigma.tailoring.service.*;
+import sigma.tailoring.tools.OrderHandler;
 
 @Configuration
 @EnableScheduling
@@ -80,8 +80,9 @@ public class ServiceConfig {
 
     @Bean
     public CommentService commentServiceImpl(OrderCommentsRepository orderCommentsRepository,
-                                             OrderRepository orderRepository) {
-        return new CommentServiceImpl(orderCommentsRepository, orderRepository);
+                                             OrderRepository orderRepository,
+                                             OrderHandler orderHandler) {
+        return new CommentServiceImpl(orderCommentsRepository, orderRepository, orderHandler);
     }
 
 
