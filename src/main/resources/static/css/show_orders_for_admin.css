@@ -15,7 +15,7 @@ body, p, h1, h2, a {
 
 .filter-box {
     width: 350px;
-    height: 1300px;
+    height: 1450px;
     margin-left: 1%;
 
     background: #FFFFFF;
@@ -82,16 +82,25 @@ input:focus {
     color: #520974;
     font-size: 40px;
     transition-duration: 0.5s;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
+.submit-input:focus,
 .submit-input:hover {
     color: #FFFFFF;
-    width: 220px;
+    width: 200px;
     height: 60px;
     background: #520974;
     transition-duration: 0.7s;
     font-size: 48px;
+
+    margin-bottom: 25px;
+    margin-top: 25px;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 .input-between-box {
