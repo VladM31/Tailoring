@@ -1,0 +1,75 @@
+p, h1, h2, a {
+    margin: 0;
+    padding: 0;
+}
+
+a:active,
+a:hover,
+a {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url("http://localhost:8095/api/v1/images/tools/error_fon.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+
+.container-form {
+    margin-top: 13%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+
+}
+
+.form-sign-up {
+    border: 3px solid #520974;
+    width: 370px;
+    min-height: 370px;
+    border-radius: 30px;
+
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: white;
+    opacity: 85%;
+}
+
+.form-sign-up h2 {
+    text-align: center;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 52px;
+
+
+    color: #520974;
+}
+
+.form-sign-up p {
+    text-align: left;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+
+
+    color: #520974;
+}
+
+.details-div {
+    padding-left: 10px;
+}
+
+.details-div summary {
+    color: #520974;
+    font-size: 22px;
+    font-weight: 500;
+}
