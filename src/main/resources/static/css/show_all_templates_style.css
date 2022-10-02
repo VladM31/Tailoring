@@ -16,6 +16,10 @@ a {
     justify-content: space-between;
 }
 
+.pageable-box {
+    padding-left: 20px;
+}
+
 .filter-box {
     margin-left: 2%;
     box-sizing: border-box;

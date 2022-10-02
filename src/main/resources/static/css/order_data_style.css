@@ -119,8 +119,7 @@ input[type=number]:focus {
 }
 
 .image-box img {
-    min-height: 100px;
-    max-height: 120px
+    height: 120px
 }
 
 .image-box label {
