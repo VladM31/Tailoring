@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import sigma.tailoring.exceptions.ReadyDesignOrderFormException;
@@ -57,5 +58,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .forEach((name, value) -> model.addAttribute(name, value));
 
         return orderFormException.getPageName();
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleAllExceptions(Exception ex, Model model) {
+        LOGGER.error(ex.getMessage(), ex);
+        model.addAttribute("message", ex.getMessage());
+        return "ErrorPage";
     }
 }
