@@ -3,6 +3,7 @@ package sigma.tailoring.controllers;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import com.google.gson.Gson;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,6 +81,7 @@ public class OrderPageController {
     }
 
     @GetMapping("management")
+    @PreAuthorize("hasAuthority('ADMINISTRATION')")
     public String getOrderManagement() {
         return "ShowOrdersForAdmin";
     }

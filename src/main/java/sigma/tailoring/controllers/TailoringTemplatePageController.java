@@ -2,6 +2,7 @@ package sigma.tailoring.controllers;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -28,21 +29,24 @@ public class TailoringTemplatePageController {
     }
 
     @GetMapping("/create")
+    @PreAuthorize("hasAuthority('ADMINISTRATION')")
     public String getCreateTailoringTemplate(Model model) {
         model.addAttribute("templateForm", new TailoringTemplateForm());
         return "CreateOrEditTemplate";
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('ADMINISTRATION')")
     public String postCreateTailoringTemplate(@Validated({OnSaveForm.class}) TailoringTemplateForm form) {
         tailoringTemplateService.save(form);
         return "redirect:/templates/create";
     }
 
-    @GetMapping("/{templateId}/edit")
-    public String getEditTailoringTemplate(Model model, @PathVariable Long templateId) {
+    @GetMapping("/{id}/edit")
+    @PreAuthorize("hasAuthority('ADMINISTRATION')")
+    public String getEditTailoringTemplate(Model model, @PathVariable Long id) {
         TailoringTemplate template = tailoringTemplateService.findBy(
-                        TailoringTemplateSearchCriteria.builder().templateIds(List.of(templateId)).build(), new Page())
+                        TailoringTemplateSearchCriteria.builder().templateIds(List.of(id)).build(), new Page())
                 .stream().findFirst().orElseThrow();
 
         model.addAttribute("templateForm", new TailoringTemplateForm(template, gson, directoryTemplateImages));
@@ -51,6 +55,7 @@ public class TailoringTemplatePageController {
     }
 
     @PostMapping("/{id}/edit")
+    @PreAuthorize("hasAuthority('ADMINISTRATION')")
     public String postEditTailoringTemplate(@Validated({OnUpdateForm.class}) @ModelAttribute TailoringTemplateForm form) {
         tailoringTemplateService.update(form);
         return "redirect:/templates/create";
@@ -62,6 +67,7 @@ public class TailoringTemplatePageController {
     }
 
     @GetMapping("management")
+    @PreAuthorize("hasAuthority('ADMINISTRATION')")
     public String getAdminTemplatePage() {
         return "AdminTemplatePage";
     }

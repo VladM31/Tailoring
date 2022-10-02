@@ -1,6 +1,7 @@
 package sigma.tailoring.controllers;
 
 import com.google.gson.Gson;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,7 @@ public class OrderController {
 
     @GetMapping
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMINISTRATION')")
     public TailoringOrderList getTailoringOrderList(OrderFilter orderFilter) {
         return this.orderService.findBy(
                 orderFilter.toOrderSearchCriteria(this.handlerFilter),
@@ -66,6 +68,7 @@ public class OrderController {
     @PutMapping("{orderId}")
     @ResponseBody
     @Validated(OnUpdate.class)
+    @PreAuthorize("hasAuthority('ADMINISTRATION')")
     public boolean editOrder(@Valid @ModelAttribute EditOrderForm form) {
         return orderService.update(form.toModifyTailoringOrder(orderService, modifyTailoringOrderConverter));
     }

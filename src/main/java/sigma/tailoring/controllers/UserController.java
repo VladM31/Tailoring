@@ -1,5 +1,6 @@
 package sigma.tailoring.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sigma.tailoring.converters.UserWebSortColumnConverter;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/users")
 @Validated
+@PreAuthorize("hasAuthority('ADMINISTRATION')")
 public class UserController {
     private final UserWebSortColumnConverter converter;
     private final UserService userService;

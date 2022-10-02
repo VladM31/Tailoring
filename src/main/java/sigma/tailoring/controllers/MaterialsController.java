@@ -1,5 +1,6 @@
 package sigma.tailoring.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sigma.tailoring.entities.Color;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/orders")
 @Validated
+@PreAuthorize("hasAuthority('ADMINISTRATION')")
 public class MaterialsController {
     private final MaterialsService materialsService;
 
