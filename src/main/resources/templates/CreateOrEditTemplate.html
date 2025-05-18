@@ -23,7 +23,7 @@
 
 <body>
 
-<th:block th:include="/TopLablePage"></th:block>
+<th:block th:include="TopLablePage"></th:block>
 <form class="container-elements" th:object="${templateForm}"
       th:action=" *{id == null} ? @{/templates/create} : @{/templates/{id}/edit(id=${templateForm.id})} "
       method="post" enctype="multipart/form-data">
@@ -116,7 +116,7 @@
 
             <!--            <input type="hidden" th:if="*{id != null}" th:field="*{id}">-->
 
-            <input type="hidden" th:if="*{id != null}" th:value="*{dateOfCreation}" name="dateOfCreation"
+            <input type="hidden" th:if="*{id != null}" th:field="*{dateOfCreation}"
                    class="hidden-input-files">
 
             <input type="hidden" th:if="*{imagesUrl != null}" th:each="image : *{imagesUrl}" name="imagesUrl"

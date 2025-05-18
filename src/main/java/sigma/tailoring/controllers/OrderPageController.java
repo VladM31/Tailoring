@@ -62,7 +62,7 @@ public class OrderPageController {
     @PostMapping("/create/based-on-template/{templateId}")
     public String saveOrderBasedOnTemplate(@AuthenticationPrincipal User user, @ModelAttribute @Valid ReadyDesignOrderForm orderForm) {
         orderService.save(orderForm.toModifyTailoringOrder(gson, user.getId()));
-        return "redirect:/";
+        return "redirect:/orders/customer/show";
     }
 
     @GetMapping("{orderId}/show")

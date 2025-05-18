@@ -39,7 +39,7 @@ public class TailoringTemplatePageController {
     @PreAuthorize("hasAuthority('ADMINISTRATION')")
     public String postCreateTailoringTemplate(@Validated({OnSaveForm.class}) TailoringTemplateForm form) {
         tailoringTemplateService.save(form);
-        return "redirect:/templates/create";
+        return "redirect:/templates/management";
     }
 
     @GetMapping("/{id}/edit")
@@ -58,7 +58,7 @@ public class TailoringTemplatePageController {
     @PreAuthorize("hasAuthority('ADMINISTRATION')")
     public String postEditTailoringTemplate(@Validated({OnUpdateForm.class}) @ModelAttribute TailoringTemplateForm form) {
         tailoringTemplateService.update(form);
-        return "redirect:/templates/create";
+        return "redirect:/templates/management";
     }
 
     @GetMapping("show")

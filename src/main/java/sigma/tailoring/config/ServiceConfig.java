@@ -85,7 +85,6 @@ public class ServiceConfig {
         return new CommentServiceImpl(orderCommentsRepository, orderRepository, orderHandler);
     }
 
-
     @Bean
     public TailoringOrderService tailoringOrderServiceImpl(
             OrderServiceSortColumnConverter sortColumnConverter,

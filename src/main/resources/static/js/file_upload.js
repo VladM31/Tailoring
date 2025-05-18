@@ -23,7 +23,7 @@ function updateImageDisplay() {
 
     for (let i = 0; i < curFiles.length; i++) {
         if (validFileType(curFiles[i])) {
-            IMAGE_BOX_CONTAINER.innerHTML += createImageBox(curFiles[i].name, returnFileSize(curFiles[i].size), window.URL.createObjectURL(curFiles[i]));
+            IMAGE_BOX_CONTAINER.innerHTML += createImageBox(curFiles[i].name, returnFileSize(curFiles[i].size), );
         } else {
             IMAGE_BOX_CONTAINER.innerHTML += createImageBox(curFiles[i].name, "...", "");
         }
