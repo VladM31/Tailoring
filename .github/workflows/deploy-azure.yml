@@ -1,0 +1,33 @@
+name: Build and Deploy Tailoring
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1. Будуємо fat-jar
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Build JAR
+        run: mvn -B clean package -DskipTests
+
+      # 2. Перевіряємо, що JAR є
+      - name: List target
+        run: ls -lh target/*.jar
+
+      # 3. Деплой у App Service
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: tailoring-app-nure         # ваше App Service
+          slot-name: Production
+          package: target/*.jar                # ← правильний шлях!
