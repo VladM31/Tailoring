@@ -1,13 +1,16 @@
 package sigma.tailoring.validations;
 
 import com.google.gson.Gson;
+import org.springframework.web.multipart.MultipartFile;
 import sigma.tailoring.exceptions.FormException;
 import sigma.tailoring.tools.PartSizeTemplateForm;
 import sigma.tailoring.tools.TailoringTemplateForm;
 
 import javax.validation.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,14 +63,10 @@ public class TailoringTemplateFormValidation implements ConstraintValidator<Tail
 
     private boolean hasNotFrontImage(TailoringTemplateForm form) {
         return Stream.of(form.getUploadImages())
-                .map(uploadFile -> uploadFile.getOriginalFilename())
-                .filter(name -> name.contains("front-"))
-                .count() == 0
+                .map(MultipartFile::getOriginalFilename).filter(Objects::nonNull).noneMatch(name -> name.contains("front-"))
                 &&
                 Stream.of(form.getImagesUrl())
-                        .map(f -> f.getName())
-                        .filter(name -> name.contains("front-"))
-                        .count() == 0;
+                        .map(File::getName).noneMatch(name -> name.contains("front-"));
     }
 
     private List<String> findPartSizeErrors(TailoringTemplateForm form) {
