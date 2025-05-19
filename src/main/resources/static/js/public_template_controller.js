@@ -34,6 +34,7 @@ async function setDirection() {
 
 let photoDirectoryUrl = null;
 
+
 async function toFilter() {
     const formData = await getFormDataFromFilter();
     const formDataUrl = formDataToUrlParameter(formData);
