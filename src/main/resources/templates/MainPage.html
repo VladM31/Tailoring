@@ -23,7 +23,9 @@
 <div>
     <h1 style="text-align: center;">ABOUT US</h1>
     <div class="box-elements-space-around-row">
-        <img class="about-ua-describe-image" th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/WorksPeople.png}" alt="WorkPeople" style="border-radius: 15px;">
+        <img class="about-ua-describe-image"
+             th:src="@{https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/images/imagesMainPage/WorksPeople.png}"
+             alt="WorkPeople" style="border-radius: 15px;">
 
         <p class="about-ua-describe-text">
             Our company was founded in 2022 as tailoring company. Since then, we have built a reputation as one of
@@ -56,9 +58,9 @@
             const elementTextSlide = document.getElementById('slide-text-p');
             const elementMaterialHref = document.getElementById('slide-href');
 
-            const photos = ["http://localhost:8095/api/v1/images/imagesMainPage/wool.jpg",
-                "http://localhost:8095/api/v1/images/imagesMainPage/shelk.jpg",
-                "http://localhost:8095/api/v1/images/imagesMainPage/cotton.jpg"];
+            const photos = ["https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/images/imagesMainPage/wool.jpg",
+                "https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/images/imagesMainPage/shelk.jpg",
+                "https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/images/imagesMainPage/cotton.jpg"];
             const text = ["Wool", "Shelk", "Cotton"];
             const url = "#material=";
 
@@ -84,13 +86,15 @@
         <div class="box-elements-space-around-row what-we-do-order-box">
 
             <div class="what-we-do-order">
-                <img th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/template.png}" alt="">
+                <img th:src="@{https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/images/imagesMainPage/template.png}"
+                     alt="">
                 <h3>Based on template</h3>
                 <p>We have ready-made designs in which you can change the color, material and size. Their delivery
                     speed is fast.</p>
             </div>
             <div class="what-we-do-order">
-                <img th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/not_template.png}" alt="">
+                <img th:src="@{https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/images/imagesMainPage/not_template.png}"
+                     alt="">
                 <h3>Special the order</h3>
                 <p>If you want, what is not on the market. You can order from us using the convenient order creation
                     design.</p>
@@ -119,9 +123,15 @@
     <div class="basement">
         <div class="basement-info">
             <p class="basement-name-cite">Lilac tangerine</p>
-            <img class="basement-img" th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/instagram-img.png}" alt="instagram">
-            <img class="basement-img" th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/facebook-img.png}" alt="facebook">
-            <img class="basement-img" th:src="@{http://localhost:8095/api/v1/images/imagesMainPage/telegram-img.png}" alt="telegram">
+            <img class="basement-img"
+                 th:src="@{https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/images/imagesMainPage/instagram-img.png}"
+                 alt="instagram">
+            <img class="basement-img"
+                 th:src="@{https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/images/imagesMainPage/facebook-img.png}"
+                 alt="facebook">
+            <img class="basement-img"
+                 th:src="@{https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/images/imagesMainPage/telegram-img.png}"
+                 alt="telegram">
         </div>
         <p style="text-align: right; padding-right: 20px;"> Delivery across Ukraine is carried out by delivery
             services: "Nova Poshta".
