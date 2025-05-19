@@ -23,9 +23,25 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Всё, что идёт под /api/v1/css/**, возьмётся из classpath:/static/css/
-        registry.addResourceHandler("/api/v1/**")
-                .addResourceLocations("classpath:/static/");
+        // всё, что под /api/v1/images/**, ищем сначала в classpath:/static/images/,
+        // а потом — в файловой системе по абсолютному пути /home/site/wwwroot/static/images/
+        registry.addResourceHandler("/api/v1/images/**")
+                .addResourceLocations(
+                        "classpath:/static/images/",
+                        "file:/home/site/wwwroot/static/images/"
+                );
+        registry.addResourceHandler("/api/v1/css/**")
+                .addResourceLocations(
+                        "classpath:/static/css/",
+                        "file:/home/site/wwwroot/static/css/"
+                );
+
+        registry.addResourceHandler("/api/v1/js/**")
+                .addResourceLocations(
+                        "classpath:/static/js/",
+                        "file:/home/site/wwwroot/static/js/"
+                );
+        // аналогично для css/js, если нужно
     }
 
     @Bean
