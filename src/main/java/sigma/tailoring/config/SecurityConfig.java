@@ -38,6 +38,14 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests()
+                .antMatchers(
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/api/v1/css/**",
+                        "/api/v1/js/**",
+                        "/api/v1/images/**"
+                ).permitAll()
                 .antMatchers(securityUrlGetter.getUrlWithoutAuthority())
                 .permitAll()
                 .anyRequest()
