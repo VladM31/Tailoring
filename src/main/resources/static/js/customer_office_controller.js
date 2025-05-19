@@ -1,7 +1,7 @@
-const CUSTOMER_ORDER_URL = 'http://localhost:8095/api/v1/orders/customer';
+const CUSTOMER_ORDER_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders/customer';
 const IMAGE_ORDER_DIRECTORY = getValueWithRemoveElement('image-order-derictory-id');
 const IMAGE_ORDER_FROM_TEMPLATE_DIRECTORY = getValueWithRemoveElement('image-order-from-template-directory-id');
-const SHOW_ORDER_URL = 'http://localhost:8095/api/v1/orders/{orderId}/show';
+const SHOW_ORDER_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders/{orderId}/show';
 
 const ORDER_OFFICE = document.getElementById('short-orders-container-id');
 const PAGE = getPage('DATE_OF_CREATION');

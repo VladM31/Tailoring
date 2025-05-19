@@ -1,4 +1,4 @@
-const ORDER_URL = 'http://localhost:8095/api/v1/orders';
+const ORDER_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders';
 const FROM_ADMIN = document.getElementById('admin-update-order-form-id');
 
 const ORDER_PAYMENT_STATUS_TEXT = document.getElementById("order-payment-status-id");

@@ -1,6 +1,6 @@
-const ORDERS_URL = 'http://localhost:8095/api/v1/orders';
+const ORDERS_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders';
 const ORDER_CONTAINER = document.getElementById('order-container-id');
-const ORDER_DATA_PAGE_URL = 'http://localhost:8095/api/v1/orders/{id}/show';
+const ORDER_DATA_PAGE_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders/{id}/show';
 
 const PAGE = getPage('DATE_OF_CREATION');
 

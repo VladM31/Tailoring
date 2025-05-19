@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 
@@ -18,6 +19,17 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Bean
     HiddenHttpMethodFilter hiddenHttpMethodFilter() {
         return new HiddenHttpMethodFilter();
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Всё, что идёт под /api/v1/css/**, возьмётся из classpath:/static/css/
+        registry.addResourceHandler("/api/v1/css/**")
+                .addResourceLocations("classpath:/static/css/");
+        registry.addResourceHandler("/api/v1/js/**")
+                .addResourceLocations("classpath:/static/js/");
+        registry.addResourceHandler("/api/v1/images/**")
+                .addResourceLocations("classpath:/static/images/");
     }
 
     @Bean

@@ -7,8 +7,8 @@ const costMaterial = document.getElementById('add-material-cost');
 const buttonMaterial = document.getElementById('add-material-button');
 
 const numberFormat16 = new RegExp('[1234567890ABCDEFabcdef]{6}');
-const urlColor = "http://localhost:8095/api/v1/orders/colors";
-const urlMaterial = "http://localhost:8095/api/v1/orders/materials";
+const urlColor = "https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders/colors";
+const urlMaterial = "https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders/materials";
 
 async function sendColor() {
     const name = nameColor.value;

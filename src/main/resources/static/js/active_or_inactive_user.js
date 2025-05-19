@@ -1,4 +1,4 @@
-const USER_ACTIVE_USER = 'http://localhost:8095/api/v1/users/{id}/active';
+const USER_ACTIVE_USER = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/users/{id}/active';
 
 async function updateUserActive(userId, active) {
     const formDataPut = new FormData();

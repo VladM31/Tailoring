@@ -1,4 +1,4 @@
-const CHAT_RESOURCE = 'http://localhost:8095/api/v1/order/{orderId}/comments';
+const CHAT_RESOURCE = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/order/{orderId}/comments';
 const FIFTEEN_SECONDS = 15000;
 
 const chatContainer = document.getElementById('chat-container-id');

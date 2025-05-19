@@ -1,4 +1,4 @@
-const URL_USER_RESOURCE = "http://localhost:8095/api/v1/users";
+const URL_USER_RESOURCE = "https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/users";
 const USER_CONTAINER = document.getElementById('user-container-id');
 const PAGE = {
     limit : null,

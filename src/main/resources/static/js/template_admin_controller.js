@@ -1,4 +1,4 @@
-const TEMPLATE_URL = 'http://localhost:8095/api/v1/templates';
+const TEMPLATE_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/templates';
 const TEMPLATE_CONTAINER = document.getElementById('template-container-id');
 
 const PAGE = {
@@ -91,7 +91,7 @@ function toTemplateDiv(template) {
             ${toOptionDisabled(template.materials)}
         </select>
         <div class="link-button-box">
-            <a href="http://localhost:8095/api/v1/templates/${template.id}/edit">
+            <a href="https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/templates/${template.id}/edit">
                 <button type="button" class="link-button">Edit</button>
             </a>
         </div>

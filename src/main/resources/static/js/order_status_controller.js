@@ -1,4 +1,4 @@
-const ORDER_STATUS_URL = 'http://localhost:8095/api/v1/orders/{id}/status';
+const ORDER_STATUS_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders/{id}/status';
 const ORDER_STATUS_BUTTON = document.getElementById("order-status-button-id");
 const CANCELLED_TEXT = 'CANCELLED';
 const DONE_TEXT = 'DONE';

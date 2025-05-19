@@ -3,9 +3,9 @@ const ERROR_TEXT_INFO = ' <em class="hidden-text" id="code-incorrect-text-id">Co
 const CODE_INPUT = '<input type="text" name="" id="code-value-id" placeholder="Code here" maxlength="20">';
 const CODE_CHECK_BUTTON = '<button type="button" onclick="checkCode()">Check</button>';
 
-const CHECK_PHONE_NUMBER_URL = 'http://localhost:8095/api/v1/authorization/number';
-const CONFIRM_CODE_URL = 'http://localhost:8095/api/v1/authorization/confirm-code';
-const LOGIN_URL = 'http://localhost:8095/api/v1/authorization/login';
+const CHECK_PHONE_NUMBER_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/authorization/number';
+const CONFIRM_CODE_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/authorization/confirm-code';
+const LOGIN_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/authorization/login';
 
 const CONFIRM_FORM = document.getElementById('confirm-form-id');
 const TEN_SECONDS = 10000;

@@ -7,8 +7,8 @@ const PART_SIZE_INPUT = document.getElementById('part-size-value-id');
 const WISHES_INPUT = document.getElementById('wishes-order-id');
 
 const MAX_COUNT = 2147483647;
-const SAVE_SPECIFIC_ORDER_URL = 'http://localhost:8095/api/v1/orders/create/specific';
-const OFFICE_URL = 'http://localhost:8095/api/v1/orders/customer/show';
+const SAVE_SPECIFIC_ORDER_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders/create/specific';
+const OFFICE_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders/customer/show';
 
 function setFiles(formData) {
     const files = FILE_INPUT.files;

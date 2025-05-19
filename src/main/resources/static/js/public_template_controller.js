@@ -76,7 +76,7 @@ function toTemplateDiv(template) {
             <div class="template-box">
                 <p class="cost-lable">${template.cost} UAH</p>
 
-                <a href="http://localhost:8095/api/v1/orders/create/based-on-template/${template.id}" > <img src="${photoDirectoryUrl}/${template.frontImage}" alt="template photo"></a>
+                <a href="https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/orders/create/based-on-template/${template.id}" > <img src="${photoDirectoryUrl}/${template.frontImage}" alt="template photo"></a>
 
                 <div class="material-and-colors-select-box">
                     <select class="select-template">
