@@ -1,4 +1,4 @@
-const PUBLIC_TEMPLATE_URL = 'http://localhost:8095/api/v1/templates/public';
+const PUBLIC_TEMPLATE_URL = 'https://vladyslav-bhe6d5e4arccerfv.westeurope-01.azurewebsites.net/api/v1/templates/public';
 const TEMPLATE_CONTAINER = document.getElementById('template-container-id');
 const IMAGES_DIRECTORY_INPUT_ID = 'images-directory-id';
 
